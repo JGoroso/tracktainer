@@ -1,12 +1,19 @@
+import { useRouter } from 'next/navigation';
 import React from 'react'
 
 function NavBar() {
+  const router = useRouter();
+
+  const agregarPedido = () => {
+    router.push('/AgregarPedido');
+  };
+
   return (
 
     <div className="grid h-full justify-center border-r-2 border-teal-100" >
       <div className="self-center">
         <div className="w-full mb-3">
-          <button className="self-center w-full">
+          <button onClick={agregarPedido} className="self-center w-full">
             <svg className="fill-stroke w-full" width="32" height="37" viewBox="0 0 32 37" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M13.25 5.79167L4.5 5.79167C2.567 5.79167 1 7.54522 1 9.70834L1 31.25C1 33.4131 2.567 35.1667 4.5 35.1667L23.75 35.1667C25.683 35.1667 27.25 33.4131 27.25 31.25L27.25 21.4583M24.7751 3.02217C26.142 1.49261 28.358 1.49261 29.7249 3.02217C31.0917 4.55172 31.0917 7.03161 29.7249 8.56117L14.6997 25.375H9.75L9.75 19.836L24.7751 3.02217Z" stroke="#545F71" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
