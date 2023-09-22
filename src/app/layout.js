@@ -14,10 +14,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="bg-slate-50">
+      <body className="bg-slate-50 h-full">
         <main className={roboto.className}>
           <Provider>
-            <Header className="w-full" />
+            <Header />
             {children}
           </Provider>
         </main>
