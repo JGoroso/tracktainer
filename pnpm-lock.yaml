@@ -29,6 +29,9 @@ dependencies:
   react-dom:
     specifier: 18.2.0
     version: 18.2.0(react@18.2.0)
+  react-hook-form:
+    specifier: ^6.11.1
+    version: 6.11.1(react@18.2.0)
   tailwindcss:
     specifier: 3.3.3
     version: 3.3.3
@@ -2374,6 +2377,14 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
+
+  /react-hook-form@6.11.1(react@18.2.0):
+    resolution: {integrity: sha512-qftXiF1kY4KsoTjhaf44jijZPC9j1wff2BpJXGZFU2vtT3o1OXl1WeYAACr9b9tN159M42JKBHVR+kdrp5AL3A==}
+    peerDependencies:
+      react: ^16.8.0 || ^17
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-is@16.13.1:
