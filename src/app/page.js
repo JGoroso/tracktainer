@@ -1,6 +1,6 @@
 "use client"
-import GoogleMapView from "./components/GoogleMapView";
-import NavBar from "./components/Navbar";
+import GoogleMapView from "./components/googleMapView";
+import NavBar from "./components/navbar";
 
 export default function Home() {
   return (
