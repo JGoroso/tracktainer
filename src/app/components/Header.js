@@ -2,17 +2,12 @@
 import Image from 'next/image'
 import React from 'react'
 import { useSession } from "next-auth/react"
-import { useRouter } from 'next/navigation'
 
 function Header() {
-  const router = useRouter();
-  const goHome = () => {
-    router.push('/');
-  };
   const { data: session } = useSession()
   return (
     <div className="grid grid-cols-2 h-12 w-full">
-      <button onClick={goHome}>
+      <button>
         <div className="flex items-center" >
           <Image
             alt=""
