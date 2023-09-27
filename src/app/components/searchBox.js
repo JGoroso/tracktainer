@@ -6,8 +6,6 @@ const libraries = ["places"]
 
 export default function Searchbox({ onSelectAddress, defaultValue }) {
 
-
-  // Ver pa q sirve ese bloque de codigo
   const { isLoaded, loadError } = useGoogleMapsScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY ?? "",
     libraries
