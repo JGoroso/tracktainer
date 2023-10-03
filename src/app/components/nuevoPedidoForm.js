@@ -1,8 +1,8 @@
 import { useState, useEffect, ChangeEvent } from 'react'
 import { useForm } from 'react-hook-form'
-import Searchbox from './searchBox.js'
+import Searchbox from './SearchBox.js'
 import { collection, addDoc } from "firebase/firestore"
-import app from '../firebase/firebase.js'
+import app from '../Firebase/Firebase.js'
 import { getFirestore } from "firebase/firestore";
 
 const db = getFirestore(app)
@@ -22,19 +22,24 @@ function NuevoPedidoForm() {
     register({ name: "longitude" }, { required: true, min: -180, max: 180 })
   }, [register])
 
-
   const cliente = "joel"
   const address = watch("address")
   const lat = watch("latitude")
   const lng = watch("longitude")
+  // todo: crear ticket para ver el manejo de fechas desde el formulario a firestore y luego de firestore al map.
+  const fechaPedido = "27/09/2023"
+  // el estado se guardaria como pendiente 
+  const estado = "pendiente"
 
-  const guardarInformacionDeUbicacion = async (cliente, address, lat, lng) => {
+  const guardarInformacionDeUbicacion = async (cliente, address, lat, lng, estado, fechaPedido) => {
     try {
       const docRef = await addDoc(collection(db, "pedidos"), {
         cliente: cliente,
+        direccion: address,
+        estado: estado,
+        fechaPedido: fechaPedido,
         lat: lat,
         lng: lng,
-        ubicacion: address,
       })
       console.log("Document written with ID: ", docRef.id)
     } catch (e) {
@@ -48,10 +53,9 @@ function NuevoPedidoForm() {
 
   const onSubmit = (data) => {
     setSubmitting(true)
-    guardarInformacionDeUbicacion(cliente, address, lat, lng);
+    guardarInformacionDeUbicacion(cliente, address, lat, lng, estado, fechaPedido);
     handleCreate(data)
   }
-
 
 
   return (
