@@ -4,33 +4,50 @@ import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption 
 
 const libraries = ["places"]
 
-export default function Searchbox({ onSelectAddress, defaultValue }) {
+export default function Searchbox({ onSelectAddress }) {
+
+  // se hace la carga de "places" a través de useGoogleMapsScript ya que es necesario para utilizar use-places-autocomplete
 
   const { isLoaded, loadError } = useGoogleMapsScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY ?? "",
     libraries
   })
 
+  // verificamos errores que pueda provocar el hook useGoogleMapsScript
   if (!isLoaded) return null;
-  if (loadError) return <div>Error loading</div>
+  if (loadError) return <div>Error loading useGoogleMapsCript</div>
 
-  // hasta aca
   return (
     <ReadySearchBox
       onSelectAddress={onSelectAddress}
-      defaultValue={defaultValue}
     />
   )
 }
 
-function ReadySearchBox({ onSelectAddress, defaultValue }) {
+function ReadySearchBox({ onSelectAddress }) {
+
+  const cba = { lat: -31.408, lng: -64.192 }
+  // Create a bounding box with sides ~10km away from the center point
+  const defaultBounds = {
+    north: cba.lat + 0.1,
+    south: cba.lat - 0.1,
+    east: cba.lng + 0.1,
+    west: cba.lng - 0.1,
+  }
+
   const {
     ready,
     value,
     setValue,
     suggestions: { status, data },
     clearSuggestions
-  } = usePlacesAutoComplete({ debounce: 300, defaultValue })
+  } = usePlacesAutoComplete({
+    debounce: 300,
+    requestOptions: {
+      bounds: defaultBounds,
+      componentRestrictions: { country: "ar" }
+    }
+  })
 
   const handleChange = (e) => {
     setValue(e.target.value)
