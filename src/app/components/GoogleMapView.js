@@ -60,7 +60,7 @@ function GoogleMapView() {
               <div class='break-inside relative overflow-hidden flex flex-col justify-between space-y-3 text-sm rounded-xl max-w-[23rem] p-4 mb-2 bg-white text-slate-700'>
                 <div class='flex items-center justify-between font-medium'>
                   <span class='uppercase text-xs text-green-500'>Estado pedido</span>
-                  <span class='text-xs text-slate-500'>Betania</span>
+                  <span class='text-xs text-slate-500'>{selected.cliente}</span>
                 </div>
                 <div class='flex flex-row items-center space-x-3'>
                   <div class='flex flex-none items-center justify-center w-10 h-10 rounded-full text-white'>
