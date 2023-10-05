@@ -1,7 +1,7 @@
 import { GoogleMap, Marker } from '@react-google-maps/api'
 import { LoadScript } from '@react-google-maps/api'
 import { collection, getDocs, getFirestore } from "firebase/firestore";
-import app from '../Firebase/Firebase';
+import app from '../firebase/firebase';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { InfoWindow } from '@react-google-maps/api';
@@ -37,13 +37,13 @@ function GoogleMapView() {
     height: '92vh'
   }
 
-  const cordinate = { lat: -50.345, lng: -72.270 }
+  const cbaLatLng = { lat: -31.408, lng: -64.192 }
 
   return (
     <div>
 
       <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY} mapIds={['ffac895524fa317e']}>
-        <GoogleMap mapContainerStyle={containerStyle} center={cordinate} zoom={15} options={{ mapId: 'ffac895524fa317e' }}>
+        <GoogleMap mapContainerStyle={containerStyle} center={cbaLatLng} zoom={13} options={{ mapId: 'ffac895524fa317e' }}>
           {markers.map((marker) =>
             <Marker
               key={marker.id}
@@ -60,7 +60,7 @@ function GoogleMapView() {
               <div class='break-inside relative overflow-hidden flex flex-col justify-between space-y-3 text-sm rounded-xl max-w-[23rem] p-4 mb-2 bg-white text-slate-700'>
                 <div class='flex items-center justify-between font-medium'>
                   <span class='uppercase text-xs text-green-500'>Estado pedido</span>
-                  <span class='text-xs text-slate-500'>Betania</span>
+                  <span class='text-xs text-slate-500'>{selected.cliente}</span>
                 </div>
                 <div class='flex flex-row items-center space-x-3'>
                   <div class='flex flex-none items-center justify-center w-10 h-10 rounded-full text-white'>

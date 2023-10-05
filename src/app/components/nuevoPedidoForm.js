@@ -1,8 +1,8 @@
 import { useState, useEffect, ChangeEvent } from 'react'
 import { useForm } from 'react-hook-form'
-import Searchbox from './SearchBox.js'
+import Searchbox from './searchBox.js'
 import { collection, addDoc } from "firebase/firestore"
-import app from '../Firebase/Firebase.js'
+import app from '../firebase/firebase.js'
 import { getFirestore } from "firebase/firestore";
 
 const db = getFirestore(app)
@@ -22,7 +22,7 @@ function NuevoPedidoForm() {
     register({ name: "longitude" }, { required: true, min: -180, max: 180 })
   }, [register])
 
-  const cliente = "joel"
+  const cliente = watch("nombre_cliente")
   const address = watch("address")
   const lat = watch("latitude")
   const lng = watch("longitude")
@@ -66,7 +66,7 @@ function NuevoPedidoForm() {
           setValue("address", address)
           setValue("latitude", latitude)
           setValue("longitude", longitude)
-        }} defautlValue="" />}
+        }} />}
         {errors.address && <p>{errors.address.message}</p>}
       </div>
       <h2>{address}</h2>

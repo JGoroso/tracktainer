@@ -10,7 +10,7 @@ function NavBar() {
 
   return (
 
-    <div className="grid h-full justify-center border-r-2 border-teal-100" >
+    <div className="grid h-full justify-center border-r-2" >
       <div className="self-center">
         <div className="w-full mb-3">
           <button onClick={agregarPedido} className="self-center w-full">
