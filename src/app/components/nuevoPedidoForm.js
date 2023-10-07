@@ -1,9 +1,8 @@
-import { useState, useEffect, ChangeEvent } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import Searchbox from './searchBox.js'
-import { collection, addDoc } from "firebase/firestore"
+import { collection, addDoc, getFirestore } from "firebase/firestore"
 import app from '../firebase/firebase.js'
-import { getFirestore } from "firebase/firestore";
 
 const db = getFirestore(app)
 
