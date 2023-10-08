@@ -1,11 +1,8 @@
-import { GoogleMap, Marker } from '@react-google-maps/api'
-import { LoadScript } from '@react-google-maps/api'
-import { collection, getDocs, getFirestore } from "firebase/firestore";
-import app from '../firebase/firebase';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { InfoWindow } from '@react-google-maps/api';
-import { Image } from 'next/image'
+import { GoogleMap, Marker, LoadScript } from '@react-google-maps/api'
+import { collection, doc, getDocs, getFirestore, updateDoc } from "firebase/firestore"
+import app from '../firebase/firebase'
+import { InfoWindow } from '@react-google-maps/api'
+import { useRef, useMemo, useEffect, useState } from 'react'
 
 // se repite en dos oportunidades, refactor.
 const db = getFirestore(app)
@@ -13,7 +10,21 @@ const db = getFirestore(app)
 function GoogleMapView() {
 
   const [markers, setMarkers] = useState([])
+  const [markerId, setMarkerId] = useState('')
   const [selected, setSelected] = useState(null)
+
+  const center = useMemo(
+    () => ({ lat: -31.408, lng: -64.192 }),
+    []
+  )
+
+  const handleCompleteOnClick = async () => {
+    const docId = markerId
+    // Actualiza el campo Estado a Completado en Firestore
+    await updateDoc(doc(db, "pedidos", docId), {
+      estado: 'completado'
+    })
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,7 +32,10 @@ function GoogleMapView() {
         const querySnapshot = await getDocs(collection(db, 'pedidos'));
         const newData = [];
         querySnapshot.forEach((doc) => {
-          newData.push(doc.data());
+          newData.push({
+            id: doc.id,
+            data: doc.data()
+          });
         });
         setMarkers(newData);
       } catch (error) {
@@ -30,68 +44,79 @@ function GoogleMapView() {
     };
 
     fetchData();
-  }, []);
+  }, [handleCompleteOnClick]);
+
+
 
   const containerStyle = {
     width: '100%',
     height: '92vh'
   }
 
-  const cbaLatLng = { lat: -31.408, lng: -64.192 }
-
   return (
     <div>
 
-      <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY} mapIds={['ffac895524fa317e']}>
-        <GoogleMap mapContainerStyle={containerStyle} center={cbaLatLng} zoom={13} options={{ mapId: 'ffac895524fa317e' }}>
+      <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY} >
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={center}
+          zoom={13}
+          options={{
+            mapId: 'ffac895524fa317e', disableDefaultUI: true,
+            clickableIcons: false
+          }}
+        >
+
           {markers.map((marker) =>
-            <Marker
-              key={marker.id}
-              position={{ lat: marker.lat, lng: marker.lng }}
-              icon={{ url: "/container.png" }}
-              onClick={() => { setSelected(marker) }}
-            />)}
+            marker.data['estado'] == "pendiente" ?
+              <Marker
+                key={marker.id}
+                position={{ lat: marker.data.lat, lng: marker.data.lng }}
+                icon={{ url: "/container.png" }}
+                onClick={() => { setSelected(marker.data); setMarkerId(marker.id) }}
+              /> : null)}
 
           {selected ?
-            <InfoWindow
-              position={{ lat: selected.lat, lng: selected.lng }}
-              onCloseClick={() => { setSelected(null) }}
-            >
-              <div class='break-inside relative overflow-hidden flex flex-col justify-between space-y-3 text-sm rounded-xl max-w-[23rem] p-4 mb-2 bg-white text-slate-700'>
-                <div class='flex items-center justify-between font-medium'>
-                  <span class='uppercase text-xs text-green-500'>Estado pedido</span>
-                  <span class='text-xs text-slate-500'>{selected.cliente}</span>
-                </div>
-                <div class='flex flex-row items-center space-x-3'>
-                  <div class='flex flex-none items-center justify-center w-10 h-10 rounded-full text-white'>
-                    <svg width="32" height="32" viewBox="0 0 16 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="8" cy="10.4177" r="7" stroke="#D9D9D9" stroke-width="2" />
-                      <circle cx="8" cy="10.4177" r="2" fill="#4CAF50" />
-                    </svg>
+            <div className="max-h-96">
+              <InfoWindow
+                position={{ lat: selected.lat, lng: selected.lng }}
+                onCloseClick={() => { setSelected(null) }}
+              >
+                <div className='break-inside relative overflow-hidden flex flex-col justify-between space-y-3 text-sm rounded-xl max-w-[23rem] p-4 mb-2 bg-white text-slate-700'>
+                  <div className='flex items-center justify-between font-medium'>
+                    <span className='uppercase text-xs text-green-500'>{selected.estado}</span>
+                    <span className='text-xs text-slate-500'>{selected.cliente}</span>
                   </div>
-                  <span class='text-base font-medium'>{selected.direccion}</span>
-                </div>
-                <div>Chofer: Matias</div>
-                <div>Fecha de entrega: {selected.fechaPedido}</div>
-                <div>Fecha de retiro: {selected.fechaPedido}</div>
-                <div class='flex justify-between items-center'>
-                  <button class='flex items-center justify-center text-xs font-medium rounded-full px-4 py-1 space-x-1 border-2 bg-red-500 hover:text-black text-white'>
-                    <span>Eliminar contenedor</span>
-                    <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
-                      <path d='M5 12h13M12 5l7 7-7 7' />
-                    </svg>
-                  </button>
-                </div>
-                <div class='flex justify-between items-center'>
-                  <button class='flex items-center justify-center text-xs font-medium rounded-full px-4 py-1 space-x-1 border-2 bg-slate-500  hover:text-black text-white'>
-                    <span>Cerrar</span>
-                    {/* <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
+                  <div className='flex flex-row items-center space-x-3'>
+                    <div className='flex flex-none items-center justify-center w-10 h-10 rounded-full text-white'>
+                      <svg width="32" height="32" viewBox="0 0 16 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="8" cy="10.4177" r="7" stroke="#D9D9D9" strokeWidth="2" />
+                        <circle cx="8" cy="10.4177" r="2" fill="#4CAF50" />
+                      </svg>
+                    </div>
+                    <span className='text-base font-medium'>{selected.direccion}</span>
+                  </div>
+                  <div>Chofer: Matias</div>
+                  <div>Fecha de entrega: {selected.fechaPedido}</div>
+                  <div>Fecha de retiro: {selected.fechaPedido}</div>
+                  <div className='flex justify-between items-center'>
+                    <button onClick={() => { handleCompleteOnClick() }} className='flex items-center justify-center text-xs font-medium rounded-full px-4 py-1 space-x-1 border-2 bg-red-500 hover:text-black text-white'>
+                      <span>Eliminar contenedor</span>
+                      <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
+                        <path d='M5 12h13M12 5l7 7-7 7' />
+                      </svg>
+                    </button>
+                  </div>
+                  <div className='flex justify-between items-center'>
+                    <button onClick={InfoWindow} className='flex items-center justify-center text-xs font-medium rounded-full px-4 py-1 space-x-1 border-2 bg-slate-500  hover:text-black text-white'>
+                      <span>Cerrar</span>
+                      {/* <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
                       <path d='M5 12h13M12 5l7 7-7 7' />
                     </svg> */}
-                  </button>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </InfoWindow>
+              </InfoWindow></div>
             : null}
         </GoogleMap>
       </LoadScript>
