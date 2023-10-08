@@ -39,9 +39,9 @@ function GoogleMapView() {
   return (
 
     <GoogleMap mapContainerStyle={containerStyle} center={cbaLatLng} zoom={13} options={{ mapId: 'ffac895524fa317e' }}>
-      {markers.map((marker, index) =>
+      {markers.map((marker) =>
         <Marker
-          key={index++}
+          key={marker}
           position={{ lat: marker.lat, lng: marker.lng }}
           icon={{ url: "/container.png" }}
           onClick={() => { setSelected(marker) }}
