@@ -5,8 +5,8 @@ function NavBar() {
   const router = useRouter();
 
   const agregarPedido = () => {
-    router.push('/Agregarpedidos');
-  };
+    router.push('/Agregarpedidos')
+  }
 
   return (
 
