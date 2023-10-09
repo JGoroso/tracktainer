@@ -1,22 +1,7 @@
-import { useGoogleMapsScript } from 'use-google-maps-script'
 import usePlacesAutoComplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from "@reach/combobox"
 
-const libraries = ["places"]
-
 export default function Searchbox({ onSelectAddress }) {
-
-  // se hace la carga de "places" a través de useGoogleMapsScript ya que es necesario para utilizar use-places-autocomplete
-
-  const { isLoaded, loadError } = useGoogleMapsScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY ?? "",
-    libraries
-  })
-
-  // verificamos errores que pueda provocar el hook useGoogleMapsScript
-  if (!isLoaded) return null;
-  if (loadError) return <div>Error loading useGoogleMapsCript</div>
-
   return (
     <ReadySearchBox
       onSelectAddress={onSelectAddress}

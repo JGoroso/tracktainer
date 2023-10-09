@@ -1,14 +1,14 @@
-import { GoogleMap, Marker, LoadScript } from '@react-google-maps/api'
-import { collection, doc, getDocs, getFirestore, updateDoc } from "firebase/firestore"
+import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api'
+import { collection, getDocs, getFirestore } from "firebase/firestore";
 import app from '../firebase/firebase'
-import { InfoWindow } from '@react-google-maps/api'
-import { useRef, useMemo, useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useEffect } from 'react'
+
 
 // se repite en dos oportunidades, refactor.
 const db = getFirestore(app)
 
 function GoogleMapView() {
-
   const [markers, setMarkers] = useState([])
   const [markerId, setMarkerId] = useState('')
   const [selected, setSelected] = useState(null)
@@ -54,7 +54,6 @@ function GoogleMapView() {
   }
 
   return (
-    <div>
 
       <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY} >
         <GoogleMap

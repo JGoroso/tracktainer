@@ -14,6 +14,7 @@ function Header() {
             width={40}
             height={40}
             src="/logo.png"
+            priority
           />
           <div className="text-base left text-black">
             TrackTainer
