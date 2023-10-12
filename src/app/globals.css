@@ -11,3 +11,16 @@ html, body {
   margin: 0;
   padding: 0;
 }
+
+.alert-box {
+  /* Estilos de la caja de alerta */
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.animate {
+  /* Anima la entrada */
+  opacity: 1;
+  transform: translateY(0);
+}
