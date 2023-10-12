@@ -7,6 +7,9 @@ function NavBar() {
   const agregarPedido = () => {
     router.push('/Agregarpedidos')
   }
+  const pedidos = () => {
+    router.push('/Pedidos')
+  }
 
   return (
 
@@ -21,7 +24,7 @@ function NavBar() {
           </button>
         </div>
         <div className="w-full mb-3">
-          <button className="self-center w-full">
+          <button onClick={pedidos} className="self-center w-full">
             <svg className="fill-stroke w-full" width="46" height="48" viewBox="0 0 46 48" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M17.25 10L13.4166 10C11.2996 10 9.58331 11.7909 9.58331 14L9.58331 38C9.58331 40.2091 11.2996 42 13.4166 42L32.5833 42C34.7004 42 36.4166 40.2091 36.4166 38L36.4166 14C36.4166 11.7909 34.7004 10 32.5833 10H28.75M17.25 10C17.25 12.2091 18.9662 14 21.0833 14L24.9166 14C27.0337 14 28.75 12.2091 28.75 10M17.25 10C17.25 7.79086 18.9662 6 21.0833 6L24.9166 6C27.0337 6 28.75 7.79086 28.75 10M23 24L28.75 24M23 32L28.75 32M17.25 24H17.2691M17.25 32H17.2691" stroke="#545F71" strokeWidth="2" strokeLinecap="round" />
             </svg>
