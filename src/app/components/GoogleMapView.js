@@ -81,7 +81,8 @@ function GoogleMapView() {
         zoom={13}
         options={{
           mapId: 'ffac895524fa317e', disableDefaultUI: true,
-          clickableIcons: false
+          clickableIcons: false,
+          gestureHandling: "greedy"
         }}
       >
 
@@ -119,21 +120,25 @@ function GoogleMapView() {
                 <div>Chofer: {selected.chofer}</div>
                 <div>Fecha de entrega: {selected.fechaPedido}</div>
                 <div>Fecha de retiro: {selected.fechaPedido}</div>
-                <div className='flex justify-between items-center'>
-                  <button onClick={() => { selected['estado'] == "entregado" ? handleCompleteOnClick() : `'${console.log("No se puede eliminar un contenedor en estado pendiente")}'` }} className='flex items-center justify-center text-xs font-medium rounded-full px-4 py-1 space-x-1 border-2 bg-red-500 hover:text-black text-white'>
-                    <span>Eliminar contenedor</span>
-                    <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
-                      <path d='M5 12h13M12 5l7 7-7 7' />
-                    </svg>
-                  </button>
-                </div>
-                <div className='flex justify-between items-center'>
-                  <button onClick={() => { setSelected(null) }} className='flex items-center justify-center text-xs font-medium rounded-full px-4 py-1 space-x-1 border-2 bg-slate-500  hover:text-black text-white'>
-                    <span>Cerrar</span>
-                    {/* <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
-                      <path d='M5 12h13M12 5l7 7-7 7' />
-                    </svg> */}
-                  </button>
+                <div className='flex flex-wrap items-center justify-between font-medium'>
+                  <div className='flex justify-between items-center'>
+                    <button onClick={() => { selected['estado'] == "entregado" ? handleCompleteOnClick() : `'${console.log("No se puede eliminar un contenedor en estado pendiente")}'` }}
+                      className="flex w-full px-5 py-2 items-center justify-center  text-sm text-gray-700 transition-colors duration-200 bg-green-400 border rounded-lg gap-x-2 sm:w-auto ray-800 0 hover:bg-gray-100 200 y-700">
+                      <span>Pedido completado</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </button>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <button onClick={() => { setSelected(null) }}
+                      className="flex w-full px-5 py-2 items-center justify-center  text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 ray-800 0 hover:bg-gray-100 200 y-700">
+                      <span>Cerrar</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
             </InfoWindow></div>
