@@ -1,0 +1,77 @@
+import Image from 'next/image'
+import React from 'react'
+
+function UpdateForm({ closeModal }) {
+  return (
+    <div>
+      <div className="py-12 bg-gray-700 transition duration-150 ease-in-out z-10 absolute top-0 right-0 bottom-0 left-0" id="modal" >
+        <div role="alert" className="container mx-auto w-11/12 md:w-2/3 max-w-lg">
+          <div className="relative py-8 px-5 md:px-10 bg-white shadow-md rounded border border-gray-400">
+            <div className="w-full flex justify-start text-gray-600 mb-3">
+              <Image
+                alt=""
+                width={40}
+                height={40}
+                src="/waste-bin.png"
+                priority
+              />
+            </div>
+            <h1 className="text-gray-800 font-lg font-bold tracking-normal leading-tight mb-4">Actualicemos el contenedor</h1>
+            <label for="name" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Nombre del Chofer</label>
+            <input id="name" className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" placeholder="James" />
+
+            <label for="name" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Id del Contenedor</label>
+            <input id="name" className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" placeholder="Id Contenedor" />
+
+            <label for="name" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Estado del pedido</label>
+            <div className="mt-2">
+              <select id="estados" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                <option selected>Seleccione un estado</option>
+                <option value="0">Pendiente</option>
+                <option value="1">Entregado</option>
+                <option value="2">Completado</option>
+              </select>
+            </div>
+            <button className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:outline-none focus:ring-gray-600" onClick={closeModal} aria-label="close modal" role="button">
+              <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-x" width="20" height="20" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" />
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+            <div className="flex items-center mt-4 gap-x-3">
+
+              <button className="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 lue-500 0">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+
+                <span>Actualizar Pedido</span>
+              </button>
+
+
+              <button onClick={closeModal} className="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto ray-800 0 hover:bg-gray-100 200 y-700">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clipPath="url(#clip0_3098_154395)">
+                    <path d="M13.3333 13.3332L9.99997 9.9999M9.99997 9.9999L6.66663 13.3332M9.99997 9.9999V17.4999M16.9916 15.3249C17.8044 14.8818 18.4465 14.1806 18.8165 13.3321C19.1866 12.4835 19.2635 11.5359 19.0351 10.6388C18.8068 9.7417 18.2862 8.94616 17.5555 8.37778C16.8248 7.80939 15.9257 7.50052 15 7.4999H13.95C13.6977 6.52427 13.2276 5.61852 12.5749 4.85073C11.9222 4.08295 11.104 3.47311 10.1817 3.06708C9.25943 2.66104 8.25709 2.46937 7.25006 2.50647C6.24304 2.54358 5.25752 2.80849 4.36761 3.28129C3.47771 3.7541 2.70656 4.42249 2.11215 5.23622C1.51774 6.04996 1.11554 6.98785 0.935783 7.9794C0.756025 8.97095 0.803388 9.99035 1.07431 10.961C1.34523 11.9316 1.83267 12.8281 2.49997 13.5832" stroke="currentColor" strokeWidth="1.67" strokeLinecap="round" strokeLinejoin="round" />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_3098_154395">
+                      <rect width="20" height="20" fill="white" />
+                    </clipPath>
+                  </defs>
+                </svg>
+
+                <span>Volver a pedidos</span>
+              </button>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default UpdateForm
