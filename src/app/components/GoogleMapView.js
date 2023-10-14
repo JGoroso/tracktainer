@@ -116,7 +116,7 @@ function GoogleMapView() {
                   </div>
                   <span className='text-base font-medium'>{selected.direccion}</span>
                 </div>
-                <div>Chofer: Matias</div>
+                <div>Chofer: {selected.chofer}</div>
                 <div>Fecha de entrega: {selected.fechaPedido}</div>
                 <div>Fecha de retiro: {selected.fechaPedido}</div>
                 <div className='flex justify-between items-center'>

@@ -1,9 +1,23 @@
 import Image from 'next/image'
 import React from 'react'
+import { useForm } from 'react-hook-form'
+import { updateContainer } from '../firebase/firestore/firestore'
 
-function UpdateForm({ closeModal }) {
+
+function UpdateForm({ closeModal, elementId, actualEstado, refresh }) {
+  const { register, handleSubmit, watch, errors } = useForm({ defautlValues: {} })
+  const chofer = watch("chofer")
+  const idContenedor = watch("idContainer")
+  const estado = watch("estados")
+
+  const onSubmit = () => {
+    updateContainer(elementId, chofer, idContenedor, estado)
+    closeModal()
+    refresh()
+  }
+
   return (
-    <div>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="py-12 bg-gray-700 transition duration-150 ease-in-out z-10 absolute top-0 right-0 bottom-0 left-0" id="modal" >
         <div role="alert" className="container mx-auto w-11/12 md:w-2/3 max-w-lg">
           <div className="relative py-8 px-5 md:px-10 bg-white shadow-md rounded border border-gray-400">
@@ -17,20 +31,47 @@ function UpdateForm({ closeModal }) {
               />
             </div>
             <h1 className="text-gray-800 font-lg font-bold tracking-normal leading-tight mb-4">Actualicemos el contenedor</h1>
-            <label for="name" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Nombre del Chofer</label>
-            <input id="name" className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" placeholder="James" />
 
-            <label for="name" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Id del Contenedor</label>
-            <input id="name" className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" placeholder="Id Contenedor" />
-
-            <label for="name" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Estado del pedido</label>
+            <label htmlFor="chofer" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Nombre del Chofer</label>
+            <input id="chofer" name="chofer" className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" placeholder="James"
+              ref={register({
+                required: "Por favor ingrese el nombre del chofer",
+                validate: (chofer) => {
+                  if (chofer.length == 1 || chofer == "") {
+                    return "El nombre es muy corto"
+                  }
+                }
+              })} />
+            {errors.chofer && <p>{errors.chofer.message}</p>}
+            <label htmlFor="idContainer" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Id del Contenedor</label>
+            <input id="idContainer" name="idContainer" className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" placeholder="Id Contenedor"
+              ref={register({
+                required: "Por favor ingrese el id del contenedor",
+                validate: (idContainer) => {
+                  if (idContainer.length == 1) {
+                    return "El id del contenedor es muy corto"
+                  }
+                }
+              })} />
+            {errors.idContainer && <p>{errors.idContainer.message}</p>}
+            <label htmlFor="estados" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Estado del pedido</label>
             <div className="mt-2">
-              <select id="estados" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                <option selected>Seleccione un estado</option>
-                <option value="0">Pendiente</option>
-                <option value="1">Entregado</option>
-                <option value="2">Completado</option>
+              <select id="estados" name="estados" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                ref={register({
+                  required: "Campo requerido",
+                  validate: (estados) => {
+                    if (estados == actualEstado) {
+                      return "El estado elegido es el que se encuentra en este contenedor"
+                    }
+                  }
+                })}
+              >
+
+                <option value="pendiente">Pendiente</option>
+                <option value="entregado">Entregado</option>
+                <option value="completado">Completado</option>
               </select>
+              {errors.estados && <p>{errors.estados.message}</p>}
             </div>
             <button className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:outline-none focus:ring-gray-600" onClick={closeModal} aria-label="close modal" role="button">
               <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-x" width="20" height="20" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
@@ -41,7 +82,7 @@ function UpdateForm({ closeModal }) {
             </button>
             <div className="flex items-center mt-4 gap-x-3">
 
-              <button className="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 lue-500 0">
+              <button type="submit" className="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 lue-500 0">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -61,16 +102,13 @@ function UpdateForm({ closeModal }) {
                     </clipPath>
                   </defs>
                 </svg>
-
                 <span>Volver a pedidos</span>
               </button>
-
-
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </form>
   )
 }
 
