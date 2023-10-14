@@ -1,35 +1,30 @@
-import { useRouter } from 'next/navigation';
+
+import Link from 'next/link'
 import React from 'react'
 
 function NavBar() {
-  const router = useRouter();
-
-  const agregarPedido = () => {
-    router.push('/Agregarpedidos')
-  }
-  const pedidos = () => {
-    router.push('/Pedidos')
-  }
-
   return (
-
     <div className="grid h-full justify-center border-r-2" >
       <div className="self-center">
         <div className="w-full mb-3">
-          <button onClick={agregarPedido} className="self-center w-full">
-            <svg className="fill-stroke w-full" width="32" height="37" viewBox="0 0 32 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M13.25 5.79167L4.5 5.79167C2.567 5.79167 1 7.54522 1 9.70834L1 31.25C1 33.4131 2.567 35.1667 4.5 35.1667L23.75 35.1667C25.683 35.1667 27.25 33.4131 27.25 31.25L27.25 21.4583M24.7751 3.02217C26.142 1.49261 28.358 1.49261 29.7249 3.02217C31.0917 4.55172 31.0917 7.03161 29.7249 8.56117L14.6997 25.375H9.75L9.75 19.836L24.7751 3.02217Z" stroke="#545F71" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <p className="w-full text-base text-[#545F71]">Agregar pedido</p>
-          </button>
+          <Link href={"/Agregarpedidos"}>
+            <button className="self-center w-full">
+              <svg className="fill-stroke w-full" width="32" height="37" viewBox="0 0 32 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.25 5.79167L4.5 5.79167C2.567 5.79167 1 7.54522 1 9.70834L1 31.25C1 33.4131 2.567 35.1667 4.5 35.1667L23.75 35.1667C25.683 35.1667 27.25 33.4131 27.25 31.25L27.25 21.4583M24.7751 3.02217C26.142 1.49261 28.358 1.49261 29.7249 3.02217C31.0917 4.55172 31.0917 7.03161 29.7249 8.56117L14.6997 25.375H9.75L9.75 19.836L24.7751 3.02217Z" stroke="#545F71" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <p className="w-full text-base text-[#545F71]">Agregar pedido</p>
+            </button>
+          </Link>
         </div>
         <div className="w-full mb-3">
-          <button onClick={pedidos} className="self-center w-full">
-            <svg className="fill-stroke w-full" width="46" height="48" viewBox="0 0 46 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M17.25 10L13.4166 10C11.2996 10 9.58331 11.7909 9.58331 14L9.58331 38C9.58331 40.2091 11.2996 42 13.4166 42L32.5833 42C34.7004 42 36.4166 40.2091 36.4166 38L36.4166 14C36.4166 11.7909 34.7004 10 32.5833 10H28.75M17.25 10C17.25 12.2091 18.9662 14 21.0833 14L24.9166 14C27.0337 14 28.75 12.2091 28.75 10M17.25 10C17.25 7.79086 18.9662 6 21.0833 6L24.9166 6C27.0337 6 28.75 7.79086 28.75 10M23 24L28.75 24M23 32L28.75 32M17.25 24H17.2691M17.25 32H17.2691" stroke="#545F71" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-            <p className="w-full text-base text-[#545F71]">Pedidos</p>
-          </button>
+          <Link href={"/Pedidos"}>
+            <button className="self-center w-full">
+              <svg className="fill-stroke w-full" width="46" height="48" viewBox="0 0 46 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.25 10L13.4166 10C11.2996 10 9.58331 11.7909 9.58331 14L9.58331 38C9.58331 40.2091 11.2996 42 13.4166 42L32.5833 42C34.7004 42 36.4166 40.2091 36.4166 38L36.4166 14C36.4166 11.7909 34.7004 10 32.5833 10H28.75M17.25 10C17.25 12.2091 18.9662 14 21.0833 14L24.9166 14C27.0337 14 28.75 12.2091 28.75 10M17.25 10C17.25 7.79086 18.9662 6 21.0833 6L24.9166 6C27.0337 6 28.75 7.79086 28.75 10M23 24L28.75 24M23 32L28.75 32M17.25 24H17.2691M17.25 32H17.2691" stroke="#545F71" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+              <p className="w-full text-base text-[#545F71]">Pedidos</p>
+            </button>
+          </Link>
         </div>
         <div className="w-full mb-3">
           <button className="self-center w-full">

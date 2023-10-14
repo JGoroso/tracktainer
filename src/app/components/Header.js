@@ -2,25 +2,28 @@
 import Image from 'next/image'
 import React from 'react'
 import { useSession } from "next-auth/react"
+import Link from 'next/link'
 
 function Header() {
   const { data: session } = useSession()
   return (
     <div className="grid grid-cols-2 h-12 w-full">
-      <button>
-        <div className="flex items-center" >
-          <Image
-            alt=""
-            width={40}
-            height={40}
-            src="/logo.png"
-            priority
-          />
-          <div className="text-base left text-black">
-            TrackTainer
+      <Link href={"/"}>
+        <button>
+          <div className="flex items-center" >
+            <Image
+              alt=""
+              width={40}
+              height={40}
+              src="/logo.png"
+              priority
+            />
+            <div className="text-base left text-black">
+              TrackTainer
+            </div>
           </div>
-        </div>
-      </button>
+        </button>
+      </Link>
       <div className="flex justify-end mr-1">
         {session?.user ? <Image src={session.user.image}
           alt="user"
