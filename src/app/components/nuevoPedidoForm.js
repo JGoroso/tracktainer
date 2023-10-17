@@ -46,16 +46,9 @@ function NuevoPedidoForm() {
     }
   };
 
-
-
-  const handleCreate = async (data) => { }
-
-  const onSubmit = (data) => {
-    setSubmitting(true)
+  const onSubmit = () => {
     guardarInformacionDeUbicacion(cliente, address, lat, lng, estado, fechaPedido);
-    handleCreate(data)
   }
-
 
   return (
     <form className="m-40" onSubmit={handleSubmit(onSubmit)}>

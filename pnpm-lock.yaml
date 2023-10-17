@@ -5,6 +5,12 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@headlessui/react':
+    specifier: ^1.7.17
+    version: 1.7.17(react-dom@18.2.0)(react@18.2.0)
+  '@heroicons/react':
+    specifier: ^2.0.18
+    version: 2.0.18(react@18.2.0)
   '@reach/combobox':
     specifier: ^0.18.0
     version: 0.18.0(react-dom@18.2.0)(react@18.2.0)
@@ -33,10 +39,10 @@ dependencies:
     specifier: ^1.0.1
     version: 1.0.1
   react:
-    specifier: 18.2.0
+    specifier: ^18.2.0
     version: 18.2.0
   react-dom:
-    specifier: 18.2.0
+    specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
   react-hook-form:
     specifier: ^6.11.1
@@ -612,6 +618,26 @@ packages:
       long: 5.2.3
       protobufjs: 7.2.5
       yargs: 17.7.2
+    dev: false
+
+  /@headlessui/react@1.7.17(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-4am+tzvkqDSSgiwrsEpGWqgGo9dz8qU5M3znCkC4PgkpY4HcCZzEDEvozltGGGHIKl9jbXbZPSH5TWn4sWJdow==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: ^16 || ^17 || ^18
+      react-dom: ^16 || ^17 || ^18
+    dependencies:
+      client-only: 0.0.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@heroicons/react@2.0.18(react@18.2.0):
+    resolution: {integrity: sha512-7TyMjRrZZMBPa+/5Y8lN0iyvUU/01PeMGX2+RE7cQWpEUIcb4QotzUObFkJDejj/HUH4qjP/eQ0gzzKs2f+6Yw==}
+    peerDependencies:
+      react: '>= 16'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /@humanwhocodes/config-array@0.11.11:

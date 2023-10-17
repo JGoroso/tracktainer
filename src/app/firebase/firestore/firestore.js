@@ -3,6 +3,9 @@ import {
   collection,
   query,
   getFirestore,
+  deleteDoc,
+  doc,
+  updateDoc,
 } from "firebase/firestore"
 import app from "../firebase"
 
@@ -23,4 +26,29 @@ export const getContainers = async () => {
     .catch((error) => {
       console.log(error)
     })
+}
+
+
+export const deleteContainer = async (docId) => {
+  await deleteDoc(doc(db, 'pedidos', docId))
+    .then(() => {
+      console.log('Documento borrado exitosamente');
+    })
+    .catch((error) => {
+      console.error('Error al borrar el documento:', error);
+    });
+}
+
+export const updateContainer = async (docId, chofer, idContenedor, estado) => {
+  await updateDoc(doc(db, "pedidos", docId), {
+    estado: estado,
+    idContenedor: idContenedor,
+    chofer: chofer
+  })
+    .then(() => {
+      console.log('Documento actualizado exitosamente');
+    })
+    .catch((error) => {
+      console.error('Error al borrar el documento:', error);
+    });
 }
