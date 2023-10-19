@@ -19,9 +19,9 @@ function NuevoPedidoForm() {
   const { register, handleSubmit, setValue, formState: { errors } } = useForm({ defautlValues: {} })
 
   useEffect(() => {
-    register({ name: "address" }, { required: "Por favor, ingrese una direccion" })
-    register({ name: "latitude" }, { required: true, min: -90, max: 90 })
-    register({ name: "longitude" }, { required: true, min: -180, max: 180 })
+    register("address", { required: "Por favor, ingrese una direccion" })
+    register("latitude", { required: true, min: -90, max: 90 })
+    register("longitude", { required: true, min: -180, max: 180 })
   }, [register])
 
   // el estado se guardaria como pendiente 
@@ -95,7 +95,8 @@ function NuevoPedidoForm() {
 
         <div className="pt-10" />
         <div className="relative z-0 w-full mb-6 group">
-          <input type="text" id="nombre_cliente" name='nombre_cliente' ref={...register({
+          <input type="text" id="nombre_cliente" {...register(
+            'nombre_cliente', {
             required: "Por favor ingrese el nombre de un cliente",
             validate: (nombre_cliente) => {
               if (nombre_cliente.length < 7) {
@@ -111,8 +112,8 @@ function NuevoPedidoForm() {
 
         <div className="pt-10" />
         <div className="relative z-0 w-full mb-6 group">
-          <input type="text" id="cliente_registrado" name='cliente_registrado' ref={...register({
-            required: "Por favor ingrese el nombre de un cliente registrado",
+          <input type="text" id="cliente_registrado" {...register(
+            'cliente_registrado', {
             validate: (cliente_registrado) => {
               if (cliente_registrado.length < 7) {
                 return "muy corto"
@@ -127,13 +128,12 @@ function NuevoPedidoForm() {
 
         <div className="pt-10" />
         <div className="relative z-0 w-full mb-6 group">
-          <input type="number" id="telefono_cliente" name="telefono_cliente"
-            ref={register(
-              {
-                required: "Ingrese el telefono del cliente por favor", length: 10
-              }
+          <input type="number" id="telefono_cliente"
+            {...register(
+              'telefono_cliente', {
+              required: "Ingrese el telefono del cliente por favor", length: 10
+            }
             )
-
             }
             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="Telefono del Cliente"
           />
@@ -148,23 +148,22 @@ function NuevoPedidoForm() {
 
           <div className="pt-10" />
           <div className="relative z-0 w-full mb-6 group">
-            <input type='date' id="fechaPedido" name="fechaPedido" floating-text="fecha de Entrega"
-              ref={
-                register(
-                  {
-                    required: {
-                      value: true,
+            <input type='date' id="fechaPedido" floating-text="fecha de Entrega"
+              {...register(
+                "fechaPedido", {
+                required: {
+                  value: true,
 
-                    },
-                    validate: (value) => {
-                      const fechaPedido = new Date(value)
-                      if (fechaPedido < defaultFecha) {
-                        return "La fecha debe ser posterior a la fecha actual"
-                      }
+                },
+                validate: (value) => {
+                  const fechaPedido = new Date(value)
+                  if (fechaPedido < defaultFecha) {
+                    return "La fecha debe ser posterior a la fecha actual"
+                  }
 
-                    }
+                }
 
-                  })
+              })
               }
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="Fecha de Entrega"
 

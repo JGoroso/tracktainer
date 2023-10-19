@@ -56,7 +56,7 @@ function ReadySearchBox({ onSelectAddress }) {
 
   return (
     <Combobox onChange={handleSelect}>
-      <Combobox.Input className={"w-full border-2 border-b-stone-800 mt-2"} onChange={handleChange} placeholder='Agregue una direccion' />
+      <Combobox.Input className={"w-full border-2 border-b-stone-800 mt-2"} onChange={handleChange} placeholder='Agregue una direccion 📍' />
       <Combobox.Options>
         {status == "OK" && data.slice(0, 2).map(({ place_id, description }) => <Combobox.Option key={place_id} value={description}>
           {description}
