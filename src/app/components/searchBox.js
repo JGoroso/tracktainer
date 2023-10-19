@@ -1,5 +1,7 @@
+import { Combobox } from '@headlessui/react'
+import { useState } from 'react'
 import usePlacesAutoComplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
-import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from "@reach/combobox"
+
 
 export default function Searchbox({ onSelectAddress }) {
   return (
@@ -21,8 +23,6 @@ function ReadySearchBox({ onSelectAddress }) {
   }
 
   const {
-    ready,
-    value,
     setValue,
     suggestions: { status, data },
     clearSuggestions
@@ -55,22 +55,13 @@ function ReadySearchBox({ onSelectAddress }) {
   }
 
   return (
-    <Combobox onSelect={handleSelect} className={"w-full border-4 border-r-4 mt-2"} >
-      <ComboboxInput
-        id="search"
-        value={value}
-        onChange={handleChange}
-        disabled={!ready}
-        className={"w-full"}
-        placeholder='Buscar una direccion'
-        autoComplete='off'
-      />
-      <ComboboxPopover className="relative bg-slate-200">
-        <ComboboxList>
-          {status == "OK" && data.slice(0, 2).map(({ place_id, description }) =>
-            <ComboboxOption key={place_id} value={description} />)}
-        </ComboboxList>
-      </ComboboxPopover>
-    </Combobox >
+    <Combobox onChange={handleSelect}>
+      <Combobox.Input className={"w-full border-2 border-b-stone-800 mt-2"} onChange={handleChange} placeholder='Agregue una direccion' />
+      <Combobox.Options>
+        {status == "OK" && data.slice(0, 2).map(({ place_id, description }) => <Combobox.Option key={place_id} value={description}>
+          {description}
+        </Combobox.Option>)}
+      </Combobox.Options>
+    </Combobox>
   )
 }
