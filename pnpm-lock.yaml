@@ -39,8 +39,8 @@ dependencies:
     specifier: 18.2.0
     version: 18.2.0(react@18.2.0)
   react-hook-form:
-    specifier: ^6.15.8
-    version: 6.15.8(react@18.2.0)
+    specifier: ^7.0.0
+    version: 7.46.2(react@18.2.0)
   react-map-gl:
     specifier: ^7.1.6
     version: 7.1.6(react-dom@18.2.0)(react@18.2.0)
@@ -3179,10 +3179,11 @@ packages:
       scheduler: 0.23.0
     dev: false
 
-  /react-hook-form@6.15.8(react@18.2.0):
-    resolution: {integrity: sha512-prq82ofMbnRyj5wqDe8hsTRcdR25jQ+B8KtCS7BLCzjFHAwNuCjRwzPuP4eYLsEBjEIeYd6try+pdLdw0kPkpg==}
+  /react-hook-form@7.46.2(react@18.2.0):
+    resolution: {integrity: sha512-x1DWmHQchV7x2Rq9l99M/cQHC8JGchAnw9Z0uTz5KrPa0bTl/Inm1NR7ceOARfIrkNuQNAhuSuZPYa6k7QYn3Q==}
+    engines: {node: '>=12.22.0'}
     peerDependencies:
-      react: ^16.8.0 || ^17
+      react: ^16.8.0 || ^17 || ^18
     dependencies:
       react: 18.2.0
     dev: false
