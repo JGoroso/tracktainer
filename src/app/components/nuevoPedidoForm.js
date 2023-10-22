@@ -5,14 +5,15 @@ import { collection, addDoc } from 'firebase/firestore'
 import app from 'src/app/firebase/firebase.js'
 import { getFirestore } from "firebase/firestore";
 import Link from 'next/link.js'
+import Image from 'next/image.js'
 
 const db = getFirestore(app)
 
 
 function NuevoPedidoForm() {
   const defaultFecha = new Date()
-  // El estado submit se utiliza para controlar si el formulario se está enviando o no.
-  const [submit, setSubmitting] = useState(false)
+  // el estado se guardaria como pendiente 
+  const estadoPendiente = "pendiente"
 
   // useForm es un hook que gestiona el estado de un formulario y se desestructuran diferentes funciones y valores para trabajar con formularios
   // https://www.youtube.com/watch?v=1MxevPIZgVc
@@ -24,16 +25,15 @@ function NuevoPedidoForm() {
     register("longitude", { required: true, min: -180, max: 180 })
   }, [register])
 
-  // el estado se guardaria como pendiente 
-  const estado = "pendiente"
 
-  const guardarInformacionDeUbicacion = async (nombre_cliente, cliente_registrado, address, lat, lng, estado, fechaPedido, telefono_cliente) => {
+
+  const guardarInformacionDeUbicacion = async (nombre_cliente, cliente_registrado, address, lat, lng, estadoPendiente, fechaPedido, telefono_cliente) => {
     try {
       const docRef = await addDoc(collection(db, "pedidos"), {
         nombreCliente: nombre_cliente,
         cliente: cliente_registrado,
         direccion: address,
-        estado: estado,
+        estado: estadoPendiente,
         fechaPedido: fechaPedido,
         lat: lat,
         lng: lng,
@@ -45,14 +45,9 @@ function NuevoPedidoForm() {
     }
   }
 
-
   const onSubmit = (data) => {
-    setSubmitting(true)
-    console.log(data)
-    guardarInformacionDeUbicacion(data.nombre_cliente, data.cliente_registrado, data.address, data.latitude, data.longitude, estado, data.fechaPedido, data.telefono_cliente);
-
+    guardarInformacionDeUbicacion(data.nombre_cliente, data.cliente_registrado, data.address, data.latitude, data.longitude, estadoPendiente, data.fechaPedido, data.telefono_cliente);
   }
-
 
   return (
 
@@ -83,7 +78,17 @@ function NuevoPedidoForm() {
         </div>
       </div>
       <form className="m-40" onSubmit={handleSubmit(onSubmit)}>
-        <h1 className=" text-5xl font-extrabold text-black">Agregar Pedido</h1>
+        <div className="w-full flex justify-start text-gray-600 mb-3">
+          <Image
+            alt=""
+            width={40}
+            height={40}
+            src="/waste-bin.png"
+            priority
+          />
+        </div>
+        <h1 className="text-gray-800 font-bold text-5xl leading-tight mb-4">Agregar Pedidos</h1>
+
         <div className="relative z-0 w-full mb-6 group">
           {<Searchbox onSelectAddress={(address, latitude, longitude) => {
             setValue("address", address)
@@ -93,98 +98,81 @@ function NuevoPedidoForm() {
           {errors.address && <p>{errors.address.message}</p>}
         </div>
 
-        <div className="pt-10" />
-        <div className="relative z-0 w-full mb-6 group">
-          <input type="text" id="nombre_cliente" {...register(
-            'nombre_cliente', {
-            required: "Por favor ingrese el nombre de un cliente",
-            validate: (nombre_cliente) => {
-              if (nombre_cliente.length < 7) {
-                return "Un nombre muy corto"
+        <label htmlFor="recibe" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">¿Quien recibe?</label>
+        <input id="recibe" name="recibe" className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" placeholder="Ingeniero Pedro"
+          {...register("recibe", {
+            required: "Por favor ingrese el nombre de la persona que recibe",
+            validate: (recibe) => {
+              if (recibe.length < 3 || recibe == "") {
+                return "El nombre es muy corto o esta vacio"
               }
             }
-          })}
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="Nombre del Cliente"
-          />
+          })} />
+        {errors.recibe && <p>{errors.recibe.message}</p>}
 
-        </div>
-        {errors.nombre_cliente && <p>{errors.nombre_cliente.message}</p>}
 
-        <div className="pt-10" />
-        <div className="relative z-0 w-full mb-6 group">
-          <input type="text" id="cliente_registrado" {...register(
-            'cliente_registrado', {
-            validate: (cliente_registrado) => {
-              if (cliente_registrado.length < 7) {
-                return "muy corto"
+        <label htmlFor="cliente" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Cliente</label>
+        <input id="cliente" name="cliente" className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" placeholder="Betania"
+          {...register("cliente", {
+            required: "Por favor ingrese el cliente",
+            validate: (cliente) => {
+              if (cliente.length < 3 || cliente == "") {
+                return "El nombre es muy corto o esta vacio"
               }
             }
-          })}
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="Nombre del Cliente Registrado"
-          />
+          })} />
+        {errors.cliente && <p>{errors.cliente.message}</p>}
 
-        </div>
-        {errors.cliente_registrado && <p>{errors.cliente_registrado.message}</p>}
+        <label htmlFor="telefono_cliente" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Número de telefono</label>
+        <input type='number' id="telefono_cliente" name="telefono_cliente" className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" placeholder="Número de telefono"
+          {...register('telefono_cliente', {
+            required: "Ingrese el telefono del cliente por favor",
+            validate: (telefono_cliente) => {
+              if (telefono_cliente == "") {
+                return "Ingrese un numero de telefono"
+              }
+              if (telefono_cliente.length < 8) {
+                return "Ingrese un numero de al menos 8 cifras"
+              }
+            }
+          })} />
+        {errors.telefono_cliente && <p>{errors.telefono_cliente.message}</p>}
 
-        <div className="pt-10" />
-        <div className="relative z-0 w-full mb-6 group">
-          <input type="number" id="telefono_cliente"
+
+        <div>
+          <label htmlFor="fechaPedido" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Fecha del pedido</label>
+
+          <input type='date' id="fechaPedido" floating-text="fecha de Entrega"
             {...register(
-              'telefono_cliente', {
-              required: "Ingrese el telefono del cliente por favor", length: 10
-            }
-            )
-            }
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="Telefono del Cliente"
-          />
-          {
-            errors.telefono_cliente && errors.telefono_cliente.type === "required" && <span>Ingrese el número del cliente por favor</span>
-          }
-          {
-            errors.telefono_cliente && errors.telefono_cliente.type === "lenght" && <span role="alert">Ingrese un número de 10 caracteres por favor</span>
-          }
-          <div />
+              "fechaPedido", {
+              required: {
+                value: true,
 
-
-          <div className="pt-10" />
-          <div className="relative z-0 w-full mb-6 group">
-            <input type='date' id="fechaPedido" floating-text="fecha de Entrega"
-              {...register(
-                "fechaPedido", {
-                required: {
-                  value: true,
-
-                },
-                validate: (value) => {
-                  const fechaPedido = new Date(value)
-                  if (fechaPedido < defaultFecha) {
-                    return "La fecha debe ser posterior a la fecha actual"
-                  }
-
+              },
+              validate: (value) => {
+                const fechaPedido = new Date(value)
+                if (fechaPedido < defaultFecha) {
+                  return "La fecha debe ser posterior a la fecha actual"
                 }
 
-              })
               }
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="Fecha de Entrega"
 
-            />
-
-            <label htmlFor="fechaPedido" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transhtmlForm -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Fecha de Entrega</label>
-
-            {
-              errors.fechaPedido && errors.fechaPedido.type === "required" && <span>Ingrese la fecha de entrega por favor</span>
+            })
             }
-            {
-              errors.fechaPedido && errors.fechaPedido.type === "validate" && <span>La fecha debe ser posterior a la fecha actual </span>
-            }
+            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="Fecha de Entrega"
+          />
 
-          </div>
+          <label htmlFor="fechaPedido" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transhtmlForm -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Fecha de Entrega</label>
 
-
-
+          {
+            errors.fechaPedido && errors.fechaPedido.type === "required" && <span>Ingrese la fecha de entrega por favor</span>
+          }
+          {
+            errors.fechaPedido && errors.fechaPedido.type === "validate" && <span>La fecha debe ser posterior a la fecha actual </span>
+          }
         </div>
         {/* <button type="submit" className="text-black bg-yellow hover:bg-yellow focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-yellow dark:hover:bg-yellow dark:focus:ring-yellow-800">Agregar pedido</button> */}
-        <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Agregar pedido</button>
+        <button type="submit" className="text-white mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Agregar pedido</button>
 
         <pre>
 

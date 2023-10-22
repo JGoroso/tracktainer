@@ -14,7 +14,7 @@ export default function Searchbox({ onSelectAddress }) {
 function ReadySearchBox({ onSelectAddress }) {
 
   const cba = { lat: -31.408, lng: -64.192 }
-  // Create a bounding box with sides ~10km away from the center point
+  // Create a bounding box with sides from the center point
   const defaultBounds = {
     north: cba.lat + 0.1,
     south: cba.lat - 0.1,
@@ -56,9 +56,9 @@ function ReadySearchBox({ onSelectAddress }) {
 
   return (
     <Combobox onChange={handleSelect}>
-      <Combobox.Input className={"w-full border-2 border-b-stone-800 mt-2"} onChange={handleChange} placeholder='Agregue una direccion 📍' />
-      <Combobox.Options>
-        {status == "OK" && data.slice(0, 2).map(({ place_id, description }) => <Combobox.Option key={place_id} value={description}>
+      <Combobox.Input className="mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" onChange={handleChange} placeholder='Agregue una direccion 📍' />
+      <Combobox.Options className="max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+        {status == "OK" && data.slice(0, 2).map(({ place_id, description }) => <Combobox.Option className="cursor-default select-none py-1 pl-5 pr-2" key={place_id} value={description}>
           {description}
         </Combobox.Option>)}
       </Combobox.Options>

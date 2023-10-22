@@ -1,17 +1,17 @@
 import Image from 'next/image'
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { updateContainer } from '../firebase/firestore/firestore'
+import { updatePedido } from '../firebase/firestore/firestore'
 
 
 function UpdateForm({ closeModal, elementId, actualEstado, refresh }) {
-  const { register, handleSubmit, watch, errors } = useForm({ defautlValues: {} })
+  const { register, handleSubmit, watch, formState: { errors } } = useForm({ defautlValues: {} })
   const chofer = watch("chofer")
   const idContenedor = watch("idContainer")
   const estado = watch("estados")
 
   const onSubmit = () => {
-    updateContainer(elementId, chofer, idContenedor, estado)
+    updatePedido(elementId, chofer, idContenedor, estado)
     closeModal()
     refresh()
   }
@@ -30,11 +30,11 @@ function UpdateForm({ closeModal, elementId, actualEstado, refresh }) {
                 priority
               />
             </div>
-            <h1 className="text-gray-800 font-lg font-bold tracking-normal leading-tight mb-4">Actualicemos el contenedor</h1>
+            <h1 className="text-gray-800 font-lg font-bold tracking-normal leading-tight mb-4">Actualizar pedido</h1>
 
             <label htmlFor="chofer" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Nombre del Chofer</label>
             <input id="chofer" name="chofer" className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" placeholder="James"
-              ref={register({
+              {...register("chofer", {
                 required: "Por favor ingrese el nombre del chofer",
                 validate: (chofer) => {
                   if (chofer.length == 1 || chofer == "") {
@@ -45,10 +45,10 @@ function UpdateForm({ closeModal, elementId, actualEstado, refresh }) {
             {errors.chofer && <p>{errors.chofer.message}</p>}
             <label htmlFor="idContainer" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Id del Contenedor</label>
             <input id="idContainer" name="idContainer" className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" placeholder="Id Contenedor"
-              ref={register({
+              {...register("idContainer", {
                 required: "Por favor ingrese el id del contenedor",
                 validate: (idContainer) => {
-                  if (idContainer.length == 1) {
+                  if (!idContainer.length > 1 && !idContainer.length < 3) {
                     return "El id del contenedor es muy corto"
                   }
                 }
@@ -57,7 +57,7 @@ function UpdateForm({ closeModal, elementId, actualEstado, refresh }) {
             <label htmlFor="estados" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Estado del pedido</label>
             <div className="mt-2">
               <select id="estados" name="estados" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                ref={register({
+                {...register("estados", {
                   required: "Campo requerido",
                   validate: (estados) => {
                     if (estados == actualEstado) {
