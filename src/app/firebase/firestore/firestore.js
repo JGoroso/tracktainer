@@ -28,8 +28,8 @@ export const getContainers = async () => {
     })
 }
 
-
-export const deleteContainer = async (docId) => {
+// Borramos un pedido
+export const deletePedido = async (docId) => {
   await deleteDoc(doc(db, 'pedidos', docId))
     .then(() => {
       console.log('Documento borrado exitosamente');
@@ -39,7 +39,9 @@ export const deleteContainer = async (docId) => {
     });
 }
 
-export const updateContainer = async (docId, chofer, idContenedor, estado) => {
+
+// Update pedido from /Pedidos
+export const updatePedido = async (docId, chofer, idContenedor, estado) => {
   await updateDoc(doc(db, "pedidos", docId), {
     estado: estado,
     idContenedor: idContenedor,
@@ -47,6 +49,21 @@ export const updateContainer = async (docId, chofer, idContenedor, estado) => {
   })
     .then(() => {
       console.log('Documento actualizado exitosamente');
+    })
+    .catch((error) => {
+      console.error('Error al borrar el documento:', error);
+    });
+}
+
+// Update estado del pedido
+
+export const updateEstadoPedido = async (docId, estado) => {
+  await updateDoc(doc(db, "pedidos", docId), {
+    estado: estado,
+  })
+    .then(() => {
+      console.log('Documento actualizado exitosamente');
+  
     })
     .catch((error) => {
       console.error('Error al borrar el documento:', error);

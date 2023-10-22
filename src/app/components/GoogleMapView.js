@@ -2,7 +2,7 @@ import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api'
 import { doc, getFirestore, updateDoc } from "firebase/firestore"
 import app from '../firebase/firebase'
 import { useState, useMemo } from 'react'
-import { getContainers } from '../firebase/firestore/firestore'
+import { getContainers, updateEstadoPedido } from '../firebase/firestore/firestore'
 import { useAsync } from '../hooks/useAsync'
 
 
@@ -24,20 +24,20 @@ function GoogleMapView() {
   )
 
   // este handle nos permite cambiar el estado a complete.
-  const handleCompleteOnClick = async () => {
+  const handleCompleteOnClick = () => {
     setShowAnimation(true)
-    setRefresh(!refresh)
     const docId = markerId
 
     // Actualiza el campo Estado a Completado en Firestore
-    await updateDoc(doc(db, "pedidos", docId), {
-      estado: 'completado'
-    })
+    updateEstadoPedido(docId, "completado")
 
     setTimeout(() => {
       setShowAnimation(false)
+      setSelected(null)
+      setRefresh(!refresh)
     }, 3000)
-    setSelected(null)
+
+
   }
 
   // Se llama a la funcion getContainers que nos devuelve todos los objetos de la coleccion 'Pedidos' en forma de promesa
@@ -80,7 +80,7 @@ function GoogleMapView() {
         center={center}
         zoom={13}
         options={{
-          mapId: 'ffac895524fa317e', disableDefaultUI: true,
+          mapId: '4fe06d8ce7103950', disableDefaultUI: true,
           clickableIcons: false,
           gestureHandling: "greedy"
         }}
@@ -119,7 +119,7 @@ function GoogleMapView() {
                 </div>
                 <div>Chofer: {selected.chofer}</div>
                 <div>Fecha de entrega: {selected.fechaPedido}</div>
-                <div>Fecha de retiro: {selected.fechaPedido}</div>
+                {/* <div>Fecha de retiro: {selected.fechaPedido}</div> */}
                 <div className='flex flex-wrap items-center justify-between font-medium'>
                   <div className='flex justify-between items-center'>
                     <button onClick={() => { selected['estado'] == "entregado" ? handleCompleteOnClick() : `'${console.log("No se puede eliminar un contenedor en estado pendiente")}'` }}
