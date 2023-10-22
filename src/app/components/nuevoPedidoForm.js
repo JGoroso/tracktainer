@@ -46,7 +46,7 @@ function NuevoPedidoForm() {
   }
 
   const onSubmit = (data) => {
-    guardarInformacionDeUbicacion(data.nombre_cliente, data.cliente_registrado, data.address, data.latitude, data.longitude, estadoPendiente, data.fechaPedido, data.telefono_cliente);
+    guardarInformacionDeUbicacion(data.recibe, data.cliente, data.address, data.latitude, data.longitude, estadoPendiente, data.fechaPedido, data.telefono_cliente);
   }
 
   return (
@@ -174,10 +174,7 @@ function NuevoPedidoForm() {
         {/* <button type="submit" className="text-black bg-yellow hover:bg-yellow focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-yellow dark:hover:bg-yellow dark:focus:ring-yellow-800">Agregar pedido</button> */}
         <button type="submit" className="text-white mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Agregar pedido</button>
 
-        <pre>
-
-        </pre>
-      </form >
+      </form>
     </>
   )
 }
