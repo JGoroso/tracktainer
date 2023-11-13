@@ -121,7 +121,7 @@ function PedidosTable() {
                       </td>
                       <td className="px-4 py-4 text-sm whitespace-nowrap">
                         <div className="flex items-center">
-                          <h4 className="text-gray-700 200">{element.direccion.split(',')[0]}</h4>
+                          <h4 className="text-gray-700 200">{element.direccion}</h4>
                         </div>
                         <h4 className="text-gray-700 200">Córdoba</h4>
                       </td>
