@@ -2,6 +2,7 @@ import Image from 'next/image'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { updatePedido } from '../firebase/firestore/firestore'
+import { Listbox, Transition } from '@headlessui/react'
 
 
 function UpdateForm({ closeModal, elementId, actualEstado, refresh }) {
@@ -15,6 +16,28 @@ function UpdateForm({ closeModal, elementId, actualEstado, refresh }) {
     closeModal()
     refresh()
   }
+
+  const choferes = [
+    { name: 'Matias Perez' },
+    { name: 'Leandro Helms' },
+  ]
+
+
+  const estados = [
+    { name: 'Pendiente' },
+    { name: 'Entregado' },
+    { name: 'Completado' },
+    { name: 'Cancelado' },
+  ]
+
+
+  const id_contenedores = [
+    { name: 'AA21123' },
+    { name: 'AA21124' },
+    { name: 'AA21125' },
+    { name: 'AA21126' },
+    { name: 'AA21127' },
+  ]
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -33,46 +56,149 @@ function UpdateForm({ closeModal, elementId, actualEstado, refresh }) {
             <h1 className="text-gray-800 font-lg font-bold tracking-normal leading-tight mb-4">Actualizar pedido</h1>
 
             <label htmlFor="chofer" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Nombre del Chofer</label>
-            <input id="chofer" name="chofer" className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" placeholder="James"
-              {...register("chofer", {
-                required: "Por favor ingrese el nombre del chofer",
-                validate: (chofer) => {
-                  if (chofer.length == 1 || chofer == "") {
-                    return "El nombre es muy corto"
-                  }
-                }
-              })} />
-            {errors.chofer && <p>{errors.chofer.message}</p>}
+            <Listbox /*value={} onChange={}*/>
+              <div className="relative mt-1">
+                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                  <span className="block truncate">Matias Perez</span>
+                  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  </span>
+                </Listbox.Button>
+                <Transition
+                  as={"Fragment"}
+                  leave="transition ease-in duration-100"
+                  leaveFrom="opacity-100"
+                  leaveTo="opacity-0"
+                >
+                  <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                    {choferes.map((person, personIdx) => (
+                      <Listbox.Option
+                        key={personIdx}
+                        className={({ active }) =>
+                          `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
+                          }`
+                        }
+                        value={person}
+                      >
+                        {({ selected }) => (
+                          <>
+                            <span
+                              className={`block truncate ${selected ? 'font-medium' : 'font-normal'
+                                }`}
+                            >
+                              {person.name}
+                            </span>
+                            {selected ? (
+                              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                                <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                              </span>
+                            ) : null}
+                          </>
+                        )}
+                      </Listbox.Option>
+                    ))}
+                  </Listbox.Options>
+                </Transition>
+              </div>
+            </Listbox>
             <label htmlFor="idContainer" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Id del Contenedor</label>
-            <input id="idContainer" name="idContainer" className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" placeholder="Id Contenedor"
-              {...register("idContainer", {
-                required: "Por favor ingrese el id del contenedor",
-                validate: (idContainer) => {
-                  if (!idContainer.length > 1 && !idContainer.length < 3) {
-                    return "El id del contenedor es muy corto"
-                  }
-                }
-              })} />
-            {errors.idContainer && <p>{errors.idContainer.message}</p>}
+            <Listbox /*value={} onChange={}*/>
+              <div className="relative mt-1">
+                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                  <span className="block truncate">AA21123</span>
+                  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  </span>
+                </Listbox.Button>
+                <Transition
+                  as={"Fragment"}
+                  leave="transition ease-in duration-100"
+                  leaveFrom="opacity-100"
+                  leaveTo="opacity-0"
+                >
+                  <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                    {id_contenedores.map((person, personIdx) => (
+                      <Listbox.Option
+                        key={personIdx}
+                        className={({ active }) =>
+                          `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
+                          }`
+                        }
+                        value={person}
+                      >
+                        {({ selected }) => (
+                          <>
+                            <span
+                              className={`block truncate ${selected ? 'font-medium' : 'font-normal'
+                                }`}
+                            >
+                              {person.name}
+                            </span>
+                            {selected ? (
+                              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                                <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                              </span>
+                            ) : null}
+                          </>
+                        )}
+                      </Listbox.Option>
+                    ))}
+                  </Listbox.Options>
+                </Transition>
+              </div>
+            </Listbox>
             <label htmlFor="estados" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Estado del pedido</label>
-            <div className="mt-2">
-              <select id="estados" name="estados" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                {...register("estados", {
-                  required: "Campo requerido",
-                  validate: (estados) => {
-                    if (estados == actualEstado) {
-                      return "El estado elegido es el que se encuentra en este contenedor"
-                    }
-                  }
-                })}
-              >
-
-                <option value="pendiente">Pendiente</option>
-                <option value="entregado">Entregado</option>
-                <option value="completado">Completado</option>
-              </select>
-              {errors.estados && <p>{errors.estados.message}</p>}
-            </div>
+            <Listbox /*value={} onChange={}*/>
+              <div className="relative mt-1">
+                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                  <span className="block truncate">Pendiente</span>
+                  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  </span>
+                </Listbox.Button>
+                <Transition
+                  as={"Fragment"}
+                  leave="transition ease-in duration-100"
+                  leaveFrom="opacity-100"
+                  leaveTo="opacity-0"
+                >
+                  <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                    {estados.map((person, personIdx) => (
+                      <Listbox.Option
+                        key={personIdx}
+                        className={({ active }) =>
+                          `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
+                          }`
+                        }
+                        value={person}
+                      >
+                        {({ selected }) => (
+                          <>
+                            <span
+                              className={`block truncate ${selected ? 'font-medium' : 'font-normal'
+                                }`}
+                            >
+                              {person.name}
+                            </span>
+                            {selected ? (
+                              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                                <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                              </span>
+                            ) : null}
+                          </>
+                        )}
+                      </Listbox.Option>
+                    ))}
+                  </Listbox.Options>
+                </Transition>
+              </div>
+            </Listbox>
             <button className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:outline-none focus:ring-gray-600" onClick={closeModal} aria-label="close modal" role="button">
               <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-x" width="20" height="20" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" />
