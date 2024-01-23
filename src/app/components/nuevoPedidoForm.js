@@ -6,6 +6,7 @@ import app from 'src/app/firebase/firebase.js'
 import { getFirestore } from "firebase/firestore";
 import Link from 'next/link.js'
 import Image from 'next/image.js'
+import { Listbox, Transition } from '@headlessui/react'
 
 const db = getFirestore(app)
 
@@ -49,6 +50,11 @@ function NuevoPedidoForm() {
     guardarInformacionDeUbicacion(data.recibe, data.cliente, data.address, data.latitude, data.longitude, estadoPendiente, data.fechaPedido, data.telefono_cliente);
   }
 
+  const clientes = [
+    { name: 'Betania' },
+    { name: 'Griwold' },
+  ]
+
   return (
 
     <>
@@ -88,7 +94,7 @@ function NuevoPedidoForm() {
           />
         </div>
         <h1 className="text-gray-800 font-bold text-5xl leading-tight mb-4">Agregar Pedidos</h1>
-
+        <label htmlFor="direccion" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Inserte una dirección</label>
         <div className="relative z-0 w-full mb-6 group">
           {<Searchbox onSelectAddress={(address, latitude, longitude) => {
             setValue("address", address)
@@ -112,16 +118,55 @@ function NuevoPedidoForm() {
 
 
         <label htmlFor="cliente" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Cliente</label>
-        <input id="cliente" name="cliente" className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" placeholder="Betania"
-          {...register("cliente", {
-            required: "Por favor ingrese el cliente",
-            validate: (cliente) => {
-              if (cliente.length < 3 || cliente == "") {
-                return "El nombre es muy corto o esta vacio"
-              }
-            }
-          })} />
-        {errors.cliente && <p>{errors.cliente.message}</p>}
+        <Listbox /*value={} onChange={}*/>
+          <div className="relative mt-1">
+            <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+              <span className="block truncate">Betania</span>
+              <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </span>
+            </Listbox.Button>
+            <Transition
+              as={"Fragment"}
+              leave="transition ease-in duration-100"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                {clientes.map((person, personIdx) => (
+                  <Listbox.Option
+                    key={personIdx}
+                    className={({ active }) =>
+                      `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
+                      }`
+                    }
+                    value={person}
+                  >
+                    {({ selected }) => (
+                      <>
+                        <span
+                          className={`block truncate ${selected ? 'font-medium' : 'font-normal'
+                            }`}
+                        >
+                          {person.name}
+                        </span>
+                        {selected ? (
+                          <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                          </span>
+                        ) : null}
+                      </>
+                    )}
+                  </Listbox.Option>
+                ))}
+              </Listbox.Options>
+            </Transition>
+          </div>
+        </Listbox>
+
+
 
         <label htmlFor="telefono_cliente" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Número de telefono</label>
         <input type='number' id="telefono_cliente" name="telefono_cliente" className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" placeholder="Número de telefono"
@@ -142,7 +187,7 @@ function NuevoPedidoForm() {
         <div>
           <label htmlFor="fechaPedido" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Fecha del pedido</label>
 
-          <input type='date' id="fechaPedido" floating-text="fecha de Entrega"
+          <input type='date' id="fechaPedido"
             {...register(
               "fechaPedido", {
               required: {
@@ -159,7 +204,7 @@ function NuevoPedidoForm() {
 
             })
             }
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="Fecha de Entrega"
+            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
           />
 
           <label htmlFor="fechaPedido" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transhtmlForm -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Fecha de Entrega</label>
