@@ -11,17 +11,31 @@ import app from "../firebase"
 
 const db = getFirestore(app)
 
-// Retornamos una lista de objeto con los datos de firestore de manera asincrona
-export const getContainers = async () => {
+// Retornamos una lista de objetos con los pedidos guardados en firestore
+export const getPedidos = async () => {
   const coleccionPedidos = query(collection(db, "pedidos"))
-
   return getDocs(coleccionPedidos)
     .then((response) => {
-      const containersFromDocs = response.docs.map((prod) => {
+      const pedidosFromDocs = response.docs.map((prod) => {
         const data = prod.data();
         return { id: prod.id, ...data }
       })
-      return containersFromDocs;
+      return pedidosFromDocs;
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
+export const getChoferes = async () => {
+  const coleccionChoferes = query(collection(db, 'chofer'))
+  return getDocs(coleccionChoferes)
+    .then((response) => {
+      const choferesFromDoc = response.docs.map((prod) => {
+        const data = prod.data();
+        return { id: prod.id, ...data }
+      })
+      return choferesFromDoc;
     })
     .catch((error) => {
       console.log(error)
@@ -40,11 +54,9 @@ export const deletePedido = async (docId) => {
 }
 
 
-// Update pedido from /Pedidos
-export const updatePedido = async (docId, chofer, idContenedor, estado) => {
+// Update chofer del pedido en /Pedidos
+export const updateChofer = async (docId, chofer) => {
   await updateDoc(doc(db, "pedidos", docId), {
-    estado: estado,
-    idContenedor: idContenedor,
     chofer: chofer
   })
     .then(() => {
@@ -56,14 +68,13 @@ export const updatePedido = async (docId, chofer, idContenedor, estado) => {
 }
 
 // Update estado del pedido
-
 export const updateEstadoPedido = async (docId, estado) => {
   await updateDoc(doc(db, "pedidos", docId), {
     estado: estado,
   })
     .then(() => {
       console.log('Documento actualizado exitosamente');
-  
+
     })
     .catch((error) => {
       console.error('Error al borrar el documento:', error);

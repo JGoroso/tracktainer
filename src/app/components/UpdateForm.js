@@ -1,43 +1,40 @@
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { updatePedido } from '../firebase/firestore/firestore'
+import { getChoferes, updateChofer } from '../firebase/firestore/firestore'
 import { Listbox, Transition } from '@headlessui/react'
+import { CheckIcon } from '@heroicons/react/20/solid'
+import { useAsync } from '../hooks/useAsync'
 
 
-function UpdateForm({ closeModal, elementId, actualEstado, refresh }) {
-  const { register, handleSubmit, watch, formState: { errors } } = useForm({ defautlValues: {} })
-  const chofer = watch("chofer")
-  const idContenedor = watch("idContainer")
-  const estado = watch("estados")
+
+function UpdateForm({ closeModal, pedidoId, refresh }) {
+  const getChoferesFromFirestore = () => getChoferes()
+  // Utilizamos un hook que hara un async await al que le pasamos una funcion asincrona que retorna una promesa (get docs from firestore)
+  // podremos recibir la data utilizando un useEffect (y con el refresh podemos refrescar los datos) y luego utilizar estos datos donde queramos
+  const { data } = useAsync(getChoferesFromFirestore, '')
+
+  const { handleSubmit } = useForm({ defautlValues: {} })
+  const [selectedChofer, setSelectedChofer] = useState('')
+
+  useEffect(() => {
+    // aseguramos que data exista y tenga un valor > a 0 para setearlo a selectedChofer
+    if (data && data.length > 0) {
+      setSelectedChofer(data[0].nombre)
+    }
+  }, [data])
 
   const onSubmit = () => {
-    updatePedido(elementId, chofer, idContenedor, estado)
+    updateChofer(pedidoId, selectedChofer)
     closeModal()
     refresh()
   }
 
-  const choferes = [
-    { name: 'Matias Perez' },
-    { name: 'Leandro Helms' },
-  ]
+  if (!data) {
+    // Muestra algún indicador de carga mientras se obtienen los choferes
+    return <p>Cargando...</p>;
+  }
 
-
-  const estados = [
-    { name: 'Pendiente' },
-    { name: 'Entregado' },
-    { name: 'Completado' },
-    { name: 'Cancelado' },
-  ]
-
-
-  const id_contenedores = [
-    { name: 'AA21123' },
-    { name: 'AA21124' },
-    { name: 'AA21125' },
-    { name: 'AA21126' },
-    { name: 'AA21127' },
-  ]
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -53,34 +50,33 @@ function UpdateForm({ closeModal, elementId, actualEstado, refresh }) {
                 priority
               />
             </div>
-            <h1 className="text-gray-800 font-lg font-bold tracking-normal leading-tight mb-4">Actualizar pedido</h1>
-
+            <h1 className="text-gray-800 font-lg font-bold tracking-normal leading-tight mb-4">Actualizar chofer</h1>
             <label htmlFor="chofer" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Nombre del Chofer</label>
-            <Listbox /*value={} onChange={}*/>
+            <Listbox value={selectedChofer} onChange={setSelectedChofer}>
               <div className="mt-1">
                 <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                  <span className="block truncate">Matias Perez</span>
+                  <span className="block truncate">{selectedChofer}</span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                     </svg>
                   </span>
                 </Listbox.Button>
                 <Transition
-                  as={"Fragment"}
+                  as={React.Fragment}
                   leave="transition ease-in duration-100"
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
                   <Listbox.Options className="relative mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-                    {choferes.map((person, personIdx) => (
+                    {data && data.map((chofer) => (
                       <Listbox.Option
-                        key={personIdx}
+                        key={chofer.id}
                         className={({ active }) =>
                           `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
                           }`
                         }
-                        value={person}
+                        value={chofer.nombre}
                       >
                         {({ selected }) => (
                           <>
@@ -88,103 +84,7 @@ function UpdateForm({ closeModal, elementId, actualEstado, refresh }) {
                               className={`block truncate ${selected ? 'font-medium' : 'font-normal'
                                 }`}
                             >
-                              {person.name}
-                            </span>
-                            {selected ? (
-                              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
-                                <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                              </span>
-                            ) : null}
-                          </>
-                        )}
-                      </Listbox.Option>
-                    ))}
-                  </Listbox.Options>
-                </Transition>
-              </div>
-            </Listbox>
-            <label htmlFor="idContainer" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Id del Contenedor</label>
-            <Listbox /*value={} onChange={}*/>
-              <div className=" mt-1">
-                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                  <span className="block truncate">AA21123</span>
-                  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                    </svg>
-                  </span>
-                </Listbox.Button>
-                <Transition
-                  as={"Fragment"}
-                  leave="transition ease-in duration-100"
-                  leaveFrom="opacity-100"
-                  leaveTo="opacity-0"
-                >
-                  <Listbox.Options className="relative mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-                    {id_contenedores.map((person, personIdx) => (
-                      <Listbox.Option
-                        key={personIdx}
-                        className={({ active }) =>
-                          `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
-                          }`
-                        }
-                        value={person}
-                      >
-                        {({ selected }) => (
-                          <>
-                            <span
-                              className={`block truncate ${selected ? 'font-medium' : 'font-normal'
-                                }`}
-                            >
-                              {person.name}
-                            </span>
-                            {selected ? (
-                              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
-                                <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                              </span>
-                            ) : null}
-                          </>
-                        )}
-                      </Listbox.Option>
-                    ))}
-                  </Listbox.Options>
-                </Transition>
-              </div>
-            </Listbox>
-            <label htmlFor="estados" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Estado del pedido</label>
-            <Listbox /*value={} onChange={}*/>
-              <div className="relative mt-1">
-                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                  <span className="block truncate">Pendiente</span>
-                  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                    </svg>
-                  </span>
-                </Listbox.Button>
-                <Transition
-                  as={"Fragment"}
-                  leave="transition ease-in duration-100"
-                  leaveFrom="opacity-100"
-                  leaveTo="opacity-0"
-                >
-                  <Listbox.Options className=" mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-                    {estados.map((person, personIdx) => (
-                      <Listbox.Option
-                        key={personIdx}
-                        className={({ active }) =>
-                          `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
-                          }`
-                        }
-                        value={person}
-                      >
-                        {({ selected }) => (
-                          <>
-                            <span
-                              className={`block truncate ${selected ? 'font-medium' : 'font-normal'
-                                }`}
-                            >
-                              {person.name}
+                              {chofer.nombre}
                             </span>
                             {selected ? (
                               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
@@ -206,16 +106,15 @@ function UpdateForm({ closeModal, elementId, actualEstado, refresh }) {
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </button>
+
             <div className="flex items-center mt-4 gap-x-3">
 
               <button type="submit" className="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 lue-500 0">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-
                 <span>Actualizar Pedido</span>
               </button>
-
 
               <button onClick={closeModal} className="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto ray-800 0 hover:bg-gray-100 200 y-700">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -231,6 +130,7 @@ function UpdateForm({ closeModal, elementId, actualEstado, refresh }) {
                 <span>Volver a pedidos</span>
               </button>
             </div>
+
           </div>
         </div>
       </div>
