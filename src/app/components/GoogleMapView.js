@@ -1,13 +1,7 @@
 import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api'
-import { doc, getFirestore, updateDoc } from "firebase/firestore"
-import app from '../firebase/firebase'
 import { useState, useMemo } from 'react'
-import { getContainers, updateEstadoPedido } from '../firebase/firestore/firestore'
+import { getPedidos, updateEstadoPedido } from '../firebase/firestore/firestore'
 import { useAsync } from '../hooks/useAsync'
-
-
-// se repite en dos oportunidades, refactor.
-const db = getFirestore(app)
 
 function GoogleMapView() {
   const [markerId, setMarkerId] = useState('')
@@ -40,13 +34,11 @@ function GoogleMapView() {
 
   }
 
-  // Se llama a la funcion getContainers que nos devuelve todos los objetos de la coleccion 'Pedidos' en forma de promesa
-  const getContainersFromFirestore = () => getContainers()
-  // Utilizamos un hook creado por nosotros que nos permite pasarle esta promesa que contiene un array de todos los objetos y con esta
-  // podremos recibir la data utilizando un useEffect y luego utilizar estos datos donde queramos
-  const { data } = useAsync(getContainersFromFirestore, refresh)
-
-
+  // Se llama a la funcion getPedidos que nos devuelve todos los objetos de la coleccion 'Pedidos' en forma de promesa
+  const getPedidosFromFirestore = () => getPedidos()
+  // Utilizamos un hook que hara un async await al que le pasamos una funcion asincrona que retorna una promesa (get docs from firestore)
+  // podremos recibir la data utilizando un useEffect (y con el refresh podemos refrescar los datos) y luego utilizar estos datos donde queramos
+  const { data } = useAsync(getPedidosFromFirestore, refresh)
   const containerStyle = {
     width: '100%',
     height: '92vh'
@@ -63,7 +55,7 @@ function GoogleMapView() {
                   d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"
                 />
               </svg>
-              <p>Bien! El container ha pasado a estado completado!</p>
+              <p>Bien! El pedido ha pasado a estado completado!</p>
             </div>
             <button className="text-green-100 hover:text-white">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

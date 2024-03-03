@@ -1,20 +1,23 @@
-import { useState, useEffect, ChangeEvent } from 'react'
+import React, { useState, useEffect, ChangeEvent, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import Searchbox from './searchBox.js'
 import { collection, addDoc } from 'firebase/firestore'
 import app from 'src/app/firebase/firebase.js'
-import { getFirestore } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore"
 import Link from 'next/link.js'
 import Image from 'next/image.js'
 import { Listbox, Transition } from '@headlessui/react'
+import { CheckIcon } from '@heroicons/react/20/solid'
 
 const db = getFirestore(app)
 
-
 function NuevoPedidoForm() {
+  const formRef = useRef()
   const defaultFecha = new Date()
   // el estado se guardaria como pendiente 
   const estadoPendiente = "pendiente"
+  // el estado del cliente seleccionado
+  const [selectedCliente, setSelectedCliente] = useState(null);
 
   // useForm es un hook que gestiona el estado de un formulario y se desestructuran diferentes funciones y valores para trabajar con formularios
   // https://www.youtube.com/watch?v=1MxevPIZgVc
@@ -28,17 +31,18 @@ function NuevoPedidoForm() {
 
 
 
-  const guardarInformacionDeUbicacion = async (nombre_cliente, cliente_registrado, address, lat, lng, estadoPendiente, fechaPedido, telefono_cliente) => {
+  const guardarInformacionDeUbicacion = async (quien_recibe, cliente_registrado, address, lat, lng, estadoPendiente, telefono_cliente, fechaPedido) => {
     try {
       const docRef = await addDoc(collection(db, "pedidos"), {
-        nombreCliente: nombre_cliente,
-        cliente: cliente_registrado,
-        direccion: address,
-        estado: estadoPendiente,
-        fechaPedido: fechaPedido,
         lat: lat,
         lng: lng,
-        telefono: telefono_cliente
+        estado: estadoPendiente,
+        direccion: address,
+        nombreCliente: quien_recibe,
+        cliente: cliente_registrado,
+        telefono: telefono_cliente,
+        fechaPedido: fechaPedido,
+        chofer: ""
       })
       console.log("Document written with ID: ", docRef.id)
     } catch (e) {
@@ -47,9 +51,11 @@ function NuevoPedidoForm() {
   }
 
   const onSubmit = (data) => {
-    guardarInformacionDeUbicacion(data.recibe, data.cliente, data.address, data.latitude, data.longitude, estadoPendiente, data.fechaPedido, data.telefono_cliente);
+    guardarInformacionDeUbicacion(data.recibe, selectedCliente.name, data.address, data.latitude, data.longitude, estadoPendiente, data.telefono_cliente, data.fechaPedido);
+    formRef.current.reset()
   }
 
+  //modificar por clientes en la base de datos y tambien los contenedores desde la base
   const clientes = [
     { name: 'Betania' },
     { name: 'Griwold' },
@@ -62,7 +68,7 @@ function NuevoPedidoForm() {
 
         <div></div>
 
-        <div className="flex items-center mt-4 gap-x-3">
+        <div className="flex items-center mt-2 gap-x-3">
           <Link href={"/"}>
             <button className="flex items-center justify-center w-3/3 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto ray-800 0 hover:bg-gray-100 200 y-700">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
@@ -83,7 +89,7 @@ function NuevoPedidoForm() {
           </Link>
         </div>
       </div>
-      <form className="m-40" onSubmit={handleSubmit(onSubmit)}>
+      <form ref={formRef} className="m-20" onSubmit={handleSubmit(onSubmit)}>
         <div className="w-full flex justify-start text-gray-600 mb-3">
           <Image
             alt=""
@@ -95,7 +101,9 @@ function NuevoPedidoForm() {
         </div>
         <h1 className="text-gray-800 font-bold text-5xl leading-tight mb-4">Agregar Pedidos</h1>
         <label htmlFor="direccion" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Inserte una dirección</label>
+        {/*SearchBox*/}
         <div className="relative z-0 w-full mb-6 group">
+          {/* LLamamos al componente searchbox.js */}
           {<Searchbox onSelectAddress={(address, latitude, longitude) => {
             setValue("address", address)
             setValue("latitude", latitude)
@@ -118,18 +126,21 @@ function NuevoPedidoForm() {
 
 
         <label htmlFor="cliente" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Cliente</label>
-        <Listbox /*value={} onChange={}*/>
+        <Listbox
+          value={selectedCliente}
+          onChange={(value) => setSelectedCliente(value)}
+        >
           <div className="relative mt-1">
             <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-              <span className="block truncate">Betania</span>
+              <span className="block truncate">{selectedCliente ? selectedCliente.name : 'Seleccionar Cliente'}</span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                 </svg>
               </span>
             </Listbox.Button>
             <Transition
-              as={"Fragment"}
+              as={React.Fragment}
               leave="transition ease-in duration-100"
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
@@ -167,7 +178,6 @@ function NuevoPedidoForm() {
         </Listbox>
 
 
-
         <label htmlFor="telefono_cliente" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Número de telefono</label>
         <input type='number' id="telefono_cliente" name="telefono_cliente" className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" placeholder="Número de telefono"
           {...register('telefono_cliente', {
@@ -186,7 +196,6 @@ function NuevoPedidoForm() {
 
         <div>
           <label htmlFor="fechaPedido" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Fecha del pedido</label>
-
           <input type='date' id="fechaPedido"
             {...register(
               "fechaPedido", {
@@ -199,16 +208,11 @@ function NuevoPedidoForm() {
                 if (fechaPedido < defaultFecha) {
                   return "La fecha debe ser posterior a la fecha actual"
                 }
-
               }
-
             })
             }
             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
           />
-
-          <label htmlFor="fechaPedido" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transhtmlForm -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Fecha de Entrega</label>
-
           {
             errors.fechaPedido && errors.fechaPedido.type === "required" && <span>Ingrese la fecha de entrega por favor</span>
           }
@@ -216,14 +220,10 @@ function NuevoPedidoForm() {
             errors.fechaPedido && errors.fechaPedido.type === "validate" && <span>La fecha debe ser posterior a la fecha actual </span>
           }
         </div>
-        {/* <button type="submit" className="text-black bg-yellow hover:bg-yellow focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-yellow dark:hover:bg-yellow dark:focus:ring-yellow-800">Agregar pedido</button> */}
-        <button type="submit" className="text-white mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Agregar pedido</button>
-
+        <button type="submit" className="text-white mt-4 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Agregar pedido</button>
       </form>
     </>
   )
 }
 
 export default NuevoPedidoForm
-
-//Luego del register no pongo el nombre del campo para que aparezca en el watch

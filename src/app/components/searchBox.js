@@ -1,5 +1,4 @@
 import { Combobox } from '@headlessui/react'
-import { useState } from 'react'
 import usePlacesAutoComplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
 
 
@@ -51,7 +50,6 @@ function ReadySearchBox({ onSelectAddress }) {
     } catch (error) {
       console.error("Error: ", error)
     }
-
   }
 
   return (
