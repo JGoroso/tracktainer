@@ -1,26 +1,31 @@
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { getChoferes, updateChofer } from '../firebase/firestore/firestore'
+import { getChoferes, getUsuarios, updateChofer } from '../firebase/firestore/firestore'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/20/solid'
 import { useAsync } from '../hooks/useAsync'
 
 
 
-function UpdateForm({ closeModal, pedidoId, refresh }) {
-  const getChoferesFromFirestore = () => getChoferes()
+function UpdatePedidoForm({ closeModal, pedidoId, refresh }) {
+  const getUsuariosFromFirestore = () => getUsuarios()
   // Utilizamos un hook que hara un async await al que le pasamos una funcion asincrona que retorna una promesa (get docs from firestore)
   // podremos recibir la data utilizando un useEffect (y con el refresh podemos refrescar los datos) y luego utilizar estos datos donde queramos
-  const { data } = useAsync(getChoferesFromFirestore, '')
+  const { data } = useAsync(getUsuariosFromFirestore, '')
+
+  const choferes = data
+    ? data.filter((user) => user.role === "chofer").map((user) => user.nombre)
+    : []
 
   const { handleSubmit } = useForm({ defautlValues: {} })
   const [selectedChofer, setSelectedChofer] = useState('')
 
+
   useEffect(() => {
     // aseguramos que data exista y tenga un valor > a 0 para setearlo a selectedChofer
-    if (data && data.length > 0) {
-      setSelectedChofer(data[0].nombre)
+    if (choferes && choferes.length > 0) {
+      setSelectedChofer(choferes[0])
     }
   }, [data])
 
@@ -69,31 +74,33 @@ function UpdateForm({ closeModal, pedidoId, refresh }) {
                   leaveTo="opacity-0"
                 >
                   <Listbox.Options className="relative mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-                    {data && data.map((chofer) => (
-                      <Listbox.Option
-                        key={chofer.id}
-                        className={({ active }) =>
-                          `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
-                          }`
-                        }
-                        value={chofer.nombre}
-                      >
-                        {({ selected }) => (
-                          <>
-                            <span
-                              className={`block truncate ${selected ? 'font-medium' : 'font-normal'
-                                }`}
-                            >
-                              {chofer.nombre}
-                            </span>
-                            {selected ? (
-                              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
-                                <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                    {data && data.map((user) => (
+                      user.estado == "activo" && user.role == "chofer" ? (
+                        <Listbox.Option
+                          key={user.id}
+                          className={({ active }) =>
+                            `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
+                            }`
+                          }
+                          value={user.nombre}
+                        >
+                          {({ selected }) => (
+                            <>
+                              <span
+                                className={`block truncate ${selected ? 'font-medium' : 'font-normal'
+                                  }`}
+                              >
+                                {user.nombre}
                               </span>
-                            ) : null}
-                          </>
-                        )}
-                      </Listbox.Option>
+                              {selected ? (
+                                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                                  <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                </span>
+                              ) : null}
+                            </>
+                          )}
+                        </Listbox.Option>
+                      ) : null
                     ))}
                   </Listbox.Options>
                 </Transition>
@@ -138,4 +145,4 @@ function UpdateForm({ closeModal, pedidoId, refresh }) {
   )
 }
 
-export default UpdateForm
+export default UpdatePedidoForm

@@ -41,7 +41,7 @@ function GoogleMapView() {
   const { data } = useAsync(getPedidosFromFirestore, refresh)
   const containerStyle = {
     width: '100%',
-    height: '92vh'
+    height: '90vh'
   }
 
   return (
@@ -114,7 +114,7 @@ function GoogleMapView() {
                 {/* <div>Fecha de retiro: {selected.fechaPedido}</div> */}
                 <div className='flex flex-wrap items-center justify-between font-medium'>
                   <div className='flex justify-between items-center'>
-                    <button onClick={() => { selected['estado'] == "entregado" ? handleCompleteOnClick() : `'${console.log("No se puede eliminar un contenedor en estado pendiente")}'` }}
+                    <button onClick={() => { selected['estado'] == "entregado" ? handleCompleteOnClick() : `'${console.log("No se puede pasar a estado completado un contenedor en estado pendiente")}'` }}
                       className="flex w-full px-5 py-2 items-center justify-center  text-sm text-gray-700 transition-colors duration-200 bg-green-400 border rounded-lg gap-x-2 sm:w-auto ray-800 0 hover:bg-gray-100 200 y-700">
                       <span>Pedido completado</span>
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">

@@ -3,7 +3,7 @@ import React from 'react'
 import { getPedidos, updateEstadoPedido } from '../firebase/firestore/firestore'
 import { useAsync } from '../hooks/useAsync'
 import { useState } from 'react'
-import UpdateForm from './UpdateForm'
+import UpdatePedidoForm from './UpdatePedidoForm'
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 import Link from 'next/link'
@@ -16,7 +16,7 @@ function PedidosTable() {
   const [showCancelAnimation, setCancelAnimation] = useState(false)
   const [showEntregadoAnimation, setEntregadoAnimation] = useState(false)
 
-  const refreshConteiners = () => {
+  const refreshContainers = () => {
     setRefresh(true)
     setTimeout(() => {
       setRefresh(false)
@@ -44,7 +44,7 @@ function PedidosTable() {
     setTimeout(() => {
       setCancelAnimation(false)
     }, 3000)
-    refreshConteiners()
+    refreshContainers()
   }
 
   const handleCancelModalClose = () => {
@@ -60,7 +60,7 @@ function PedidosTable() {
     setTimeout(() => {
       setEntregadoAnimation(false)
     }, 3000)
-    refreshConteiners()
+    refreshContainers()
   }
 
 
@@ -296,7 +296,7 @@ function PedidosTable() {
             </div>
           </div>
         </div>
-        {showModal ? <UpdateForm closeModal={closeModal} pedidoId={pedidoId} actualEstado={estado} refresh={refreshConteiners} /> : null}
+        {showModal ? <UpdatePedidoForm closeModal={closeModal} pedidoId={pedidoId} actualEstado={estado} refresh={refreshContainers} /> : null}
 
       </div >
     </>
