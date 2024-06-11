@@ -19,6 +19,7 @@ function NuevoPedidoForm() {
   // el estado del cliente seleccionado
   const [selectedCliente, setSelectedCliente] = useState(null);
 
+
   // useForm es un hook que gestiona el estado de un formulario y se desestructuran diferentes funciones y valores para trabajar con formularios
   // https://www.youtube.com/watch?v=1MxevPIZgVc
   const { register, handleSubmit, setValue, formState: { errors } } = useForm({ defautlValues: {} })
@@ -51,15 +52,11 @@ function NuevoPedidoForm() {
   }
 
   const onSubmit = (data) => {
-    guardarInformacionDeUbicacion(data.recibe, selectedCliente.name, data.address, data.latitude, data.longitude, estadoPendiente, data.telefono_cliente, data.fechaPedido);
+    guardarInformacionDeUbicacion(data.recibe, selectedCliente, data.address, data.latitude, data.longitude, estadoPendiente, data.telefono_cliente, data.fechaPedido);
     formRef.current.reset()
   }
 
-  //modificar por clientes en la base de datos y tambien los contenedores desde la base
-  const clientes = [
-    { name: 'Betania' },
-    { name: 'Griwold' },
-  ]
+  var clientes = ["betania", "griwold"]
 
   return (
 
@@ -128,7 +125,6 @@ function NuevoPedidoForm() {
         <label htmlFor="cliente" className="text-gray-800 text-sm font-bold leading-tight tracking-normal">Cliente</label>
         <Listbox
           value={selectedCliente}
-          onChange={(value) => setSelectedCliente(value)}
         >
           <div className="relative mt-1">
             <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
