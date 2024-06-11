@@ -1,24 +1,36 @@
-import Header from './components/Header'
 import './globals.css'
 import { Roboto } from 'next/font/google'
 import Provider from './Provider'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '../../pages/api/auth/[...nextauth]'
+import Header from './components/Header'
+import { LoginPage } from './Login/login'
+import UserNotFound from './components/UserNotFound'
 
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['500'] })
-
 export const metadata = {
   title: 'TrackTainer',
   description: '',
 }
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const session = await getServerSession(authOptions)
+
+  console.log(session)
   return (
     <html lang="en">
-      <body className="bg-slate-50 h-full">
+      <body className="h-screen bg-gradient-to-b from-slate-100 to-slate-100">
         <main className={roboto.className}>
           <Provider>
-            <Header />
-            {children}
+            {(session && session?.user?.userAllowed != false) ? (
+              <>
+                <Header />
+                {children}
+              </>
+            ) : (session?.user?.userAllowed == false) ? <UserNotFound /> :
+              < LoginPage />
+            }
           </Provider>
         </main>
       </body>
