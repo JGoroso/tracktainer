@@ -36,7 +36,7 @@ function NavBar({ }) {
           </svg>
         </button>
         <div className={`${isMenuOpen ? 'block' : 'hidden'} w-full md:block md:w-auto fixed top-16 left-0 bg-gradient-to-b from-slate-100 to-slate-100 border-gray-100 md:static md:bg-transparent z-50`} id="navbar-default">
-          <div className="font-medium flex flex-col p-4 md:p-0 mt-4 rounded-lg  md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white">
+          <div className="font-medium flex flex-col p-4 md:p-0 mt-4 rounded-lg  md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0">
             {session?.user.role === 'admin' && (
               <Link legacyBehavior href="/Agregarpedidos">
                 <a onClick={toggleMenu} className="text-[#545F71] flex items-center">
@@ -78,7 +78,7 @@ function NavBar({ }) {
                 </a>
               </Link>
             )}
-            <Link legacyBehavior href="/auth/signout">
+            <button>
               <a onClick={() => signOut()} className="text-[#545F71] flex items-center">
                 {session?.user ? <><Image src={session.user.image}
                   alt="user"
@@ -88,7 +88,7 @@ function NavBar({ }) {
                 }
                 <span className="ml-2">Cerrar sesión</span>
               </a>
-            </Link>
+            </button>
           </div>
         </div>
       </div>
