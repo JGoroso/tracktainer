@@ -128,3 +128,36 @@ export const updateEstadoPedido = async (docId, estado) => {
       console.error('Error al borrar el documento:', error);
     });
 }
+
+export const fetchOrdersByDateRange = async (startDateStr, endDateStr, estado) => {
+
+  const ordersCollection = collection(db, 'pedidos');
+  var q
+  if (!estado) {
+    q = query(
+      ordersCollection,
+      where('fechaPedido', '>=', startDateStr),
+      where('fechaPedido', '<=', endDateStr)
+    )
+  } else {
+    q = query(
+      ordersCollection,
+      where('fechaPedido', '>=', startDateStr),
+      where('fechaPedido', '<=', endDateStr),
+      where('estado', '==', estado)
+    )
+  }
+
+
+  const ordersSnapshot = await getDocs(q);
+  const ordersList = ordersSnapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
+
+  return ordersList;
+};
+
+export const fetchOrders = async (startDate, endDate, estado) => {
+  return await fetchOrdersByDateRange(startDate, endDate, estado);
+};
