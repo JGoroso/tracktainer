@@ -61,7 +61,7 @@ function NavBar({ }) {
               </Link>
             )}
             {session?.user.role === 'admin' && (
-              <Link legacyBehavior href="">
+              <Link legacyBehavior href="/Agregarcliente">
                 <a onClick={toggleMenu} className="text-[#545F71] flex items-center">
                   <UserPlusIcon className="h-8 w-8" aria-hidden="true" />
 
