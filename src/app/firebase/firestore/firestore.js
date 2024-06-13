@@ -59,9 +59,51 @@ export const getUsuarios = async () => {
     })
 }
 
+export const getClientes = async () => {
+  const coleccionClientes = query(collection(db, "clientes"))
+  return getDocs(coleccionClientes)
+    .then((response) => {
+      const clientesFromDoc = response.docs.map((user) => {
+        const data = user.data();
+        return { id: user.id, ...data }
+      })
+      return clientesFromDoc;
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
+export const addCliente = async (data) => {
+  try {
+    const docRef = await addDoc(collection(db, "clientes"), {
+      empresa: data.nombreEmpresa,
+      referente: data.nombreCompleto,
+      telefono: data.telefono,
+      estado: "activo"
+    })
+    console.log("Document written with ID: ", docRef.id)
+  } catch (e) {
+    console.error("Error adding document: ", e)
+  }
+}
+
 // Update estado del usuario a baja
 export const updateEstadoUsuario = async (docId) => {
   await updateDoc(doc(db, "users", docId), {
+    estado: "baja",
+  })
+    .then(() => {
+      console.log('Documento actualizado exitosamente');
+
+    })
+    .catch((error) => {
+      console.error('Error al borrar el documento:', error);
+    });
+}
+
+export const updateEstadoCliente = async (docId) => {
+  await updateDoc(doc(db, "clientes", docId), {
     estado: "baja",
   })
     .then(() => {
@@ -80,6 +122,21 @@ export const updateInfoUsuario = async (docId, data) => {
     role: data.role,
     telefono: data.telefono,
     email: data.email
+  })
+    .then(() => {
+      console.log('Documento actualizado exitosamente');
+
+    })
+    .catch((error) => {
+      console.error('Error al borrar el documento:', error);
+    });
+}
+
+export const updateInfoCliente = async (docId, data) => {
+  await updateDoc(doc(db, "clientes", docId.id), {
+    empresa: data.nombreEmpresa,
+    referente: data.nombreCompleto,
+    telefono: data.telefono
   })
     .then(() => {
       console.log('Documento actualizado exitosamente');
