@@ -1,23 +1,23 @@
 'use client'
 import React, { useState } from 'react'
-import { addUsuario, getUsuarios, updateEstadoUsuario, updateInfoUsuario } from '../firebase/firestore/firestore'
+import { addCliente, addUsuario, getClientes, updateEstadoCliente, updateEstadoUsuario, updateInfoCliente, updateInfoUsuario } from '../firebase/firestore/firestore'
 import { useAsync } from '../hooks/useAsync'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import { ArchiveBoxXMarkIcon, PencilSquareIcon } from '@heroicons/react/20/solid'
-import UpdateUsuarioForm from './UpdateUsuarioForm'
+import UpdateClienteForm from './UpdateClienteForm'
 
 
 // utilizamos un schema yup para realizar verificaciones
 const schema = yup.object({
-  nombre: yup.string().required().matches(/^[aA-zZ\s]+$/, "No se permiten numeros ni simbolos"),
-  telefono: yup.number().positive().integer().required(),
-  email: yup.string().required(),
+  nombreEmpresa: yup.string().required("El nombre de la empresa es obligatorio").matches(/^[aA-zZ\s]+$/, "No se permiten numeros ni simbolos"),
+  nombreCompleto: yup.string().required("El nombre del referente es obligatorio").matches(/^[aA-zZ\s]+$/, "No se permiten numeros ni simbolos"),
+  telefono: yup.number().positive().integer().required("El telefono es obligatorio, no se permiten letras"),
 }).required()
 
-function NuevoUsuarioForm() {
+function NuevoClienteForm() {
 
   const {
     register,
@@ -30,21 +30,20 @@ function NuevoUsuarioForm() {
   })
   const [refresh, setRefresh] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedCliente, setSelectedCliente] = useState(null);
   const [showBajaModal, setShowBajaModal] = useState(false);
-  const roles = ["admin", "chofer"]
 
 
-  // Se llama a la funcion getUsuarios que nos devuelve todos los objetos de la coleccion 'Usuarios' en forma de promesa
-  const getUsuariosFromFirestore = () => getUsuarios()
+  // Se llama a la funcion getClientes que nos devuelve todos los objetos de la coleccion 'Clientes' en forma de promesa
+  const getClientesFromFirestore = () => getClientes()
   // Utilizamos un hook que hara un async await al que le pasamos una funcion asincrona que retorna una promesa
   // podremos recibir la data utilizando un useEffect (y con el refresh podemos refrescar los datos) y luego utilizar estos datos donde queramos
-  const { data } = useAsync(getUsuariosFromFirestore, refresh)
+  const { data } = useAsync(getClientesFromFirestore, refresh)
 
 
   // add, update, delete
   const onSubmit = (data) => {
-    addUsuario(data)
+    addCliente(data)
     reset()
     setTimeout(() => {
       setRefresh(!refresh)
@@ -52,17 +51,17 @@ function NuevoUsuarioForm() {
   }
 
   const handleEdit = (user) => {
-    setSelectedUser(user);
+    setSelectedCliente(user);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSelectedUser(null);
+    setSelectedCliente(null);
   };
 
   const handleBaja = () => {
-    updateEstadoUsuario(selectedUser)
+    updateEstadoCliente(selectedCliente)
     setShowBajaModal(false)
     setTimeout(() => {
       setRefresh(!refresh)
@@ -74,7 +73,7 @@ function NuevoUsuarioForm() {
   }
 
   const handleSave = (data) => {
-    updateInfoUsuario(selectedUser, data)
+    updateInfoCliente(selectedCliente, data)
     handleCloseModal();
     reset()
     setTimeout(() => {
@@ -89,7 +88,7 @@ function NuevoUsuarioForm() {
           <div className="flex items-center justify-center min-h-screen">
             <div className="fixed inset-0 bg-black opacity-50"></div>
             <div className="bg-white fixed p-8 rounded shadow-md">
-              <p className="mb-4">¿Estás seguro de que deseas dar de baja este usuario?</p>
+              <p className="mb-4">¿Estás seguro de que deseas dar de baja este cliente?</p>
               <div className="flex justify-end">
                 <button className="mr-4 text-red-500 hover:text-red-700" onClick={handleBaja}>
                   Sí, dar de baja
@@ -106,9 +105,9 @@ function NuevoUsuarioForm() {
       <div className="sm:flex sm:items-center sm:justify-between p-4">
         <div>
           <div className="flex items-center gap-x-3">
-            <h2 className="font-medium text-xl text-gray-800">Agregar Usuario</h2>
+            <h2 className="font-medium text-xl text-gray-800">Agregar Cliente</h2>
           </div>
-          <p className="mt-1 text-sm text-gray-800">En esta sección podrá asignar los usuarios que ingresarán a la aplicación</p>
+          <p className="mt-1 text-sm text-gray-800">Sección que permite agregar clientes de la empresa</p>
         </div>
         <div className="flex items-center mt-4 gap-x-3">
           <Link href={"/"}>
@@ -127,13 +126,22 @@ function NuevoUsuarioForm() {
         <div className="w-full lg:w-1/2">
           <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto p-4 shadow-md rounded-lg">
             <div className="mb-4">
-              <label htmlFor="nombre" className="block text-gray-700 font-bold mb-2">Nombre</label>
+              <label htmlFor="nombreEmpresa" className="block text-gray-700 font-bold mb-2">Nombre de la empresa</label>
               <input
-                id="nombre"
-                {...register("nombre", { required: "El nombre es obligatorio" })}
+                id="nombreEmpresa"
+                {...register("nombreEmpresa", { required: "El nombre de la empresa es obligatorio" })}
                 className={`w-full px-3 py-2 border ${errors.nombre ? 'border-red-500' : 'border-gray-300'} rounded-md`}
               />
-              {errors.nombre && <p className="text-red-500 text-sm mt-1">{errors.nombre.message}</p>}
+              {errors.nombreEmpresa && <p className="text-red-500 text-sm mt-1">{errors.nombreEmpresa.message}</p>}
+            </div>
+            <div className="mb-4">
+              <label htmlFor="nombreCompleto" className="block text-gray-700 font-bold mb-2">Nombre y apellido</label>
+              <input
+                id="nombreCompleto"
+                {...register("nombreCompleto", { required: "El nombre del referente de la empresa es obligatorio" })}
+                className={`w-full px-3 py-2 border ${errors.nombre ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+              />
+              {errors.nombreCompleto && <p className="text-red-500 text-sm mt-1">{errors.nombreCompleto.message}</p>}
             </div>
             <div className="mb-4">
               <label htmlFor="telefono" className="block text-gray-700 font-bold mb-2">Teléfono</label>
@@ -143,29 +151,6 @@ function NuevoUsuarioForm() {
                 className={`w-full px-3 py-2 border ${errors.telefono ? 'border-red-500' : 'border-gray-300'} rounded-md`}
               />
               {errors.telefono && <p className="text-red-500 text-sm mt-1">{errors.telefono.message}</p>}
-            </div>
-            <div className="mb-4">
-              <label htmlFor="role" className="block text-gray-700 font-bold mb-2">Role</label>
-              <select
-                id="role"
-                {...register("role", { required: "El role es obligatorio" })}
-                className={`w-full px-3 py-2 border ${errors.role ? 'border-red-500' : 'border-gray-300'} rounded-md`}
-              >
-                {roles.map((role, index) => (
-                  <option key={index} value={role}>{role}</option>
-                ))}
-              </select>
-              {errors.role && <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>}
-            </div>
-            <div className="mb-4">
-              <label htmlFor="email" className="block text-gray-700 font-bold mb-2">Correo</label>
-              <input
-                id="email"
-                type="email"
-                {...register("email", { required: "El correo es obligatorio", pattern: { value: /\S+@\S+\.\S+/, message: "El formato del correo es inválido" } })}
-                className={`w-full px-3 py-2 border ${errors.correo ? 'border-red-500' : 'border-gray-300'} rounded-md`}
-              />
-              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
             </div>
             <input
               type="submit"
@@ -180,13 +165,16 @@ function NuevoUsuarioForm() {
               <thead className="bg-gray-50">
                 <tr>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Email
+                    Empresa
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Role
+                    Referente
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Estado
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Telefono
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Acciones
@@ -194,23 +182,26 @@ function NuevoUsuarioForm() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {data && data.map((user) => (
+                {data && data.map((cliente) => (
 
-                  user.estado == "activo" ? (
-                    <tr key={user.id}>
+                  cliente.estado == "activo" ? (
+                    <tr key={cliente.id}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {user.email}
+                        {cliente.empresa}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {user.role}
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {cliente.referente}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold uppercase text-green-500">
-                        {user.estado}
+                        {cliente.estado}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold uppercase text-gray-500">
+                        {cliente.telefono}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex space-x-2">
                         <button
                           className="btn btn-warning btn-sm flex flex-row"
-                          onClick={() => handleEdit(user)}
+                          onClick={() => handleEdit(cliente)}
                         >
                           <PencilSquareIcon className="h-5 w-5" aria-hidden="true" />
                           Editar
@@ -218,12 +209,10 @@ function NuevoUsuarioForm() {
 
                         <button
                           className="btn btn-error btn-sm flex flex-row pl-5"
-                          onClick={() => { setShowBajaModal(true), setSelectedUser(user.id) }}
+                          onClick={() => { setShowBajaModal(true), setSelectedCliente(cliente.id) }}
                         >
-
                           <ArchiveBoxXMarkIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
                           Baja
-
                         </button>
                       </td>
                     </tr>
@@ -235,10 +224,10 @@ function NuevoUsuarioForm() {
         </div>
       </div>
 
-      <UpdateUsuarioForm
+      <UpdateClienteForm
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        user={selectedUser}
+        user={selectedCliente}
         onSave={handleSave}
         register={register}
         setValue={setValue}
@@ -250,4 +239,4 @@ function NuevoUsuarioForm() {
 };
 
 
-export default NuevoUsuarioForm
+export default NuevoClienteForm
