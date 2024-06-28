@@ -10,9 +10,12 @@ import {
   getClientes,
   getContenedores,
   getChoferes1,
+  updateEstadoContenedor,
 } from "../firebase/firestore/firestore.js";
 import Select from "react-select";
 import { useAsync } from "../hooks/useAsync.js";
+import { useRouter } from "next/navigation";
+import { Router } from "next/router.js";
 
 const db = getFirestore(app);
 
@@ -22,10 +25,14 @@ function NuevoPedidoForm() {
   // el estado se guardaria como pendiente
   const estadoPendiente = "pendiente";
   // el estado del cliente seleccionado
-  const [selectedCliente, setSelectedCliente] = useState(null);
-  const [selectedContenedor, setSelectedContenedor] = useState(null);
-  const [selectedChofer, setSelectedChofer] = useState(null);
+  const [selectedCliente, setSelectedCliente] = useState({});
+  const [selectedContenedor, setSelectedContenedor] = useState({});
+  const [selectedChofer, setSelectedChofer] = useState({});
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
+  const [clientes, setClientes] = useState([]);
+  const [contenedores, setContenedores] = useState([]);
+  const [choferes, setChoferes] = useState([]);
+  const router = useRouter();
 
   // useForm es un hook que gestiona el estado de un formulario y se desestructuran diferentes funciones y valores para trabajar con formularios
   // https://www.youtube.com/watch?v=1MxevPIZgVc
@@ -50,22 +57,22 @@ function NuevoPedidoForm() {
     estadoPendiente,
     telefono_cliente,
     fechaPedido,
-    contenedor,
-    cliente,
-    chofer
+    cliente, // Esto ahora será solo el nombre de la empresa
+    chofer, // Esto ahora será solo el nombre del chofer
+    contenedor
   ) => {
     try {
       const docRef = await addDoc(collection(db, "pedidos"), {
-        nombreCliente: recibe,
+        recibe: recibe,
         direccion: address,
         lat: lat,
         lng: lng,
         estado: estadoPendiente,
         telefono: telefono_cliente,
         fechaPedido: fechaPedido,
-        contenedor: contenedor || "",
-        cliente: cliente,
-        chofer: chofer,
+        cliente: cliente, // Guardar solo el nombre del cliente
+        chofer: chofer, // Guardar solo el nombre del chofer
+        contenedor: contenedor, // Guardar solo el número del contenedor
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
@@ -74,39 +81,68 @@ function NuevoPedidoForm() {
   };
 
   const onSubmit = (data) => {
+    const clienteSeleccionado = clientes.find(
+      (c) => c.value === selectedCliente.value
+    );
     console.log(data);
+    const choferSeleccionado = choferes.find(
+      (c) => c.value === selectedChofer.value
+    );
+    const contenedorSeleccionado = contenedores.find(
+      (c) => c.value === selectedContenedor.value
+    );
+
     guardarInformacionDeUbicacion(
-      data.recibe,
+      data.recibe || "",
+
       data.address,
       data.latitude,
       data.longitude,
       estadoPendiente,
-      data.telefono_cliente,
+      data.telefono_cliente || "",
       data.fechaPedido,
-      selectedContenedor,
-      selectedCliente,
-      selectedChofer
+      clienteSeleccionado ? clienteSeleccionado.label : "", // Nombre del cliente
+      choferSeleccionado ? choferSeleccionado.label : "", // Nombre del chofer
+      contenedorSeleccionado ? contenedorSeleccionado.label : "" // Número del contenedor
     );
-    formRef.current.reset();
+    updateEstadoContenedor(selectedContenedor);
+    router.refresh();
   };
 
-  // Utiliza useAsync para obtener los datos de clientes de forma asíncrona
-  const { data: clientes, errorCliente } = useAsync(getClientes);
+  const { data: clientesData, errorCliente } = useAsync(getClientes);
   if (errorCliente) {
     return <div>Error al cargar los clientes : {errorCliente.message} </div>;
   }
 
-  const { data: contenedores, errorContenedor } = useAsync(getContenedores);
+  useEffect(() => {
+    if (clientesData) {
+      setClientes(clientesData);
+    }
+  }, [clientesData]);
+
+  const { data: contenedoresData, errorContenedor } = useAsync(getContenedores);
   if (errorContenedor) {
     return (
       <div>Error al cargar los contenedores: {errorContenedor.message}</div>
     );
   }
 
-  const { data: choferes, errorChofer } = useAsync(getChoferes1);
+  useEffect(() => {
+    if (contenedoresData) {
+      setContenedores(contenedoresData);
+    }
+  }, [contenedoresData]);
+
+  const { data: choferesData, errorChofer } = useAsync(getChoferes1);
   if (errorChofer) {
     return <div>Error al cargar los choferes: {errorChofer.message}</div>;
   }
+
+  useEffect(() => {
+    if (choferesData) {
+      setChoferes(choferesData);
+    }
+  }, [choferesData]);
 
   const handleCheckboxChange = () => {
     setIsCheckboxChecked(!isCheckboxChecked);
@@ -205,9 +241,9 @@ function NuevoPedidoForm() {
           className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-yellow-500 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
           placeholder="Ingeniero Pedro"
           {...register("recibe", {
-            required: "Por favor ingrese el nombre de la persona que recibe",
+            required: false,
             validate: (recibe) => {
-              if (recibe.length < 3) {
+              if (recibe.length > 0 && recibe.length < 3) {
                 return "El nombre es muy corto";
               }
             },
@@ -222,7 +258,7 @@ function NuevoPedidoForm() {
           Cliente
         </label>
 
-        <div className="relative w-full cursor-default bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+        <div className="relative w-full cursor-default py-2 text-left  focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
           <Select
             placeholder="Seleccione un cliente"
             name="cliente"
@@ -246,12 +282,9 @@ function NuevoPedidoForm() {
           className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-yellow-500 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
           placeholder="Número de telefono"
           {...register("telefono_cliente", {
-            required: "Ingrese el telefono del cliente por favor",
+            required: false,
             validate: (telefono_cliente) => {
-              if (telefono_cliente == "") {
-                return "Ingrese un numero de telefono";
-              }
-              if (telefono_cliente.length < 8) {
+              if (telefono_cliente.length > 0 && telefono_cliente.length < 8) {
                 return "Ingrese un numero de al menos 8 cifras";
               }
             },
@@ -262,7 +295,7 @@ function NuevoPedidoForm() {
         <div>
           <label
             htmlFor="fechaPedido"
-            className="text-gray-800 text-sm font-bold leading-tight tracking-normal"
+            className="text-gray-800 text-sm  pr-4 font-bold leading-tight tracking-normal"
           >
             Fecha del pedido
           </label>
@@ -280,7 +313,7 @@ function NuevoPedidoForm() {
                 }
               },
             })}
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-yellow-600 dark:focus:border-yellow-500 focus:outline-none focus:ring-0 focus:border-yellow-500 peer"
+            className="block py-2.5 px-0 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-yellow-600 dark:focus:border-yellow-500 focus:outline-none focus:ring-0 focus:border-yellow-500 peer"
           />
           {errors.fechaPedido && errors.fechaPedido.type === "required" && (
             <span>Ingrese la fecha de entrega por favor</span>
@@ -291,13 +324,13 @@ function NuevoPedidoForm() {
         </div>
 
         <label
-          htmlFor="cliente"
+          htmlFor="chofer"
           className="text-gray-800 text-sm font-bold leading-tight tracking-normal"
         >
           Chofer
         </label>
 
-        <div className="relative w-full cursor-default bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+        <div className="relative w-full cursor-default py-2 text-left focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
           <Select
             placeholder="Seleccione un chofer"
             id="chofer"
@@ -325,7 +358,7 @@ function NuevoPedidoForm() {
           <span className="ml-2">Habilitar contenedor</span>
         </label>
 
-        <div className="relative w-full cursor-default bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+        <div className="relative w-full cursor-default py-2  text-left focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
           <Select
             placeholder="Seleccione un contenedor"
             id="contenedores"

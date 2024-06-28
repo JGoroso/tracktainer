@@ -38,7 +38,7 @@ export const getContenedores = async () => {
     const response = await getDocs(contenedoresCollectionRef);
     const contenedoresFromDoc = response.docs.map((c) => {
       const data = c.data();
-      return { value: c.id, label: data.numero, ...data };
+      return { value: data.id, label: data.numero };
     });
     return contenedoresFromDoc;
   } catch (error) {
@@ -57,7 +57,7 @@ export const getChoferes1 = async () => {
     const contenedoresFromDoc = response.docs.map((c) => {
       const data = c.data();
 
-      return { value: c.id, label: data.nombre, ...data };
+      return { value: data.id, label: data.nombre };
     });
     return contenedoresFromDoc;
   } catch (error) {
@@ -100,9 +100,9 @@ export const getClientes = async () => {
   const coleccionClientes = query(collection(db, "clientes"));
   return getDocs(coleccionClientes)
     .then((response) => {
-      const clientesFromDoc = response.docs.map((user) => {
-        const data = user.data();
-        return { id: user.id, label: data.empresa, ...data };
+      const clientesFromDoc = response.docs.map((cliente) => {
+        const data = cliente.data();
+        return { value: cliente.id, label: data.empresa };
       });
       return clientesFromDoc;
     })
@@ -216,6 +216,30 @@ export const updateEstadoPedido = async (docId, estado) => {
       console.error("Error al borrar el documento:", error);
     });
 };
+
+// Update estado del contenedor
+export const updateEstadoContenedor = async (contNumero) => {
+  const q = query(
+    collection(db, "contenedores"),
+    where("numero", "==", contNumero.label)
+  );
+
+  try {
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      querySnapshot.forEach(async (doc) => {
+        await updateDoc(doc.ref, {
+          estado: "ocupado",
+        });
+        console.log("Contenedor actualizado exitosamente");
+      });
+    } else {
+      console.log("No se encontró el contenedor con el número proporcionado");
+    }
+  } catch (error) {
+    console.error("Error al actualizar el contenedor:", error);
+  }
+}; //agregar un if vacío cuando no hay disponibles
 
 export const fetchOrdersByDateRange = async (
   startDateStr,
