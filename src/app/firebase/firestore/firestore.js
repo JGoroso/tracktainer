@@ -38,7 +38,7 @@ export const getContenedores = async () => {
     const response = await getDocs(contenedoresCollectionRef);
     const contenedoresFromDoc = response.docs.map((c) => {
       const data = c.data();
-      return { value: data.id, label: data.numero };
+      return { value: c.id, ...data };
     });
     return contenedoresFromDoc;
   } catch (error) {
@@ -47,7 +47,7 @@ export const getContenedores = async () => {
   }
 };
 
-export const getChoferes1 = async () => {
+export const getChoferes = async () => {
   const contenedoresCollectionRef = query(
     collection(db, "users"),
     where("role", "==", "chofer")
@@ -56,8 +56,7 @@ export const getChoferes1 = async () => {
     const response = await getDocs(contenedoresCollectionRef);
     const contenedoresFromDoc = response.docs.map((c) => {
       const data = c.data();
-
-      return { value: data.id, label: data.nombre };
+      return { value: c.id, label: data.nombre };
     });
     return contenedoresFromDoc;
   } catch (error) {
@@ -100,11 +99,11 @@ export const getClientes = async () => {
   const coleccionClientes = query(collection(db, "clientes"));
   return getDocs(coleccionClientes)
     .then((response) => {
-      const clientesFromDoc = response.docs.map((cliente) => {
+      const clientesFromDocs = response.docs.map((cliente) => {
         const data = cliente.data();
-        return { value: cliente.id, label: data.empresa };
+        return { id: cliente.id, ...data };
       });
-      return clientesFromDoc;
+      return clientesFromDocs;
     })
     .catch((error) => {
       console.log(error);
@@ -219,27 +218,36 @@ export const updateEstadoPedido = async (docId, estado) => {
 
 // Update estado del contenedor
 export const updateEstadoContenedor = async (contNumero) => {
-  const q = query(
-    collection(db, "contenedores"),
-    where("numero", "==", contNumero.label)
-  );
+  if (contNumero) {
+    try {
+      // Creamos una referencia a la colección 'contenedores' y realizamos la consulta filtrando por el número de contenedor
+      const contenedoresCollectionRef = collection(db, "contenedores");
+      const q = query(contenedoresCollectionRef, where("numero", "==", contNumero));
 
-  try {
-    const querySnapshot = await getDocs(q);
-    if (!querySnapshot.empty) {
-      querySnapshot.forEach(async (doc) => {
-        await updateDoc(doc.ref, {
-          estado: "ocupado",
+      // Ejecutamos la consulta para obtener los documentos que coinciden
+      const querySnapshot = await getDocs(q);
+
+      // Iteramos sobre los resultados
+      querySnapshot.forEach((doc) => {
+        // Obtenemos la referencia del documento y actualizamos el campo 'estado' a 'ocupado'
+        const contenedorRef = doc.ref; // Accedemos a la referencia del documento con doc.ref
+        updateDoc(contenedorRef, {
+          estado: "ocupado"
+        }).then(() => {
+          console.log(`Estado actualizado a "ocupado" para el contenedor con número ${contNumero}`);
+        }).catch((error) => {
+          console.error("Error actualizando el estado del contenedor:", error);
         });
-        console.log("Contenedor actualizado exitosamente");
       });
-    } else {
-      console.log("No se encontró el contenedor con el número proporcionado");
+
+    } catch (error) {
+      console.error("Error obteniendo documentos:", error);
     }
-  } catch (error) {
-    console.error("Error al actualizar el contenedor:", error);
+  } else {
+    console.log("no se asignaron contenedores")
   }
-}; //agregar un if vacío cuando no hay disponibles
+};
+
 
 export const fetchOrdersByDateRange = async (
   startDateStr,

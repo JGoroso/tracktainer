@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import { addUsuario, getUsuarios, updateEstadoUsuario, updateInfoUsuario } from '../firebase/firestore/firestore'
+import { addUsuario, getClientes, getUsuarios, updateEstadoUsuario, updateInfoUsuario } from '../firebase/firestore/firestore'
 import { useAsync } from '../hooks/useAsync'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
@@ -35,8 +35,8 @@ function NuevoUsuarioForm() {
   const roles = ["admin", "chofer"]
 
 
-  // Se llama a la funcion getUsuarios que nos devuelve todos los objetos de la coleccion 'Usuarios' en forma de promesa
-  const getUsuariosFromFirestore = () => getUsuarios()
+  // Se llama a la funcion getClientes que nos devuelve todos los objetos de la coleccion 'Clientes' en forma de promesa
+  const getUsuariosFromFirestore = () => getClientes()
   // Utilizamos un hook que hara un async await al que le pasamos una funcion asincrona que retorna una promesa
   // podremos recibir la data utilizando un useEffect (y con el refresh podemos refrescar los datos) y luego utilizar estos datos donde queramos
   const { data } = useAsync(getUsuariosFromFirestore, refresh)
@@ -195,7 +195,6 @@ function NuevoUsuarioForm() {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {data && data.map((user) => (
-
                   user.estado == "activo" ? (
                     <tr key={user.id}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">

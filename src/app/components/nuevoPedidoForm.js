@@ -1,4 +1,5 @@
-import React, { useState, useEffect, ChangeEvent, useRef } from "react";
+'use client'
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Searchbox from "./searchBox.js";
 import { collection, addDoc } from "firebase/firestore";
@@ -7,47 +8,45 @@ import { getFirestore } from "firebase/firestore";
 import Link from "next/link.js";
 import Image from "next/image.js";
 import {
+  getChoferes,
   getClientes,
   getContenedores,
-  getChoferes1,
   updateEstadoContenedor,
 } from "../firebase/firestore/firestore.js";
-import Select from "react-select";
 import { useAsync } from "../hooks/useAsync.js";
-import { useRouter } from "next/navigation";
-import { Router } from "next/router.js";
+import { bool } from "yup";
 
 const db = getFirestore(app);
 
 function NuevoPedidoForm() {
-  const formRef = useRef();
   const defaultFecha = new Date();
-  // el estado se guardaria como pendiente
   const estadoPendiente = "pendiente";
-  // el estado del cliente seleccionado
-  const [selectedCliente, setSelectedCliente] = useState({});
-  const [selectedContenedor, setSelectedContenedor] = useState({});
-  const [selectedChofer, setSelectedChofer] = useState({});
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
-  const [clientes, setClientes] = useState([]);
-  const [contenedores, setContenedores] = useState([]);
-  const [choferes, setChoferes] = useState([]);
-  const router = useRouter();
+  console.log(isCheckboxChecked)
+  // Obtenemos data para los listboxes
+  const getClienteFromFirestore = async () => await getClientes();
+  const getChoferesFromFirestore = async () => await getChoferes();
+  const getContenedoresFromFirestore = async () => await getContenedores();
 
-  // useForm es un hook que gestiona el estado de un formulario y se desestructuran diferentes funciones y valores para trabajar con formularios
-  // https://www.youtube.com/watch?v=1MxevPIZgVc
+  const { data: clientesData, error: clientesError } = useAsync(getClienteFromFirestore, "");
+  const { data: choferesData, error: choferesError } = useAsync(getChoferesFromFirestore, "");
+  const { data: contenedoresData, error: contenedoresError } = useAsync(getContenedoresFromFirestore, "");
+
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
-  } = useForm({ defautlValues: {} });
+  } = useForm();
 
   useEffect(() => {
     register("address", { required: "Por favor, ingrese una direccion" });
     register("latitude", { required: true, min: -90, max: 90 });
     register("longitude", { required: true, min: -180, max: 180 });
   }, [register]);
+
+
 
   const guardarInformacionDeUbicacion = async (
     recibe,
@@ -57,8 +56,8 @@ function NuevoPedidoForm() {
     estadoPendiente,
     telefono_cliente,
     fechaPedido,
-    cliente, // Esto ahora será solo el nombre de la empresa
-    chofer, // Esto ahora será solo el nombre del chofer
+    cliente,
+    chofer,
     contenedor
   ) => {
     try {
@@ -70,9 +69,9 @@ function NuevoPedidoForm() {
         estado: estadoPendiente,
         telefono: telefono_cliente,
         fechaPedido: fechaPedido,
-        cliente: cliente, // Guardar solo el nombre del cliente
-        chofer: chofer, // Guardar solo el nombre del chofer
-        contenedor: contenedor, // Guardar solo el número del contenedor
+        cliente: cliente,
+        chofer: chofer,
+        contenedor: contenedor,
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
@@ -81,72 +80,43 @@ function NuevoPedidoForm() {
   };
 
   const onSubmit = (data) => {
-    const clienteSeleccionado = clientes.find(
-      (c) => c.value === selectedCliente.value
-    );
-    console.log(data);
-    const choferSeleccionado = choferes.find(
-      (c) => c.value === selectedChofer.value
-    );
-    const contenedorSeleccionado = contenedores.find(
-      (c) => c.value === selectedContenedor.value
-    );
-
+    setIsCheckboxChecked(!isCheckboxChecked)
     guardarInformacionDeUbicacion(
       data.recibe || "",
-
       data.address,
       data.latitude,
       data.longitude,
       estadoPendiente,
       data.telefono_cliente || "",
       data.fechaPedido,
-      clienteSeleccionado ? clienteSeleccionado.label : "", // Nombre del cliente
-      choferSeleccionado ? choferSeleccionado.label : "", // Nombre del chofer
-      contenedorSeleccionado ? contenedorSeleccionado.label : "" // Número del contenedor
+      data.cliente,
+      data.chofer,
+      data.contenedor || "",
     );
-    updateEstadoContenedor(selectedContenedor);
-    router.refresh();
+    updateEstadoContenedor(data.contenedor);
+    reset();
   };
 
-  const { data: clientesData, errorCliente } = useAsync(getClientes);
-  if (errorCliente) {
-    return <div>Error al cargar los clientes : {errorCliente.message} </div>;
-  }
 
+
+  // Usamos este useEffect para darles valores por defecto dado que no se dan en el form
   useEffect(() => {
-    if (clientesData) {
-      setClientes(clientesData);
+    if (clientesData && clientesData.length > 0) {
+      setValue('cliente', clientesData[0].empresa);
     }
-  }, [clientesData]);
-
-  const { data: contenedoresData, errorContenedor } = useAsync(getContenedores);
-  if (errorContenedor) {
-    return (
-      <div>Error al cargar los contenedores: {errorContenedor.message}</div>
-    );
-  }
-
-  useEffect(() => {
-    if (contenedoresData) {
-      setContenedores(contenedoresData);
+    if (choferesData && choferesData.length > 0) {
+      setValue('chofer', choferesData[0].label);
     }
-  }, [contenedoresData]);
-
-  const { data: choferesData, errorChofer } = useAsync(getChoferes1);
-  if (errorChofer) {
-    return <div>Error al cargar los choferes: {errorChofer.message}</div>;
-  }
-
-  useEffect(() => {
-    if (choferesData) {
-      setChoferes(choferesData);
+    if (contenedoresData && contenedoresData.length > 0) {
+      setValue('contenedor', contenedoresData[0].numero);
     }
-  }, [choferesData]);
+  }, [clientesData, choferesData, setValue]);
+
 
   const handleCheckboxChange = () => {
-    setIsCheckboxChecked(!isCheckboxChecked);
+    setIsCheckboxChecked(!isCheckboxChecked)
   };
+
 
   return (
     <>
@@ -200,7 +170,7 @@ function NuevoPedidoForm() {
           </Link>
         </div>
       </div>
-      <form ref={formRef} className="m-20" onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto p-4 shadow-md rounded-lg">
         <div className="w-full flex justify-start text-gray-600 mb-3">
           <Image alt="" width={40} height={40} src="/waste-bin.png" priority />
         </div>
@@ -223,7 +193,6 @@ function NuevoPedidoForm() {
                 setValue("latitude", latitude);
                 setValue("longitude", longitude);
               }}
-              defautlValue=""
             />
           }
           {errors.address && <p>{errors.address.message}</p>}
@@ -259,14 +228,16 @@ function NuevoPedidoForm() {
         </label>
 
         <div className="relative w-full cursor-default py-2 text-left  focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-          <Select
-            placeholder="Seleccione un cliente"
-            name="cliente"
+          <select
             id="cliente"
-            value={selectedCliente}
-            onChange={setSelectedCliente}
-            options={clientes || []}
-          />
+            {...register("cliente")}
+            className={`w-full px-3 py-2 border ${errors.cliente ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+          >
+            {clientesData && clientesData.map((cliente, index) => (
+              <option key={index} value={cliente.empresa}>{cliente.empresa}</option>
+            ))}
+          </select>
+          {errors.cliente && <p className="text-red-500 text-sm mt-1">{errors.cliente.message}</p>}
         </div>
 
         <label
@@ -331,14 +302,17 @@ function NuevoPedidoForm() {
         </label>
 
         <div className="relative w-full cursor-default py-2 text-left focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-          <Select
-            placeholder="Seleccione un chofer"
-            id="chofer"
-            name="chofer"
-            value={selectedChofer}
-            onChange={setSelectedChofer}
-            options={choferes || []}
-          />
+          <div className="relative w-full cursor-default py-2 text-left  focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+            <select
+              id="chofer"
+              {...register("chofer")}
+              className={`w-full px-3 py-2 border ${errors.chofer ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+            >
+              {choferesData && choferesData.map((chofer, index) => (
+                <option key={index} value={chofer.label}>{chofer.label}</option>
+              ))}
+            </select>
+          </div>
         </div>
         <div>
           <label
@@ -350,24 +324,26 @@ function NuevoPedidoForm() {
         </div>
         <label className="inline-flex items-center">
           <input
+
             type="checkbox"
+
             checked={isCheckboxChecked}
-            onChange={handleCheckboxChange}
+            onChange={() => handleCheckboxChange()}
             className="form-checkbox"
           />
           <span className="ml-2">Habilitar contenedor</span>
         </label>
 
         <div className="relative w-full cursor-default py-2  text-left focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-          <Select
-            placeholder="Seleccione un contenedor"
-            id="contenedores"
-            name="contenedores"
-            value={selectedContenedor}
-            onChange={setSelectedContenedor}
-            options={contenedores || []}
-            isDisabled={!isCheckboxChecked}
-          />
+          <select
+            id="contenedor"
+            {...register("contenedor")}
+            disabled={!isCheckboxChecked}
+          >
+            {isCheckboxChecked && contenedoresData && contenedoresData.map((contenedor, index) => (
+              <option key={index} value={contenedor.numero}>{contenedor.numero}</option>
+            ))}
+          </select>
         </div>
 
         <button
@@ -376,7 +352,7 @@ function NuevoPedidoForm() {
         >
           Agregar pedido
         </button>
-      </form>
+      </form >
     </>
   );
 }
