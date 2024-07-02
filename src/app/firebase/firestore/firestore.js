@@ -216,8 +216,8 @@ export const updateEstadoPedido = async (docId, estado) => {
     });
 };
 
-// Update estado del contenedor
-export const updateEstadoContenedor = async (contNumero) => {
+// Update estado del contenedor a ocupado
+export const updateEstadoContenedorOcupado = async (contNumero) => {
   if (contNumero) {
     try {
       // Creamos una referencia a la colección 'contenedores' y realizamos la consulta filtrando por el número de contenedor
@@ -247,6 +247,39 @@ export const updateEstadoContenedor = async (contNumero) => {
     console.log("no se asignaron contenedores")
   }
 };
+
+// Update estado del contenedor a disponible
+export const updateEstadoContenedorDisponible = async (contNumero) => {
+  if (contNumero) {
+    try {
+      // Creamos una referencia a la colección 'contenedores' y realizamos la consulta filtrando por el número de contenedor
+      const contenedoresCollectionRef = collection(db, "contenedores");
+      const q = query(contenedoresCollectionRef, where("numero", "==", contNumero));
+
+      // Ejecutamos la consulta para obtener los documentos que coinciden
+      const querySnapshot = await getDocs(q);
+
+      // Iteramos sobre los resultados
+      querySnapshot.forEach((doc) => {
+        // Obtenemos la referencia del documento y actualizamos el campo 'estado' a 'ocupado'
+        const contenedorRef = doc.ref; // Accedemos a la referencia del documento con doc.ref
+        updateDoc(contenedorRef, {
+          estado: "disponible"
+        }).then(() => {
+          console.log(`Estado actualizado a "disponible" para el contenedor con número ${contNumero}`);
+        }).catch((error) => {
+          console.error("Error actualizando el estado del contenedor:", error);
+        });
+      });
+
+    } catch (error) {
+      console.error("Error obteniendo documentos:", error);
+    }
+  } else {
+    console.log("no se asignaron contenedores")
+  }
+};
+
 
 
 export const fetchOrdersByDateRange = async (

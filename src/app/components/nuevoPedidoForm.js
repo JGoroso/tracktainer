@@ -11,7 +11,7 @@ import {
   getChoferes,
   getClientes,
   getContenedores,
-  updateEstadoContenedor,
+  updateEstadoContenedorOcupado,
 } from "../firebase/firestore/firestore.js";
 import { useAsync } from "../hooks/useAsync.js";
 import { bool } from "yup";
@@ -101,8 +101,10 @@ function NuevoPedidoForm() {
       data.chofer,
       data.contenedor || "",
     );
-    updateEstadoContenedor(data.contenedor);
-    await getContenedoresFromFirestore();
+    updateEstadoContenedorOcupado(data.contenedor);
+    setTimeout(async () => {
+      await getContenedoresFromFirestore();
+    }, 1500);
     reset();
   };
 
@@ -115,9 +117,6 @@ function NuevoPedidoForm() {
     }
     if (choferesData && choferesData.length > 0) {
       setValue('chofer', choferesData[0].label);
-    }
-    if (contenedoresData && contenedoresData.length > 0) {
-      setValue('contenedor', contenedoresData[0].numero);
     }
   }, [clientesData, choferesData, setValue]);
 
@@ -343,12 +342,15 @@ function NuevoPedidoForm() {
 
         <div className="relative w-full cursor-default py-2 text-left focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
           <select
+            defaultValue={'N/A'}
             disabled={!isCheckboxChecked}
             id="contenedor"
             className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-yellow-500 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
             {...register("contenedor")}
           >
-            {contenedoresData.map((contenedor, index) => (
+
+            <option value={'N/A'} disabled>Seleccionar contenedor</option>
+            {contenedoresData && contenedoresData.map((contenedor, index) => (
               <option key={index} value={contenedor.numero}>
                 {contenedor.numero}
               </option>

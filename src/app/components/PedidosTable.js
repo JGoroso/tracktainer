@@ -2,6 +2,7 @@
 import React from "react";
 import {
   getPedidos,
+  updateEstadoContenedorDisponible,
   updateEstadoPedido,
 } from "../firebase/firestore/firestore";
 import { useAsync } from "../hooks/useAsync";
@@ -12,6 +13,7 @@ import { Fragment } from "react";
 import Link from "next/link";
 function PedidosTable() {
   const [pedidoId, setPedidoId] = useState("");
+  const [contenedorNumero, setContenedorNumero] = useState("")
   const [estado, setActualEstado] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [refresh, setRefresh] = useState(false);
@@ -40,6 +42,7 @@ function PedidosTable() {
   // button cancelar, muestra modal para confirmar si el pedido pasa estado cancelado y lo quita de la lista
   const handleCancelModalConfirm = () => {
     updateEstadoPedido(pedidoId, "cancelado");
+    updateEstadoContenedorDisponible(contenedorNumero)
     setShowCancelModal(false);
     setCancelAnimation(true);
     setTimeout(() => {
@@ -300,11 +303,10 @@ function PedidosTable() {
                           <tr key={pedido.id}>
                             <td className="px-2 py-4 text-sm font-medium whitespace-nowrap">
                               <div
-                                className={`inline px-3 py-1 capitalize text-sm font-normal rounded-full ${
-                                  pedido.estado == "entregado"
-                                    ? "text-emerald-500 gap-x-2 bg-emerald-100/60 0"
-                                    : " text-orange-500 gap-x-2 bg-orange-100/60 0"
-                                }   `}
+                                className={`inline px-3 py-1 capitalize text-sm font-normal rounded-full ${pedido.estado == "entregado"
+                                  ? "text-emerald-500 gap-x-2 bg-emerald-100/60 0"
+                                  : " text-orange-500 gap-x-2 bg-orange-100/60 0"
+                                  }   `}
                               >
                                 {pedido.estado}
                               </div>
@@ -350,7 +352,7 @@ function PedidosTable() {
                             <td className="px-2 py-4 text-sm whitespace-nowrap">
                               <div>
                                 <h4 className="text-gray-700 200">
-                                  {pedido.idContenedor}
+                                  {pedido.contenedor}
                                 </h4>
                               </div>
                             </td>
@@ -420,7 +422,7 @@ function PedidosTable() {
                                           href="#"
                                           className={
                                             (active ? "bg-gray-100" : "",
-                                            "block px-4 py-2 text-sm text-gray-700")
+                                              "block px-4 py-2 text-sm text-gray-700")
                                           }
                                           onClick={() => {
                                             setShowModal(true);
@@ -438,11 +440,12 @@ function PedidosTable() {
                                           href="#"
                                           className={
                                             (active ? "bg-gray-100" : "",
-                                            "block px-4 py-2 text-sm text-gray-700")
+                                              "block px-4 py-2 text-sm text-gray-700")
                                           }
                                           onClick={() => {
                                             setShowCancelModal(true),
-                                              setPedidoId(pedido.id);
+                                              setPedidoId(pedido.id),
+                                              setContenedorNumero(pedido.contenedor)
                                           }}
                                         >
                                           Cancelar Pedido
