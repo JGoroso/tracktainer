@@ -160,7 +160,7 @@ function NuevoClienteForm() {
           </form>
         </div>
         <div className="card border border-gray-200 bg-base-100 p-4 shadow-xl mt-8 sm:w-100 lg:w-1/2">
-          <div id="secondbox" className="ps-4 overflow-auto md:pl-4 md:overflow-visible md:w-full">
+          <div id="secondbox" className="ps-4 overflow-auto md:pl-4 md:w-100 ">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
