@@ -22,15 +22,24 @@ function NuevoPedidoForm() {
   const defaultFecha = new Date();
   const estadoPendiente = "pendiente";
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
-  console.log(isCheckboxChecked)
+  const [contenedoresData, setContenedoresData] = useState([]);
+
   // Obtenemos data para los listboxes
   const getClienteFromFirestore = async () => await getClientes();
   const getChoferesFromFirestore = async () => await getChoferes();
-  const getContenedoresFromFirestore = async () => await getContenedores();
+
+  // useEffect para obtener nuevos contenedores luego de cada submit
+  const getContenedoresFromFirestore = async () => {
+    const data = await getContenedores();
+    setContenedoresData(data);
+  };
+
+  useEffect(() => {
+    getContenedoresFromFirestore();
+  }, []);
 
   const { data: clientesData, error: clientesError } = useAsync(getClienteFromFirestore, "");
   const { data: choferesData, error: choferesError } = useAsync(getChoferesFromFirestore, "");
-  const { data: contenedoresData, error: contenedoresError } = useAsync(getContenedoresFromFirestore, "");
 
   const {
     register,
@@ -79,8 +88,7 @@ function NuevoPedidoForm() {
     }
   };
 
-  const onSubmit = (data) => {
-    setIsCheckboxChecked(!isCheckboxChecked)
+  const onSubmit = async (data) => {
     guardarInformacionDeUbicacion(
       data.recibe || "",
       data.address,
@@ -94,6 +102,7 @@ function NuevoPedidoForm() {
       data.contenedor || "",
     );
     updateEstadoContenedor(data.contenedor);
+    await getContenedoresFromFirestore();
     reset();
   };
 
@@ -324,29 +333,31 @@ function NuevoPedidoForm() {
         </div>
         <label className="inline-flex items-center">
           <input
-
             type="checkbox"
-
             checked={isCheckboxChecked}
-            onChange={() => handleCheckboxChange()}
+            onChange={handleCheckboxChange}
             className="form-checkbox"
           />
           <span className="ml-2">Habilitar contenedor</span>
         </label>
 
-        <div className="relative w-full cursor-default py-2  text-left focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+        <div className="relative w-full cursor-default py-2 text-left focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
           <select
-            id="contenedor"
-            {...register("contenedor")}
             disabled={!isCheckboxChecked}
+            id="contenedor"
+            className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-yellow-500 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
+            {...register("contenedor")}
           >
-            {isCheckboxChecked && contenedoresData && contenedoresData.map((contenedor, index) => (
-              <option key={index} value={contenedor.numero}>{contenedor.numero}</option>
+            {contenedoresData.map((contenedor, index) => (
+              <option key={index} value={contenedor.numero}>
+                {contenedor.numero}
+              </option>
             ))}
           </select>
         </div>
 
         <button
+          onClick={handleCheckboxChange}
           type="submit"
           className="text-white mt-4 hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-yellow-500 dark:hover:bg-yellow-500 dark:focus:ring-yellow-500"
         >
