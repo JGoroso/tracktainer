@@ -3,7 +3,7 @@ import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import React, { useState } from 'react'
 import Image from 'next/image'
-import { ArchiveBoxIcon, Bars3Icon, ChartBarSquareIcon, KeyIcon, PencilSquareIcon, UserPlusIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { ArchiveBoxArrowDownIcon, ArchiveBoxIcon, ChartBarSquareIcon, KeyIcon, PencilSquareIcon, UserPlusIcon } from '@heroicons/react/24/outline'
 
 function NavBar({ }) {
 
@@ -17,7 +17,7 @@ function NavBar({ }) {
 
   return (
     <nav className="z-50">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <div className="max-w-screen-xxl flex flex-wrap items-center justify-between mx-auto p-4">
         <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
           <Image src="/logo.png" width={42} height={42} alt="Tracktainer Logo" />
           <span className="self-center text-2xl whitespace-nowrap">Tracktainer</span>
@@ -69,6 +69,15 @@ function NavBar({ }) {
                 </a>
               </Link>
             )}
+            
+              <Link legacyBehavior href="/AgregarContenedor">
+                <a onClick={toggleMenu} className="text-[#545F71] flex items-center">
+                  <ArchiveBoxArrowDownIcon className="h-8 w-8" aria-hidden="true" />
+
+                  <span className="ml-2">Agregar Contenedor</span>
+                </a>
+              </Link>
+          
             {session?.user.role === 'admin' && (
               <Link legacyBehavior href="/Reportes">
                 <a onClick={toggleMenu} className="text-[#545F71] flex items-center">
