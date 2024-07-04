@@ -16,7 +16,7 @@ function UpdateClienteForm({ isOpen, onClose, user, onSave, register, setValue, 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
       <div className="bg-white p-6 rounded-lg shadow-lg">
-        <h2 className="text-xl font-bold mb-4">Editar Usuario</h2>
+        <h2 className="text-xl font-bold mb-4">Editar Cliente</h2>
         <form onSubmit={handleSubmit(onSave)}>
           <div className="mb-4">
             <label htmlFor="edit-nombreEmpresa" className="block text-gray-700 font-bold mb-2">Empresa</label>
