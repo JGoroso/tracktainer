@@ -3,7 +3,7 @@ import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import React, { useState } from 'react'
 import Image from 'next/image'
-import { ArchiveBoxIcon, Bars3Icon, ChartBarSquareIcon, KeyIcon, PencilSquareIcon, UserPlusIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { ArchiveBoxArrowDownIcon, ArchiveBoxIcon, ChartBarSquareIcon, KeyIcon, PencilSquareIcon, UserPlusIcon } from '@heroicons/react/24/outline'
 
 function NavBar({ }) {
 
@@ -66,6 +66,15 @@ function NavBar({ }) {
                   <UserPlusIcon className="h-8 w-8" aria-hidden="true" />
 
                   <span className="ml-2">Agregar Cliente</span>
+                </a>
+              </Link>
+            )}
+            {session?.user.role === 'admin' && (
+              <Link legacyBehavior href="/AgregarContenedor">
+                <a onClick={toggleMenu} className="text-[#545F71] flex items-center">
+                  <ArchiveBoxArrowDownIcon className="h-8 w-8" aria-hidden="true" />
+
+                  <span className="ml-2">Agregar Contenedor</span>
                 </a>
               </Link>
             )}

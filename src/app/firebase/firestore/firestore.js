@@ -29,6 +29,7 @@ export const getPedidos = async () => {
     });
 };
 
+// solo los contenedores disponibles
 export const getContenedores = async () => {
   const contenedoresCollectionRef = query(
     collection(db, "contenedores"),
@@ -44,6 +45,65 @@ export const getContenedores = async () => {
   } catch (error) {
     console.error("Error al cargar los contenedores: ", error);
     throw error;
+  }
+};
+
+export const getAllContenedores = async () => {
+  const contenedoresCollectionRef = query(
+    collection(db, "contenedores")
+  );
+  try {
+    const response = await getDocs(contenedoresCollectionRef);
+    const contenedoresFromDoc = response.docs.map((c) => {
+      const data = c.data();
+      return { value: c.id, ...data };
+    });
+    return contenedoresFromDoc;
+  } catch (error) {
+    console.error("Error al cargar los contenedores: ", error);
+    throw error;
+  }
+};
+
+// Función para generar un string alfanumérico de 5 caracteres
+const generateUniqueNumero = (existingNumeros) => {
+  const characters = '0123456789';
+  let newNumero;
+  do {
+    newNumero = '';
+    for (let i = 0; i < 5; i++) {
+      newNumero += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+  } while (existingNumeros.includes(newNumero));
+  return 'TT' + newNumero;
+};
+
+export const addContenedor = async () => {
+  const contenedoresCollectionRef = query(collection(db, "contenedores"));
+
+  try {
+    const response = await getDocs(contenedoresCollectionRef);
+
+    const contenedoresFromDoc = response.docs.map((c) => ({
+      id: c.id,
+      ...c.data()
+    }));
+
+    // Obtener todos los números existentes
+    const existingNumeros = contenedoresFromDoc.map(contenedor => contenedor.numero);
+
+    // Generar un número único
+    const newNumero = generateUniqueNumero(existingNumeros);
+
+    // Agregar el nuevo contenedor con el número generado
+    const docRef = await addDoc(collection(db, "contenedores"), {
+      estado: "disponible",
+      numero: newNumero
+    });
+
+    console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding document: ", e);
   }
 };
 
@@ -280,6 +340,38 @@ export const updateEstadoContenedorDisponible = async (contNumero) => {
   }
 };
 
+
+// Update estado del contenedor a roto
+export const updateEstadoContenedorRoto = async (contNumero) => {
+  if (contNumero.numero) {
+    try {
+      // Creamos una referencia a la colección 'contenedores' y realizamos la consulta filtrando por el número de contenedor
+      const contenedoresCollectionRef = collection(db, "contenedores");
+      const q = query(contenedoresCollectionRef, where("numero", "==", contNumero.numero));
+
+      // Ejecutamos la consulta para obtener los documentos que coinciden
+      const querySnapshot = await getDocs(q);
+
+      // Iteramos sobre los resultados
+      querySnapshot.forEach((doc) => {
+        // Obtenemos la referencia del documento y actualizamos el campo 'estado' a 'ocupado'
+        const contenedorRef = doc.ref; // Accedemos a la referencia del documento con doc.ref
+        updateDoc(contenedorRef, {
+          estado: "roto"
+        }).then(() => {
+          console.log(`Estado actualizado a "disponible" para el contenedor con número ${contNumero}`);
+        }).catch((error) => {
+          console.error("Error actualizando el estado del contenedor:", error);
+        });
+      });
+
+    } catch (error) {
+      console.error("Error obteniendo documentos:", error);
+    }
+  } else {
+    console.log("no se asignaron contenedores")
+  }
+};
 
 
 export const fetchOrdersByDateRange = async (

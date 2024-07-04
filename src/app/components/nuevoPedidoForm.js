@@ -14,7 +14,6 @@ import {
   updateEstadoContenedorOcupado,
 } from "../firebase/firestore/firestore.js";
 import { useAsync } from "../hooks/useAsync.js";
-import { bool } from "yup";
 
 const db = getFirestore(app);
 
@@ -101,30 +100,16 @@ function NuevoPedidoForm() {
       data.chofer,
       data.contenedor || "",
     );
-    updateEstadoContenedorOcupado(data.contenedor);
+    updateEstadoContenedorOcupado(data.contenedor); 1
     setTimeout(async () => {
       await getContenedoresFromFirestore();
     }, 1500);
     reset();
   };
 
-
-
-  // Usamos este useEffect para darles valores por defecto dado que no se dan en el form
-  useEffect(() => {
-    if (clientesData && clientesData.length > 0) {
-      setValue('cliente', clientesData[0].empresa);
-    }
-    if (choferesData && choferesData.length > 0) {
-      setValue('chofer', choferesData[0].label);
-    }
-  }, [clientesData, choferesData, setValue]);
-
-
   const handleCheckboxChange = () => {
     setIsCheckboxChecked(!isCheckboxChecked)
   };
-
 
   return (
     <>
@@ -216,7 +201,6 @@ function NuevoPedidoForm() {
           id="recibe"
           name="recibe"
           className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-yellow-500 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
-          placeholder="Ingeniero Pedro"
           {...register("recibe", {
             required: false,
             validate: (recibe) => {
@@ -237,10 +221,12 @@ function NuevoPedidoForm() {
 
         <div className="relative w-full cursor-default py-2 text-left  focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
           <select
+            defaultValue={'N/A'}
             id="cliente"
             {...register("cliente")}
             className={`w-full px-3 py-2 border ${errors.cliente ? 'border-red-500' : 'border-gray-300'} rounded-md`}
           >
+            <option value={"N/A"} disabled>Seleccionar cliente</option>
             {clientesData && clientesData.map((cliente, index) => (
               <option key={index} value={cliente.empresa}>{cliente.empresa}</option>
             ))}
@@ -312,10 +298,13 @@ function NuevoPedidoForm() {
         <div className="relative w-full cursor-default py-2 text-left focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
           <div className="relative w-full cursor-default py-2 text-left  focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
             <select
+              defaultValue={'N/A'}
               id="chofer"
               {...register("chofer")}
               className={`w-full px-3 py-2 border ${errors.chofer ? 'border-red-500' : 'border-gray-300'} rounded-md`}
             >
+              <option value={"N/A"} disabled>Seleccionar chofer</option>
+
               {choferesData && choferesData.map((chofer, index) => (
                 <option key={index} value={chofer.label}>{chofer.label}</option>
               ))}
