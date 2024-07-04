@@ -60,9 +60,8 @@ function NuevoContenedor() {
   };
 
   return (
+
     <>
-
-
       <div className="sm:flex sm:items-center sm:justify-between p-4">
         <div>
           <div className="flex items-center gap-x-3">
@@ -83,10 +82,9 @@ function NuevoContenedor() {
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8">
-        <div className="w-full lg:w-100">
+      <div className="flex flex-col">
+        <div className="w-full">
           <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto p-4 shadow-md rounded-lg">
-
             <input
               type="submit"
               value="Crear Nuevo Contenedor"
@@ -94,7 +92,7 @@ function NuevoContenedor() {
             />
           </form>
         </div>
-        <div className="card border border-gray-200 bg-base-100 p-4 shadow-xl mt-8 sm:w-100 lg:w-1/2">
+        <div className="card border border-gray-200 bg-base-100 p-4 shadow-xl mt-8 sm:w-full">
           <div id="secondbox" className="ps-4 overflow-auto md:pl-4 md:overflow-visible md:w-full">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
@@ -112,14 +110,11 @@ function NuevoContenedor() {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {data && data.map((contenedor) => (
-
                   <tr key={contenedor.id}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {contenedor.numero}
                     </td>
-                    <td className={`px-6 py-4 uppercase whitespace-nowrap text-sm ${contenedor.estado === 'disponible' ? 'text-green-400' :
-                      'text-red-400'
-                      }`}>
+                    <td className={`px-6 py-4 uppercase whitespace-nowrap text-sm ${contenedor.estado === 'disponible' ? 'text-green-400' : 'text-red-400'}`}>
                       {contenedor.estado}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex space-x-2">
@@ -137,7 +132,8 @@ function NuevoContenedor() {
             </table>
           </div>
         </div>
-      </div >
+      </div>
+
 
       <UpdateContenedorForm
         isOpen={isModalOpen}

@@ -291,9 +291,7 @@ function PedidosTable() {
                       >
                         Acciones
                       </th>
-                      <th scope="col" className="relative py-3.2 px-2">
-                        <span className="sr-only">Edit</span>
-                      </th>
+
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200 y-700 0">

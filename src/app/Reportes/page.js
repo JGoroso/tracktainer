@@ -7,8 +7,14 @@ import EstadoPedidoGraph from '../components/EstadoPedidoGraph';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 const ReportsPage = () => {
+  const { data: session } = useSession()
+  if (!session || session.user.role !== 'admin') {
+    // Si no hay sesión o el usuario no tiene el rol de administrador, no renderizar el componente
+    return null
+  }
   const [startDate, setStartDate] = useState('2024-01-01');
   const [endDate, setEndDate] = useState('2024-01-31');
   const [ordersByMonth, setOrdersByMonth] = useState([]);

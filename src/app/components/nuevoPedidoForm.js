@@ -163,7 +163,7 @@ function NuevoPedidoForm() {
           </Link>
         </div>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto p-4 shadow-md rounded-lg">
+      <form onSubmit={handleSubmit(onSubmit)} className="mx-auto w-1/2 p-4 shadow-md rounded-lg">
         <div className="w-full flex justify-start text-gray-600 mb-3">
           <Image alt="" width={40} height={40} src="/waste-bin.png" priority />
         </div>
