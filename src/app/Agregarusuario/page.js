@@ -1,3 +1,4 @@
+'use client'
 import { useSession } from 'next-auth/react'
 import NuevoUsuarioForm from '../components/NuevoUsuarioForm'
 import React from 'react'
