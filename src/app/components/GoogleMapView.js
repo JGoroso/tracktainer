@@ -80,11 +80,15 @@ function GoogleMapView() {
       >
 
         {data && data.map((marker) =>
-          marker['estado'] == "pendiente" || marker['estado'] == "entregado" ?
+          marker['estado'] == "pendiente" || marker['estado'] == "entregado" || marker['estado'] == "retirar" ?
             <Marker
               key={marker.id}
               position={{ lat: marker.lat, lng: marker.lng }}
-              icon={marker['estado'] == "entregado" ? { url: "/container.png" } : { url: "/container-pend.png" }}
+              icon={marker['estado'] === "pendiente"
+                ? { url: "/cont-pend.png" }
+                : marker['estado'] === "entregado"
+                  ? { url: "/cont-entre.png" }
+                  : { url: "/cont-retirar.png" }}
               onClick={() => { setSelected(marker); setMarkerId(marker.id) }}
             />
             : null
@@ -98,7 +102,7 @@ function GoogleMapView() {
             >
               <div className='break-inside relative overflow-hidden flex flex-col justify-between space-y-3 text-sm rounded-xl max-w-[23rem] p-4 mb-2 bg-white text-slate-700'>
                 <div className='flex items-center justify-between font-medium'>
-                  <span className={`uppercase text-xs ${selected['estado'] == "entregado" ? 'text-green-500' : 'text-orange-400'}`}>{selected.estado}</span>
+                  <span className={`uppercase text-xs ${selected.estado === "pendiente" ? 'text-yellow-500' : selected.estado === "entregar" ? 'text-green-400' : selected.estado === "a retirar" ? 'text-orange-400' : selected.estado === "completado" ? 'text-blue-500' : ''}`}>{selected.estado}</span>
                   <span className='text-xs text-slate-500'>{selected.cliente}</span>
                 </div>
                 <div className='flex flex-row items-center space-x-3'>
@@ -115,7 +119,7 @@ function GoogleMapView() {
                 {/* <div>Fecha de retiro: {selected.fechaPedido}</div> */}
                 <div className='flex flex-wrap items-center justify-between font-medium'>
                   <div className='flex justify-between items-center'>
-                    <button onClick={() => { selected['estado'] == "entregado" ? handleCompleteOnClick(selected.contenedor) : `'${console.log("No se puede pasar a estado completado un contenedor en estado pendiente")}'` }}
+                    <button onClick={() => { selected['estado'] == "entregado" ? handleCompleteOnClick(selected.contenedor) : `'${console.log("No se puede pasar a estado completado un contenedor en estado a retirar o pendiente")}'` }}
                       className="flex w-full px-5 py-2 items-center justify-center  text-sm text-gray-700 transition-colors duration-200 bg-green-400 border rounded-lg gap-x-2 sm:w-auto ray-800 0 hover:bg-gray-100 200 y-700">
                       <span>Pedido completado</span>
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">

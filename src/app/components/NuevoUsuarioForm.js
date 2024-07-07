@@ -36,7 +36,7 @@ function NuevoUsuarioForm() {
 
 
   // Se llama a la funcion getClientes que nos devuelve todos los objetos de la coleccion 'Clientes' en forma de promesa
-  const getUsuariosFromFirestore = () => getClientes()
+  const getUsuariosFromFirestore = () => getUsuarios()
   // Utilizamos un hook que hara un async await al que le pasamos una funcion asincrona que retorna una promesa
   // podremos recibir la data utilizando un useEffect (y con el refresh podemos refrescar los datos) y luego utilizar estos datos donde queramos
   const { data } = useAsync(getUsuariosFromFirestore, refresh)
