@@ -18,7 +18,8 @@ function PedidosTable() {
   const [refresh, setRefresh] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showCancelAnimation, setCancelAnimation] = useState(false);
-  const [showEntregadoAnimation, setEntregadoAnimation] = useState(false);
+  const [showAnimation, setAnimation] = useState(false);
+  const [accionAnimation, setAccionAnimation] = useState("");
 
   const refreshContainers = () => {
     setRefresh(true);
@@ -57,9 +58,11 @@ function PedidosTable() {
   // button entregado, cambia el estado a cencelado y lo quita de la lista
   const onAccion = (pedidoId, accion) => {
     updateEstadoPedido(pedidoId, accion);
-    setEntregadoAnimation(true);
+    setAccionAnimation(accion)
+    setAnimation(true);
+    setAccionAnimation(accion)
     setTimeout(() => {
-      setEntregadoAnimation(false);
+      setAnimation(false);
     }, 3000);
     refreshContainers();
   };
@@ -102,9 +105,9 @@ function PedidosTable() {
       )}
 
       {/* Seteamos animaciones para los estados del pedido cancel*/}
-      {showEntregadoAnimation && (
-        <div className={`alert-box ${showEntregadoAnimation ? "animate" : ""}`}>
-          <div className="px-8 py-6 bg-green-400 text-white flex justify-between rounded">
+      {showAnimation && (
+        <div className={`alert-box ${showAnimation ? "animate" : ""}`}>
+          <div className={`px-8 py-6 ${accionAnimation === "entregado" ? 'bg-green-400' : 'bg-orange-400'} text-white flex justify-between rounded`}>
             <div className="flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -114,7 +117,8 @@ function PedidosTable() {
               >
                 <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
               </svg>
-              <p>Bien! Su pedido ha pasado a estado ENTREGADO!</p>
+
+              <p>Bien! Su pedido ha pasado a estado {accionAnimation === "entregado" ? "ENTREGADO!" : "RETIRAR!"}</p>
             </div>
             <button className="text-green-100 hover:text-white">
               <svg
@@ -224,7 +228,7 @@ function PedidosTable() {
         </div>
 
         <h3 className={"inline mt-10 px-3 py-1 capitalize text-sm font-normal rounded-full text-yellow-500 gap-x-2 bg-yellow-100/60"} >Pedidos pendientes</h3>
-        <DataPedidosTable source={dataPedidos} estado="pendiente" accion="entregar" accionFunc={onAccion} setUpdateModal={setShowModal} setCancelModal={setShowCancelModal} setPedido={setPedidoId} setNewEstado={setActualEstado} />
+        <DataPedidosTable source={dataPedidos} estado="pendiente" accion="entregado" accionFunc={onAccion} setUpdateModal={setShowModal} setCancelModal={setShowCancelModal} setPedido={setPedidoId} setNewEstado={setActualEstado} />
         <h3 className={"inline px-3 py-1 capitalize text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60"} >Pedidos entregados</h3>
         <DataPedidosTable source={dataPedidos} estado="entregado" accion="retirar" accionFunc={onAccion} setUpdateModal={setShowModal} setCancelModal={setShowCancelModal} setPedido={setPedidoId} setNewEstado={setActualEstado} />
 
