@@ -173,6 +173,7 @@ function DataPedidosTable({ source, estado, accion, accionFunc, setUpdateModal, 
                           <div className="ml-2">
                             <button
                               onClick={() => {
+                                console.log(accion)
                                 accionFunc(pedido.id, accion);
                               }}
                               className={`px-3 py-1 text-sm tracking-wide text-white transition-colors duration-200 rounded-lg shrink-0 sm:w-auto ${accion === 'retirar' ? 'bg-orange-500 hover:bg-orange-600' :
