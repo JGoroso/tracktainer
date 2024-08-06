@@ -2,6 +2,7 @@ import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api'
 import { useState, useMemo } from 'react'
 import { getPedidos, updateEstadoContenedorDisponible, updateEstadoPedido } from '../firebase/firestore/firestore'
 import { useAsync } from '../hooks/useAsync'
+import { CalendarDaysIcon, ClockIcon, MapPinIcon, TruckIcon } from '@heroicons/react/24/outline'
 
 function GoogleMapView() {
   const [markerId, setMarkerId] = useState('')
@@ -93,55 +94,112 @@ function GoogleMapView() {
             />
             : null
         )}
-
-        {selected ?
+        {selected ? (
           <div className="max-h-96">
             <InfoWindow
               position={{ lat: selected.lat, lng: selected.lng }}
-              onCloseClick={() => { setSelected(null) }}
+              onCloseClick={() => setSelected(null)}
             >
-              <div className='break-inside relative overflow-hidden flex flex-col justify-between space-y-3 text-sm rounded-xl max-w-[23rem] p-4 mb-2 bg-white text-slate-700'>
-                <div className='flex items-center justify-between font-medium'>
-                  <span className={`uppercase text-xs ${selected.estado === "pendiente" ? 'text-yellow-500' : selected.estado === "entregar" ? 'text-green-400' : selected.estado === "a retirar" ? 'text-orange-400' : selected.estado === "completado" ? 'text-blue-500' : ''}`}>{selected.estado}</span>
-                  <span className='text-xs text-slate-500'>{selected.cliente}</span>
+              <div className="relative overflow-hidden flex flex-col justify-between space-y-4 text-sm rounded-xl max-w-[23rem] p-4 bg-white text-slate-700 shadow-lg">
+                <div className="flex justify-between items-center">
+                  <div className={`uppercase text-xs font-semibold ${selected.estado === "pendiente" ? 'text-yellow-500' : selected.estado === "entregado" ? 'text-green-400' : selected.estado === "a retirar" ? 'text-orange-400' : selected.estado === "completado" ? 'text-blue-500' : ''}`}>
+                    {selected.estado}
+                  </div>
+                  <div className="flex items-center">
+                    <ClockIcon class="h-6 w-6 text-gray-500" />
+                    <p className="text-gray-700">
+                      Días en sitio: {
+                        Math.floor(
+                          (new Date() - new Date(new Date(selected.fechaPedido).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }))) / (1000 * 60 * 60 * 24)
+                        )
+                      }
+                    </p>
+                  </div>
                 </div>
-                <div className='flex flex-row items-center space-x-3'>
-                  <div className='flex flex-none items-center justify-center w-10 h-10 rounded-full text-white'>
-                    <svg width="32" height="32" viewBox="0 0 16 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="8" cy="10.4177" r="7" stroke="#D9D9D9" strokeWidth="2" />
-                      <circle cx="8" cy="10.4177" r="2" fill="#4CAF50" />
+                <div className="mt-2">
+                  <div className="h-32 w-full rounded-lg overflow-hidden">
+                    <iframe
+                      className="w-full h-full"
+
+                      src={`https://maps.google.com/maps?q=${selected.lat},${selected.lng}&z=15&output=embed`}
+                    ></iframe>
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <div className="flex items-center space-x-2 mt-2">
+                    <MapPinIcon class="h-4 w-4 text-gray-900 font-bold" />
+                    <p className="text-gray-900 font-bold">Dirección </p>
+                    <p className="text-gray-700"> {selected.direccion} </p>
+                  </div>
+                  <div className="flex items-center space-x-2 mt-2">
+                    <TruckIcon class="h-4 w-4 text-gray-900 font-bold" />
+                    <p className="text-gray-900 font-bold">Chofer </p>
+                    <p className="text-gray-700"> {selected.chofer} </p>
+                  </div>
+                  <div className="flex items-center space-x-2 mt-2">
+                    <CalendarDaysIcon class="h-4 w-4 text-gray-900 font-bold" />
+                    <p className="text-gray-900 font-bold">Fecha de entrega </p>
+                    <p className="text-gray-700"> {selected.fechaPedido} </p>
+                  </div>
+
+                </div>
+
+
+                <div className="flex justify-end space-x-2">
+                  <button
+                    onClick={() => {
+                      selected.estado === "retirar"
+                        ? handleCompleteOnClick(selected.contenedor)
+                        : alert('Solo se pueden completar aquellos pedidos en estado "retirar".');
+                    }}
+                    className="flex items-center px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-600 rounded-lg transition duration-200"
+                  >
+                    Completado
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="w-5 h-5 ml-2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
-                  </div>
-                  <span className='text-base font-medium'>{selected.direccion}</span>
-                </div>
-                <div>Chofer: {selected.chofer}</div>
-                <div>Fecha de entrega: {selected.fechaPedido}</div>
-                {/* <div>Fecha de retiro: {selected.fechaPedido}</div> */}
-                <div className='flex flex-wrap items-center justify-between font-medium'>
-                  <div className='flex justify-between items-center'>
-                    <button onClick={() => { selected['estado'] == "retirar" ? handleCompleteOnClick(selected.contenedor) : `'${alert('Solo se pueden completar aquellos pedidos en estado "retirar".')}'` }}
-                      className="flex w-full px-5 py-2 items-center justify-center  text-sm text-gray-700 transition-colors duration-200 bg-green-400 border rounded-lg gap-x-2 sm:w-auto ray-800 0 hover:bg-gray-100 200 y-700">
-                      <span>Pedido completado</span>
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </button>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <button onClick={() => { setSelected(null) }}
-                      className="flex w-full px-5 py-2 items-center justify-center  text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 ray-800 0 hover:bg-gray-100 200 y-700">
-                      <span>Cerrar</span>
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </button>
-                  </div>
+                  </button>
+                  <button
+                    onClick={() => setSelected(null)}
+                    className="flex items-center px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition duration-200"
+                  >
+                    Cerrar
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="w-5 h-5 ml-2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </button>
                 </div>
               </div>
-            </InfoWindow></div>
-          : null}
-      </GoogleMap>
-    </div>
+            </InfoWindow>
+          </div>
+        ) : null
+        }
+
+
+      </GoogleMap >
+    </div >
   )
 }
 

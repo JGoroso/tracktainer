@@ -118,7 +118,7 @@ function NuevoPedidoForm() {
 
         <div className="flex items-center mt-2 gap-x-3">
           <Link href={"/"}>
-            <button className="flex items-center justify-center w-3/3 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto ray-800 0 hover:bg-gray-100 200 y-700">
+            <button className="flex items-center justify-center w-full sm:w-auto px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 hover:bg-gray-100">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -142,7 +142,7 @@ function NuevoPedidoForm() {
             </button>
           </Link>
           <Link href={"Pedidos"}>
-            <button className="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-yellow-400 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-yellow-500 lue-500 0">
+            <button className="flex items-center justify-center w-full sm:w-auto px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-yellow-400 rounded-lg gap-x-2 hover:bg-yellow-500">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -157,19 +157,23 @@ function NuevoPedidoForm() {
                   d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-
               <span>Pedidos Pendientes</span>
             </button>
           </Link>
         </div>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)} className="mx-auto w-1/2 p-4 shadow-md rounded-lg">
+
+      <form onSubmit={handleSubmit(onSubmit)} className="mx-auto w-full sm:w-2/3 lg:w-1/2 p-4 shadow-md rounded-lg">
         <div className="w-full flex justify-start text-gray-600 mb-3">
           <Image alt="" width={40} height={40} src="/waste-bin.png" priority />
         </div>
-        <h1 className="text-gray-800 font-bold text-5xl leading-tight mb-4">
+        <h1 className="text-gray-800 font-bold text-2xl md:text-5xl leading-tight mb-4">
           Agregar Pedidos
         </h1>
+        <p className="mt-1 mb-3 text-sm text-gray-800 ">
+          Seccion donde podremos agregar los pedidos a entregar
+        </p>
+
         <label
           htmlFor="direccion"
           className="text-gray-800 text-sm font-bold leading-tight tracking-normal"
@@ -218,8 +222,7 @@ function NuevoPedidoForm() {
         >
           Cliente
         </label>
-
-        <div className="relative w-full cursor-default py-2 text-left  focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+        <div className="relative w-full cursor-default py-2 text-left focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
           <select
             defaultValue={'N/A'}
             id="cliente"
@@ -260,7 +263,7 @@ function NuevoPedidoForm() {
         <div>
           <label
             htmlFor="fechaPedido"
-            className="text-gray-800 text-sm  pr-4 font-bold leading-tight tracking-normal"
+            className="text-gray-800 text-sm pr-4 font-bold leading-tight tracking-normal"
           >
             Fecha del pedido
           </label>
@@ -278,7 +281,7 @@ function NuevoPedidoForm() {
                 }
               },
             })}
-            className="block py-2.5 px-0 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-yellow-600 dark:focus:border-yellow-500 focus:outline-none focus:ring-0 focus:border-yellow-500 peer"
+            className="block py-2.5 px-0 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-yellow-500 peer"
           />
           {errors.fechaPedido && errors.fechaPedido.type === "required" && (
             <span>Ingrese la fecha de entrega por favor</span>
@@ -294,29 +297,26 @@ function NuevoPedidoForm() {
         >
           Chofer
         </label>
-
         <div className="relative w-full cursor-default py-2 text-left focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-          <div className="relative w-full cursor-default py-2 text-left  focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-            <select
-              defaultValue={'N/A'}
-              id="chofer"
-              {...register("chofer")}
-              className={`w-full px-3 py-2 border ${errors.chofer ? 'border-red-500' : 'border-gray-300'} rounded-md`}
-            >
-              <option value={"N/A"} disabled>Seleccionar chofer</option>
-
-              {choferesData && choferesData.map((chofer, index) => (
-                <option key={index} value={chofer.label}>{chofer.label}</option>
-              ))}
-            </select>
-          </div>
+          <select
+            defaultValue={'N/A'}
+            id="chofer"
+            {...register("chofer")}
+            className={`w-full px-3 py-2 border ${errors.chofer ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+          >
+            <option value={"N/A"} disabled>Seleccionar chofer</option>
+            {choferesData && choferesData.map((chofer, index) => (
+              <option key={index} value={chofer.label}>{chofer.label}</option>
+            ))}
+          </select>
         </div>
+
         <div>
           <label
-            htmlFor="cliente"
+            htmlFor="contenedor"
             className="text-gray-800 text-sm font-bold leading-tight tracking-normal"
           >
-            ¿Selecconar contenedor?
+            ¿Seleccionar contenedor?
           </label>
         </div>
         <label className="inline-flex items-center">
@@ -328,7 +328,6 @@ function NuevoPedidoForm() {
           />
           <span className="ml-2">Habilitar contenedor</span>
         </label>
-
         <div className="relative w-full cursor-default py-2 text-left focus:outline-none focus-visible:border-yellow-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
           <select
             defaultValue={'N/A'}
@@ -337,7 +336,6 @@ function NuevoPedidoForm() {
             className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-yellow-500 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
             {...register("contenedor")}
           >
-
             <option value={'N/A'} disabled>Seleccionar contenedor</option>
             {contenedoresData && contenedoresData.map((contenedor, index) => (
               <option key={index} value={contenedor.numero}>
@@ -350,7 +348,7 @@ function NuevoPedidoForm() {
         <button
           onClick={handleCheckboxChange}
           type="submit"
-          className="text-white mt-4 hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-yellow-500 dark:hover:bg-yellow-500 dark:focus:ring-yellow-500"
+          className="text-white mt-4 focus:ring-4 focus:outline-none bg-yellow-400 gap-x-2 hover:bg-yellow-500 focus:ring-yellow-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
         >
           Agregar pedido
         </button>
