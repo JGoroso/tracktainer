@@ -179,7 +179,8 @@ function PedidosTable() {
             </p>
           </div>
 
-          <div className="flex items-center mt-4 gap-x-3">
+
+          <div className="flex items-center mt-2 gap-x-3">
             <Link href={"/"}>
               <button className="flex items-center justify-center w-3/3 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto ray-800 0 hover:bg-gray-100 200 y-700">
                 <svg
@@ -205,7 +206,7 @@ function PedidosTable() {
               </button>
             </Link>
             <Link href={"/Agregarpedidos"}>
-              <button className="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 lue-500 0">
+              <button className="flex items-center justify-center w-full sm:w-auto px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-400 rounded-lg gap-x-2 hover:bg-blue-500">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
