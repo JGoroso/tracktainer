@@ -128,7 +128,6 @@ function GoogleMapView() {
                 <div className="mt-4">
                   <div className="flex items-center space-x-2 mt-2">
                     <MapPinIcon class="h-4 w-4 text-gray-900 font-bold" />
-                    <p className="text-gray-900 font-bold">Dirección </p>
                     <p className="text-gray-700"> {selected.direccion} </p>
                   </div>
                   <div className="flex items-center space-x-2 mt-2">
@@ -145,14 +144,14 @@ function GoogleMapView() {
                 </div>
 
 
-                <div className="flex justify-end space-x-2">
+                <div className="flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0">
                   <button
                     onClick={() => {
                       selected.estado === "retirar"
                         ? handleCompleteOnClick(selected.contenedor)
                         : alert('Solo se pueden completar aquellos pedidos en estado "retirar".');
                     }}
-                    className="flex items-center px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-600 rounded-lg transition duration-200"
+                    className="flex items-center justify-center px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-600 rounded-lg transition duration-200"
                   >
                     Completado
                     <svg
@@ -172,7 +171,7 @@ function GoogleMapView() {
                   </button>
                   <button
                     onClick={() => setSelected(null)}
-                    className="flex items-center px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition duration-200"
+                    className="flex items-center justify-center px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition duration-200"
                   >
                     Cerrar
                     <svg
@@ -191,6 +190,7 @@ function GoogleMapView() {
                     </svg>
                   </button>
                 </div>
+
               </div>
             </InfoWindow>
           </div>
