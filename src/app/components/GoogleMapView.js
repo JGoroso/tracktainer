@@ -36,6 +36,7 @@ function GoogleMapView() {
 
   }
 
+
   // Se llama a la funcion getPedidos que nos devuelve todos los objetos de la coleccion 'Pedidos' en forma de promesa
   const getPedidosFromFirestore = () => getPedidos()
   // Utilizamos un hook que hara un async await al que le pasamos una funcion asincrona que retorna una promesa (get docs from firestore)
@@ -106,14 +107,17 @@ function GoogleMapView() {
                     {selected.estado}
                   </div>
                   <div className="flex items-center">
-                    <ClockIcon class="h-6 w-6 text-gray-500" />
-                    <p className="text-gray-700">
-                      Días en sitio: {
-                        Math.floor(
-                          (new Date() - new Date(new Date(selected.fechaPedido).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }))) / (1000 * 60 * 60 * 24)
-                        )
-                      }
-                    </p>
+                    {selected.estado !== "pendiente" ? (
+                      <>
+                        <ClockIcon className="h-6 w-6 text-gray-500" />
+                        <p className="text-gray-700">
+                          Días en sitio: {Math.floor(
+                            (new Date() - new Date(new Date(selected.fechaPedido).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })))
+                            / (1000 * 60 * 60 * 24)
+                          )}
+                        </p>
+                      </>
+                    ) : null}
                   </div>
                 </div>
                 <div className="mt-2">
