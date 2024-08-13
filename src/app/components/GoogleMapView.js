@@ -32,8 +32,6 @@ function GoogleMapView() {
       setSelected(null)
       setRefresh(!refresh)
     }, 3000)
-
-
   }
 
 
@@ -46,6 +44,8 @@ function GoogleMapView() {
     width: '100%',
     height: '90vh'
   }
+
+  console.log(new Date())
 
   return (
     <div>
@@ -111,9 +111,12 @@ function GoogleMapView() {
                       <>
                         <ClockIcon className="h-6 w-6 text-gray-500" />
                         <p className="text-gray-700">
-                          Días en sitio: {Math.floor(
-                            (new Date() - new Date(new Date(selected.fechaPedido).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })))
-                            / (1000 * 60 * 60 * 24)
+                          Días en sitio: {Math.max(
+                            Math.floor(
+                              (new Date() - new Date(new Date(selected.fechaPedido).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })))
+                              / (1000 * 60 * 60 * 24)
+                            ),
+                            0 // Ensure the result is non-negative
                           )}
                         </p>
                       </>

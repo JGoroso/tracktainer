@@ -4,7 +4,7 @@ import { Fragment } from "react";
 import { InformationCircleIcon, UserPlusIcon } from '@heroicons/react/24/outline'
 
 
-function DataPedidosTable({ source, estado, accion, accionFunc, setUpdateModal, setCancelModal, setPedido, setNewEstado }) {
+function DataPedidosTable({ source, nombreSeccion, proximoEstado, accionFunc, setUpdateModal, setCancelModal, setPedido, setNewEstado }) {
   const handleAction = (pedido, editAction) => {
     if (editAction == "cancelar") {
       setCancelModal(true);
@@ -76,16 +76,18 @@ function DataPedidosTable({ source, estado, accion, accionFunc, setUpdateModal, 
                     scope="col"
                     className="capitalize py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 400"
                   >
-                    {accion}?
-                    {accion == "retirar" ? <>
+                    Actualizar Pedido
+                    {nombreSeccion == "entregado" ?
+                      <>
+                        <button
+                          type="button"
+                          className=" text-blue-500"
+                          onClick={() => alert('Si el pedido se encuentra entregado podrá pasar a estado a retirar.')}
+                        >
+                          <InformationCircleIcon className='w-7 pl-2' />
+                        </button>
 
-                      <button
-                        type="button"
-                        className=" text-blue-500"
-                        onClick={() => alert('Retirar permite avisarle al chofer que debe vaciar el contenedor y dar por completado el pedido desde el mapa.')}
-                      >
-                        <InformationCircleIcon className='w-7 pl-2' />
-                      </button></> : null}
+                      </> : null}
                   </th>
                   <th
                     scope="col"
@@ -99,7 +101,7 @@ function DataPedidosTable({ source, estado, accion, accionFunc, setUpdateModal, 
               <tbody className="bg-white divide-y divide-gray-200 y-700 0">
                 {source &&
                   source.map((pedido) => {
-                    return pedido.estado === estado ? (
+                    return pedido.estado === nombreSeccion ? (
                       <tr key={pedido.id}>
                         <td className="px-2 py-4 text-sm font-medium whitespace-nowrap">
                           <div
@@ -170,26 +172,19 @@ function DataPedidosTable({ source, estado, accion, accionFunc, setUpdateModal, 
 
 
 
-                          <div className="ml-2">
+                          <div className="px-2 py-4 text-sm whitespace-nowrap">
                             <button
                               onClick={() => {
-                                console.log(accion)
-                                accionFunc(pedido.id, accion);
+                                accionFunc(pedido.id, proximoEstado);
                               }}
-                              className={`px-3 py-1 text-sm tracking-wide text-white transition-colors duration-200 rounded-lg shrink-0 sm:w-auto ${accion === 'retirar' ? 'bg-orange-500 hover:bg-orange-600' :
-                                accion === 'completado' ? 'bg-blue-500 hover:bg-blue-600' :
-                                  'bg-green-500 hover:bg-green-600'
+                              className={`px-3 py-1 text-sm tracking-wide text-white transition-colors duration-200 rounded-lg shrink-0 sm:w-auto ${nombreSeccion === 'pendiente' ? 'bg-green-500 hover:bg-green-600' : nombreSeccion === "entregado"
+                                ? 'bg-orange-500 hover:bg-orange-600'
+                                : nombreSeccion === "retirar" ?
+                                  'bg-blue-600 hover:bg-blue-500'
+                                  : null
                                 }`}
                             >
-                              <svg
-                                width="24"
-                                height="24"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fillRule="evenodd"
-                                clipRule="evenodd"
-                              >
-                                <path fill="white" d="M11 19c0 2.208-1.792 4-4 4s-4-1.792-4-4c0-.345.044-.68.126-1h-1.126v-3h9.92l3.08-10h4.279c.431 0 .812.275.948.684l1.773 5.316 1.337.668c.406.204.663.619.663 1.073v4.259c0 .553-.448 1-1 1h-1.126c.082.32.126.655.126 1 0 2.208-1.792 4-4 4s-4-1.792-4-4h-3zm-4-3c1.656 0 3 1.344 3 3s-1.344 3-3 3-3-1.344-3-3 1.344-3 3-3zm11 0c1.656 0 3 1.344 3 3s-1.344 3-3 3-3-1.344-3-3 1.344-3 3-3zm-11 2c.552 0 1 .448 1 1s-.448 1-1 1-1-.448-1-1 .448-1 1-1zm11 0c.552 0 1 .448 1 1s-.448 1-1 1-1-.448-1-1 .448-1 1-1zm1.279-12h-3.541l-3.08 10h-3.013c.59.521 1.026 1.214 1.229 2h3.252c.445-1.724 2.012-3 3.874-3 1.479 0 2.772.805 3.464 2h1.536v-4.259c0-.076-.043-.144-.113-.179l-1.705-.853-1.903-5.709zm-14.924 10h-1.355v1h.536c.218-.376.495-.714.819-1zm6.897-2h-9.252l-2-8h1.734l4.488-4.629c.227-.235.538-.365.86-.365.558 0 .899.354 1.041.6l2.517 4.362.84-2.968h7.52v1h-4.748l-3 10zm1.956-10h-.972l-.849 3h-10.106l1.5 6h7.727l2.7-9zm-6.022 8h-1.057l-1.036-4h.995l1.098 4zm-2.093 0h-1.057l-1.036-4h.995l1.098 4zm4.186 0h-1.057l-1.036-4h.995l1.098 4zm10.609-1h-3.888v-4h2.72l1.168 4zm-1.888-3h-1v2h1.501l-.501-2zm-8.497-2l-2.246-3.894c-.071-.121-.23-.128-.316-.04l-3.814 3.934h6.376z" />
-                              </svg>
+                              {nombreSeccion === "pendiente" ? "Entregar" : nombreSeccion === "entregado" ? "Retirar" : "Completar"}
                             </button>
                           </div>
                         </td>

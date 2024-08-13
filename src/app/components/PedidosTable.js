@@ -55,7 +55,7 @@ function PedidosTable() {
     setShowCancelModal(false);
   };
 
-  // button entregado, cambia el estado a cencelado y lo quita de la lista
+  // button entregado.
   const onAccion = (pedidoId, accion) => {
     updateEstadoPedido(pedidoId, accion);
     setAccionAnimation(accion)
@@ -227,11 +227,15 @@ function PedidosTable() {
             </Link>
           </div>
         </div>
-
+        {/* El nombre de la seccion es pendiente y el estado de los pedidos es pendiente se podra pasara a entregado */}
         <h3 className={"inline mt-10 px-3 py-1 capitalize text-sm font-normal rounded-full text-yellow-500 gap-x-2 bg-yellow-100/60"} >Pedidos pendientes</h3>
-        <DataPedidosTable source={dataPedidos} estado="pendiente" accion="entregado" accionFunc={onAccion} setUpdateModal={setShowModal} setCancelModal={setShowCancelModal} setPedido={setPedidoId} setNewEstado={setActualEstado} />
+        <DataPedidosTable source={dataPedidos} nombreSeccion="pendiente" proximoEstado="entregado" accionFunc={onAccion} setUpdateModal={setShowModal} setCancelModal={setShowCancelModal} setPedido={setPedidoId} setNewEstado={setActualEstado} />
+        {/* El nombre de la seccion es entregado y el estado de los pedidos es entregado se podra pasar a estado retirar */}
         <h3 className={"inline px-3 py-1 capitalize text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60"} >Pedidos entregados</h3>
-        <DataPedidosTable source={dataPedidos} estado="entregado" accion="retirar" accionFunc={onAccion} setUpdateModal={setShowModal} setCancelModal={setShowCancelModal} setPedido={setPedidoId} setNewEstado={setActualEstado} />
+        <DataPedidosTable source={dataPedidos} nombreSeccion="entregado" proximoEstado="retirar" accionFunc={onAccion} setUpdateModal={setShowModal} setCancelModal={setShowCancelModal} setPedido={setPedidoId} setNewEstado={setActualEstado} />
+        {/* El nombre de la seccion es pedidos a retirar y el estado de los pedidos es a retirar*/}
+        <h3 className={"inline px-3 py-1 capitalize text-sm font-normal rounded-full text-orange-200 gap-x-2 bg-orange-400"} >Pedidos a retirar</h3>
+        <DataPedidosTable source={dataPedidos} nombreSeccion="retirar" proximoEstado="completado" accionFunc={onAccion} setUpdateModal={setShowModal} setCancelModal={setShowCancelModal} setPedido={setPedidoId} setNewEstado={setActualEstado} />
 
         {showModal ? (
           <UpdatePedidoForm
