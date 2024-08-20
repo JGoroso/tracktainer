@@ -276,6 +276,19 @@ export const updateEstadoPedido = async (docId, estado) => {
     });
 };
 
+// Update estado del pedido
+export const updateRemitoPedido = async (docId, nroRemito) => {
+  await updateDoc(doc(db, "pedidos", docId), {
+    remito: nroRemito,
+  })
+    .then(() => {
+      console.log("Documento actualizado exitosamente");
+    })
+    .catch((error) => {
+      console.error("Error al borrar el documento:", error);
+    });
+};
+
 // Update estado del contenedor a ocupado
 export const updateEstadoContenedorOcupado = async (contNumero) => {
   if (contNumero) {

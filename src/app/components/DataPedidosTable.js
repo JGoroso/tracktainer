@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
 
-
-
 function DataPedidosTable({ source, accionFunc, setUpdateModal, setCancelModal, setPedido, setNewEstado }) {
   // Estado para almacenar el filtro seleccionado
   const [filtro, setFiltro] = useState('Todos');
@@ -223,6 +221,7 @@ function DataPedidosTable({ source, accionFunc, setUpdateModal, setCancelModal, 
                 <th scope="col" className="px-2 py-3.5 text-sm font-normal text-left text-gray-500">Teléfono</th>
                 <th scope="col" className="px-2 py-3.5 text-sm font-normal text-left text-gray-500">Container ID</th>
                 <th scope="col" className="px-2 py-3.5 text-sm font-normal text-left text-gray-500">Chofer</th>
+                <th scope="col" className="px-2 py-3.5 text-sm font-normal text-left text-gray-500">Remito</th>
                 <th scope="col" className="px-2 py-3.5 text-sm font-normal text-left text-gray-500">Acción</th>
               </tr>
             </thead>
@@ -270,6 +269,9 @@ function DataPedidosTable({ source, accionFunc, setUpdateModal, setCancelModal, 
                       </td>
                       <td className="px-2 py-4 whitespace-nowrap">
                         <p className="text-base font-medium text-left text-gray-700">{pedido.chofer}</p>
+                      </td>
+                      <td className="px-2 py-4 whitespace-nowrap">
+                        <p className="text-base font-medium text-left text-gray-700">{pedido.remito}</p>
                       </td>
                       <td className="px-2 py-4 whitespace-nowrap">
                         <button
