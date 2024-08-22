@@ -123,9 +123,9 @@ function NuevoUsuarioForm() {
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-8 px-4 sm:px-8 md:px-16 lg:px-24 mt-10">
         <div className="w-full lg:w-1/2">
-          <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto p-4 shadow-md rounded-lg">
+          <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto p-4 shadow-md rounded-lg bg-white">
             <div className="mb-4">
               <label htmlFor="nombre" className="block text-gray-700 font-bold mb-2">Nombre</label>
               <input
@@ -174,8 +174,9 @@ function NuevoUsuarioForm() {
             />
           </form>
         </div>
-        <div className="card border border-gray-200 bg-base-100 p-4 shadow-xl mt-8 sm:w-100 lg:w-1/2">
-          <div id="secondbox" className="ps-4 overflow-auto md:pl-4 md:w-100 ">
+
+        <div className="w-full lg:w-1/2">
+          <div className="p-4 shadow-md rounded-lg bg-white overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -195,8 +196,8 @@ function NuevoUsuarioForm() {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {data && data.map((user) => (
-                  user.estado == "activo" ? (
-                    <tr key={user.id}>
+                  user.estado === "activo" ? (
+                    <tr key={user.id} className="hover:bg-gray-100 transition duration-200">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         {user.email}
                       </td>
@@ -208,21 +209,18 @@ function NuevoUsuarioForm() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex space-x-2">
                         <button
-                          className="btn btn-warning btn-sm flex flex-row"
+                          className="btn btn-warning btn-sm flex flex-row items-center px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-300"
                           onClick={() => handleEdit(user)}
                         >
                           <PencilSquareIcon className="h-5 w-5" aria-hidden="true" />
                           Editar
                         </button>
-
                         <button
-                          className="btn btn-error btn-sm flex flex-row pl-5"
+                          className="btn btn-error btn-sm flex flex-row items-center px-4 py-2 bg-red-500 text-white bg-black rounded-md hover:bg-red-600 transition duration-300"
                           onClick={() => { setShowBajaModal(true), setSelectedUser(user.id) }}
                         >
-
-                          <ArchiveBoxXMarkIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
+                          <ArchiveBoxXMarkIcon className="h-5 w-5 mr-2" aria-hidden="true" />
                           Baja
-
                         </button>
                       </td>
                     </tr>
@@ -233,6 +231,7 @@ function NuevoUsuarioForm() {
           </div>
         </div>
       </div>
+
 
       <UpdateUsuarioForm
         isOpen={isModalOpen}
