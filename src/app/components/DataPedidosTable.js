@@ -211,22 +211,22 @@ function DataPedidosTable({ source, accionFunc, setUpdateModal, setCancelModal, 
 
         <div className="mt-7 overflow-x-auto">
           <table className="min-w-full table-auto">
-            <thead className="bg-gray-100">
+            <thead className="bg-gray-100 font-bold uppercase bg-gray-2 rounded-sm ">
               <tr>
-                <th scope="col" className="px-2 py-3.5 text-sm font-normal text-left text-gray-500">Estado</th>
-                <th scope="col" className="px-2 py-3.5 text-sm font-normal text-left text-gray-500">Fecha de entrega</th>
-                <th scope="col" className="px-2 py-3.5 text-sm font-normal text-left text-gray-500">Dirección</th>
-                <th scope="col" className="px-2 py-3.5 text-sm font-normal text-left text-gray-500">Cliente</th>
-                <th scope="col" className="px-4 py-3.5 text-sm font-normal text-left text-gray-500">¿Quién recibe?</th>
-                <th scope="col" className="px-2 py-3.5 text-sm font-normal text-left text-gray-500">Teléfono</th>
-                <th scope="col" className="px-2 py-3.5 text-sm font-normal text-left text-gray-500">Container ID</th>
-                <th scope="col" className="px-2 py-3.5 text-sm font-normal text-left text-gray-500">Chofer</th>
-                <th scope="col" className="px-2 py-3.5 text-sm font-normal text-left text-gray-500">Remito</th>
-                <th scope="col" className="px-2 py-3.5 text-sm font-normal text-left text-gray-500">Acción</th>
+                <th scope="col" className="px-2 py-3.5 text-sm font-medium text-left text-gray-500">Estado</th>
+                <th scope="col" className="px-2 py-3.5 text-sm font-medium text-left text-gray-500">Fecha de entrega</th>
+                <th scope="col" className="px-2 py-3.5 text-sm font-medium text-left text-gray-500">Dirección</th>
+                <th scope="col" className="px-2 py-3.5 text-sm font-medium text-left text-gray-500">Cliente</th>
+                <th scope="col" className="px-4 py-3.5 text-sm font-medium text-left text-gray-500">¿Quién recibe?</th>
+                <th scope="col" className="px-2 py-3.5 text-sm font-medium text-left text-gray-500">Teléfono</th>
+                <th scope="col" className="px-2 py-3.5 text-sm font-medium text-left text-gray-500">Container ID</th>
+                <th scope="col" className="px-2 py-3.5 text-sm font-medium text-left text-gray-500">Chofer</th>
+                <th scope="col" className="px-2 py-3.5 text-sm font-medium text-left text-gray-500">Remito</th>
+                <th scope="col" className="px-2 py-3.5 text-sm font-medium text-left text-gray-500">Acción</th>
               </tr>
             </thead>
 
-            <tbody className="bg-white">
+            <tbody className="bg-white ">
               {pedidosFiltrados &&
                 pedidosFiltrados
                   .filter((pedido) => pedido.estado !== 'completado')
@@ -235,7 +235,7 @@ function DataPedidosTable({ source, accionFunc, setUpdateModal, setCancelModal, 
                     return order.indexOf(a.estado) - order.indexOf(b.estado);
                   })
                   .map((pedido) => (
-                    <tr key={pedido.id} className="focus:outline-none border-b border-gray-200">
+                    <tr key={pedido.id} className="focus:outline-none border-b border-b-neutral-200">
                       <td className="px-2 py-4 whitespace-nowrap">
                         <p className={`text-base font-medium text-left uppercase
                         ${pedido.estado === 'entregado' ? 'text-green-700'

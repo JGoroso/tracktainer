@@ -82,18 +82,18 @@ function NuevoContenedor() {
         </div>
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col px-4 lg:px-16">
         <div className="w-full">
-          <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto p-4 shadow-md rounded-lg">
+          <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto p-6 shadow-lg rounded-lg bg-white border border-gray-200">
             <input
               type="submit"
               value="Crear Nuevo Contenedor"
-              className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
+              className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300"
             />
           </form>
         </div>
-        <div className="card border border-gray-200 bg-base-100 p-4 shadow-xl mt-8 sm:w-full">
-          <div id="secondbox" className="ps-4 overflow-auto md:pl-4 md:overflow-visible md:w-full">
+        <div className="card border border-gray-200 bg-white p-6 shadow-xl mt-8 rounded-lg sm:w-full">
+          <div id="secondbox" className="overflow-auto md:overflow-visible md:w-full">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -109,30 +109,40 @@ function NuevoContenedor() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {data && data.map((contenedor) => (
-                  <tr key={contenedor.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {contenedor.numero}
-                    </td>
-                    <td className={`px-6 py-4 uppercase whitespace-nowrap text-sm ${contenedor.estado === 'disponible' ? 'text-green-400' : 'text-red-400'}`}>
-                      {contenedor.estado}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex space-x-2">
-                      <button
-                        className="btn btn-warning btn-sm flex flex-row"
-                        onClick={() => handleEdit(contenedor)}
-                      >
-                        <PencilSquareIcon className="h-5 w-5" aria-hidden="true" />
-                        Editar
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {data && data
+                  .sort((a, b) => {
+                    if (a.estado === 'disponible' && b.estado !== 'disponible') return -1;
+                    if (a.estado !== 'disponible' && b.estado === 'disponible') return 1;
+                    if (a.estado === 'ocupado' && b.estado !== 'ocupado') return -1;
+                    if (a.estado !== 'ocupado' && b.estado === 'ocupado') return 1;
+                    return 0;
+                  })
+                  .map((contenedor) => (
+                    <tr key={contenedor.id} className="hover:bg-gray-100 transition duration-200">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {contenedor.numero}
+                      </td>
+                      <td className={`px-6 py-4 uppercase whitespace-nowrap text-sm ${contenedor.estado === 'disponible' ? 'text-green-500' :
+                        contenedor.estado === 'roto' ? 'text-red' : contenedor.estado === 'ocupado' ? "text-graydark" : null}`}>
+                        {contenedor.estado}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex space-x-2">
+                        <button
+                          className="flex flex-row items-center px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-300"
+                          onClick={() => handleEdit(contenedor)}
+                        >
+                          <PencilSquareIcon className="h-5 w-5 mr-2" aria-hidden="true" />
+                          Editar
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
         </div>
       </div>
+
 
 
       <UpdateContenedorForm
