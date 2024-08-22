@@ -122,45 +122,47 @@ function NuevoClienteForm() {
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8">
+
+
+      <div className="flex flex-col lg:flex-row lg:gap-8 px-4 lg:px-16 mt-10">
         <div className="w-full lg:w-1/2">
-          <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto p-4 shadow-md rounded-lg">
-            <div className="mb-4">
-              <label htmlFor="nombreEmpresa" className="block text-gray-700 font-bold mb-2">Nombre de la empresa</label>
+          <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto p-6 shadow-lg rounded-lg bg-white border border-gray-200">
+            <div className="mb-6">
+              <label htmlFor="nombreEmpresa" className="block text-gray-700 font-semibold mb-2">Nombre de la empresa</label>
               <input
                 id="nombreEmpresa"
                 {...register("nombreEmpresa", { required: "El nombre de la empresa es obligatorio" })}
-                className={`w-full px-3 py-2 border ${errors.nombre ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                className={`w-full px-4 py-2 border ${errors.nombre ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
               {errors.nombreEmpresa && <p className="text-red-500 text-sm mt-1">{errors.nombreEmpresa.message}</p>}
             </div>
-            <div className="mb-4">
-              <label htmlFor="nombreCompleto" className="block text-gray-700 font-bold mb-2">Nombre y apellido</label>
+            <div className="mb-6">
+              <label htmlFor="nombreCompleto" className="block text-gray-700 font-semibold mb-2">Nombre y apellido</label>
               <input
                 id="nombreCompleto"
                 {...register("nombreCompleto", { required: "El nombre del referente de la empresa es obligatorio" })}
-                className={`w-full px-3 py-2 border ${errors.nombre ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                className={`w-full px-4 py-2 border ${errors.nombre ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
               {errors.nombreCompleto && <p className="text-red-500 text-sm mt-1">{errors.nombreCompleto.message}</p>}
             </div>
-            <div className="mb-4">
-              <label htmlFor="telefono" className="block text-gray-700 font-bold mb-2">Teléfono</label>
+            <div className="mb-6">
+              <label htmlFor="telefono" className="block text-gray-700 font-semibold mb-2">Teléfono</label>
               <input
                 id="telefono"
                 {...register("telefono", { required: "El teléfono es obligatorio" })}
-                className={`w-full px-3 py-2 border ${errors.telefono ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                className={`w-full px-4 py-2 border ${errors.telefono ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
               {errors.telefono && <p className="text-red-500 text-sm mt-1">{errors.telefono.message}</p>}
             </div>
             <input
               type="submit"
               value="Enviar"
-              className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
+              className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300"
             />
           </form>
         </div>
-        <div className="card border border-gray-200 bg-base-100 p-4 shadow-xl mt-8 sm:w-100 lg:w-1/2">
-          <div id="secondbox" className="ps-4 overflow-auto md:pl-4 md:w-100 ">
+        <div className="card border border-gray-200 bg-white p-6 shadow-xl mt-8 lg:mt-0 lg:w-1/2 rounded-lg">
+          <div id="secondbox" className="overflow-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -174,7 +176,7 @@ function NuevoClienteForm() {
                     Estado
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Telefono
+                    Teléfono
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Acciones
@@ -183,9 +185,8 @@ function NuevoClienteForm() {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {data && data.map((cliente) => (
-
-                  cliente.estado == "activo" ? (
-                    <tr key={cliente.id}>
+                  cliente.estado === "activo" ? (
+                    <tr key={cliente.id} className="hover:bg-gray-100 transition duration-200">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         {cliente.empresa}
                       </td>
@@ -198,20 +199,19 @@ function NuevoClienteForm() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold uppercase text-gray-500">
                         {cliente.telefono}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex space-x-2">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-2">
                         <button
-                          className="btn btn-warning btn-sm flex flex-row"
+                          className="btn btn-warning btn-sm flex flex-row items-center px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-300"
                           onClick={() => handleEdit(cliente)}
                         >
-                          <PencilSquareIcon className="h-5 w-5" aria-hidden="true" />
+                          <PencilSquareIcon className="h-5 w-5 mr-2" aria-hidden="true" />
                           Editar
                         </button>
-
                         <button
-                          className="btn btn-error btn-sm flex flex-row pl-5"
+                          className="btn btn-error btn-sm flex flex-row items-center px-4 py-2 bg-red-500 text-white bg-black rounded-md hover:bg-red-600 transition duration-300"
                           onClick={() => { setShowBajaModal(true), setSelectedCliente(cliente.id) }}
                         >
-                          <ArchiveBoxXMarkIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
+                          <ArchiveBoxXMarkIcon className="h-5 w-5 mr-2" aria-hidden="true" />
                           Baja
                         </button>
                       </td>
@@ -223,6 +223,7 @@ function NuevoClienteForm() {
           </div>
         </div>
       </div>
+
 
       <UpdateClienteForm
         isOpen={isModalOpen}
