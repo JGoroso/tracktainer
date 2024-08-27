@@ -229,7 +229,7 @@ function DataPedidosTable({ source, accionFunc, setUpdateModal, setCancelModal, 
             <tbody className="bg-white ">
               {pedidosFiltrados &&
                 pedidosFiltrados
-                  .filter((pedido) => pedido.estado !== 'completado')
+                  .filter((pedido) => pedido.estado !== 'completado' && pedido.estado !== 'cancelado')
                   .sort((a, b) => {
                     const order = ['pendiente', 'entregado', 'retirar'];
                     return order.indexOf(a.estado) - order.indexOf(b.estado);

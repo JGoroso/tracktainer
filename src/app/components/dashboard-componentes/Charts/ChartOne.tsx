@@ -1,147 +1,145 @@
 "use client";
 
 import { ApexOptions } from "apexcharts";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import axios from 'axios'
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
 
-const options: ApexOptions = {
-  legend: {
-    show: false,
-    position: "top",
-    horizontalAlign: "left",
-  },
-  colors: ["#6cff3a", "#ff3c25"],
-  chart: {
-    fontFamily: "Satoshi, sans-serif",
-    height: 335,
-    type: "area",
-    dropShadow: {
-      enabled: true,
-      color: "#623CEA14",
-      top: 10,
-      blur: 4,
-      left: 0,
-      opacity: 0.1,
-    },
+type FilterType = 'Día' | 'Semana' | 'Mes';
 
-    toolbar: {
-      show: false,
-    },
-  },
-  responsive: [
-    {
-      breakpoint: 1024,
-      options: {
-        chart: {
-          height: 300,
-        },
-      },
-    },
-    {
-      breakpoint: 1366,
-      options: {
-        chart: {
-          height: 350,
-        },
-      },
-    },
-  ],
-  stroke: {
-    width: [2, 2],
-    curve: "straight",
-  },
-  // labels: {
-  //   show: false,
-  //   position: "top",
-  // },
-  grid: {
-    xaxis: {
-      lines: {
-        show: true,
-      },
-    },
-    yaxis: {
-      lines: {
-        show: true,
-      },
-    },
-  },
-  dataLabels: {
-    enabled: false,
-  },
-  markers: {
-    size: 4,
-    colors: "#fff",
-    strokeColors: ["#3056D3", "#80CAEE"],
-    strokeWidth: 3,
-    strokeOpacity: 0.9,
-    strokeDashArray: 0,
-    fillOpacity: 1,
-    discrete: [],
-    hover: {
-      size: undefined,
-      sizeOffset: 5,
-    },
-  },
-  xaxis: {
-    type: "category",
-    categories: [
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-    ],
-    axisBorder: {
-      show: false,
-    },
-    axisTicks: {
-      show: false,
-    },
-  },
-  yaxis: {
-    title: {
-      style: {
-        fontSize: "0px",
-      },
-    },
-    min: 0,
-    max: 100,
-  },
+const parseDate = (dateStr: string): Date => {
+  const [day, month, year] = dateStr.split('/').map(Number);
+  return new Date(year, month - 1, day);
 };
 
-interface ChartOneState {
-  series: {
-    name: string;
-    data: number[];
-  }[];
+interface Pedido {
+  fechaPedido: string; 
+  cantidad: number;
 }
+const filterData = (data: Pedido[], filter: FilterType) => {
+  const now = new Date();
+  const startOfPeriod = new Date();
+  let endOfPeriod = new Date();
+
+  switch (filter) {
+    case 'Día':
+      startOfPeriod.setDate(now.getDate() - 3);
+      startOfPeriod.setHours(0, 0, 0, 0);
+      endOfPeriod = new Date();
+      endOfPeriod.setHours(23, 59, 59, 999);
+      break;
+    case 'Semana':
+      startOfPeriod.setDate(now.getDate() - 7);
+      startOfPeriod.setHours(0, 0, 0, 0);
+      endOfPeriod = new Date();
+      endOfPeriod.setHours(23, 59, 59, 999);
+      break;
+    case 'Mes':
+      startOfPeriod.setDate(1);
+      startOfPeriod.setMonth(now.getMonth());
+      startOfPeriod.setHours(0, 0, 0, 0);
+      endOfPeriod.setMonth(now.getMonth() + 1);
+      endOfPeriod.setDate(0);
+      endOfPeriod.setHours(23, 59, 59, 999);
+      break;
+  }
+
+  const filteredData = data.filter(pedido => {
+    const pedidoDate = parseDate(pedido.fechaPedido);
+    return pedidoDate >= startOfPeriod && pedidoDate <= endOfPeriod;
+  });
+
+  return filteredData;
+};
 
 const ChartOne: React.FC = () => {
-  const series = [
-      {
-        name: "Entregados",
-  
-        data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39, 51],
-      },
+  const [pedidosCancelados, setPedidosCancelados] = useState<Pedido[]>([]);
+  const [pedidosCompletados, setPedidosCompletados] = useState<Pedido[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [options, setOptions] = useState<any>({});
+  const [series, setSeries] = useState<any>([]);
+  const [filter, setFilter] = useState<FilterType>('Día');
 
-      {
-        name: "Cancelados",
-        data: [4, 8, 2, 4, 3, 4, 6, 3, 1, 1, 2, 4],
-      },
-    ]
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const resCancelados = await axios.get('/api/get/pedidoscanceladosbydate');
+        const dataCancelados = resCancelados.data;
+        setPedidosCancelados(dataCancelados);
 
+        const resCompletados = await axios.get('/api/get/pedidoscompletadosbydate');
+        const dataCompletados = resCompletados.data;
+        setPedidosCompletados(dataCompletados);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const filteredCancelados = filterData(pedidosCancelados, filter);
+    const filteredCompletados = filterData(pedidosCompletados, filter);
+
+    const allDates = new Set([...filteredCancelados.map(pedido => pedido.fechaPedido), ...filteredCompletados.map(pedido => pedido.fechaPedido)]);
+    const sortedDates = Array.from(allDates).sort();
+
+    const dataCompletadosSorted = sortedDates.map(date => {
+      const pedido = filteredCompletados.find(p => p.fechaPedido === date);
+      return pedido ? pedido.cantidad : 0;
+    });
+
+    const dataCanceladosSorted = sortedDates.map(date => {
+      const pedido = filteredCancelados.find(p => p.fechaPedido === date);
+      return pedido ? pedido.cantidad : 0;
+    });
+
+    const newOptions = {
+      chart: {
+        type: 'area',
+        height: 350,
+        width: '100%',
+      },
+      xaxis: {
+        categories: sortedDates,
+      },
+      colors: ['#00E396', '#FF4560'],
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: 'smooth',
+      },
+    };
+
+    setOptions(newOptions);
+
+    const newSeries = [
+      {
+        name: 'Completados',
+        data: dataCompletadosSorted,
+      },
+      {
+        name: 'Cancelados',
+        data: dataCanceladosSorted,
+      },
+    ];
+
+    setSeries(newSeries);
+  }, [pedidosCancelados, pedidosCompletados, filter]);
+
+  const handleFilterChange = (newFilter: FilterType) => {
+    setFilter(newFilter);
+  };
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8">
       <div className="flex flex-wrap items-start justify-between gap-3 sm:flex-nowrap">
@@ -152,7 +150,7 @@ const ChartOne: React.FC = () => {
             </span>
             <div className="w-full">
               <p className="font-semibold text-green-500">Pedidos Completados</p>
-              <p className="text-sm font-medium">12.04.2022 - 12.05.2022</p>
+              {/* <p className="text-sm font-medium">12/04/2023 - 12/05/2023</p> */}
             </div>
           </div>
           <div className="flex min-w-47.5">
@@ -161,35 +159,35 @@ const ChartOne: React.FC = () => {
             </span>
             <div className="w-full">
               <p className="font-semibold text-red">Pedidos Cancelados</p>
-              <p className="text-sm font-medium">12.04.2022 - 12.05.2022</p>
+              {/* <p className="text-sm font-medium">12/04/2023 - 12/05/2023</p> */}
             </div>
           </div>
         </div>
         <div className="flex w-full max-w-45 justify-end">
           <div className="inline-flex items-center rounded-md bg-whiter p-1.5 dark:bg-meta-4">
-            <button className="rounded bg-white px-3 py-1 text-xs font-medium text-black shadow-card hover:bg-white hover:shadow-card dark:bg-boxdark dark:text-white dark:hover:bg-boxdark">
-              Dia
+            <button
+              className={`rounded px-3 py-1 text-xs font-medium ${filter === 'Día' ? 'bg-white text-black shadow-card dark:bg-boxdark dark:text-white dark:hover:bg-boxdark' : 'text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark'}`}
+              onClick={() => handleFilterChange('Día')}
+            >
+              Día
             </button>
-            <button className="rounded px-3 py-1 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark">
+            <button
+              className={`rounded px-3 py-1 text-xs font-medium ${filter === 'Semana' ? 'bg-white text-black shadow-card dark:bg-boxdark dark:text-white dark:hover:bg-boxdark' : 'text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark'}`}
+              onClick={() => handleFilterChange('Semana')}
+            >
               Semana
             </button>
-            <button className="rounded px-3 py-1 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark">
+            <button
+              className={`rounded px-3 py-1 text-xs font-medium ${filter === 'Mes' ? 'bg-white text-black shadow-card dark:bg-boxdark dark:text-white dark:hover:bg-boxdark' : 'text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark'}`}
+              onClick={() => handleFilterChange('Mes')}
+            >
               Mes
             </button>
           </div>
         </div>
       </div>
-
-      <div>
-        <div id="chartOne" className="-ml-5">
-          <ReactApexChart
-            options={options}
-            series={series}
-            type="area"
-            height={350}
-            width={"100%"}
-          />
-        </div>
+      <div className="mt-5">
+        <ReactApexChart options={options} series={series} type="area" height={350} />
       </div>
     </div>
   );

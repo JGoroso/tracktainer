@@ -1,7 +1,6 @@
 'use client'
 import { signIn } from 'next-auth/react';
 import Image from 'next/image';
-import Modal from '../components/UserNotFound';
 
 export const LoginPage = () => {
   return (
@@ -11,7 +10,6 @@ export const LoginPage = () => {
           <div className="hidden lg:block lg:w-1/2 bg-cover bg-hero-image" style={{ backgroundPosition: 'center right', filter: 'brightness(70%) contrast(130%) saturate(150%)' }}></div>
           <div className="w-full p-8 lg:w-1/2">
             <div className="flex flex-col direction items-center justify-center h-full">
-
               <div className='flex items-center'>
                 <Image
                   alt=""
