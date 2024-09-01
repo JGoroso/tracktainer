@@ -16,7 +16,7 @@ function NavBar({ }) {
 
 
   return (
-    <nav className="z-50">
+    <nav className="">
       <div className="max-w-screen-xxl flex flex-wrap items-center justify-between mx-auto p-4">
         <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
           <Image src="/logo.png" width={42} height={42} alt="Tracktainer Logo" />
@@ -35,7 +35,7 @@ function NavBar({ }) {
             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15" />
           </svg>
         </button>
-        <div className={`${isMenuOpen ? 'block' : 'hidden'} w-full md:block md:w-auto fixed top-16 left-0 bg-gradient-to-b from-slate-100 to-slate-100 border-gray-100 md:static md:bg-transparent z-50`} id="navbar-default">
+        <div className={`${isMenuOpen ? 'block' : 'hidden'} w-full md:block md:w-auto fixed top-16 left-0 bg-gradient-to-b from-slate-100 to-slate-100 border-gray-100 md:static md:bg-transparent z-10`} id="navbar-default">
           <div className="font-medium flex flex-col p-4 md:p-0 mt-4 rounded-lg  md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0">
             {session?.user.role === 'admin' && (
               <Link legacyBehavior href="/Agregarpedidos">
@@ -69,15 +69,15 @@ function NavBar({ }) {
                 </a>
               </Link>
             )}
-            
-              <Link legacyBehavior href="/AgregarContenedor">
-                <a onClick={toggleMenu} className="text-[#545F71] flex items-center">
-                  <ArchiveBoxArrowDownIcon className="h-8 w-8" aria-hidden="true" />
 
-                  <span className="ml-2">Agregar Contenedor</span>
-                </a>
-              </Link>
-          
+            <Link legacyBehavior href="/AgregarContenedor">
+              <a onClick={toggleMenu} className="text-[#545F71] flex items-center">
+                <ArchiveBoxArrowDownIcon className="h-8 w-8" aria-hidden="true" />
+
+                <span className="ml-2">Agregar Contenedor</span>
+              </a>
+            </Link>
+
             {session?.user.role === 'admin' && (
               <Link legacyBehavior href="/Reportes">
                 <a onClick={toggleMenu} className="text-[#545F71] flex items-center">

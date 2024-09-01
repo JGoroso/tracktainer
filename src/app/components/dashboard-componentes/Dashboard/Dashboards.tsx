@@ -135,7 +135,7 @@ const Dashboards: React.FC = () => {
         <ChartTwo />
         <ChartThree />
 
-        <div className="col-span-12 xl:col-span-7">
+        <div className="col-span-12 xl:col-span-7 overflow-x-auto">
           <TableOne />
         </div>
       </div>

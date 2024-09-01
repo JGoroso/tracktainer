@@ -6,7 +6,9 @@
   box-sizing: border-box;
 }
 
-html, body, main {
+html,
+body,
+main {
   height: 100vh;
   margin: 0;
   padding: 0;
@@ -16,7 +18,9 @@ html, body, main {
   /* Estilos de la caja de alerta */
   opacity: 0;
   transform: translateY(-20px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
 .animate {
