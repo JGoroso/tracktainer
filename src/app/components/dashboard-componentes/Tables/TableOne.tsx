@@ -69,7 +69,7 @@ const TableOne = () => {
 
       <div className="mt-7 overflow-x-auto">
         <table className="min-w-full table-auto">
-          <thead className="bg-gray-100 font-bold uppercase bg-gray-2 rounded-sm">
+          <thead className="bg-gray-100 font-bold uppercase bg-gray-2 rounded-sm ">
             <tr>
               <th
                 scope="col"
@@ -91,19 +91,19 @@ const TableOne = () => {
               </th>
               <th
                 scope="col"
-                className="hidden sm:table-cell px-2 py-3.5 text-sm font-medium text-left text-gray-500"
+                className=" sm:table-cell px-2 py-3.5 text-sm font-medium text-left text-gray-500"
               >
                 Remito
               </th>
               <th
                 scope="col"
-                className="hidden sm:table-cell px-2 py-3.5 text-sm font-medium text-left text-gray-500"
+                className=" sm:table-cell px-2 py-3.5 text-sm font-medium text-left text-gray-500"
               >
                 Fecha entrega
               </th>
               <th
                 scope="col"
-                className="hidden sm:table-cell px-2 py-3.5 text-sm font-medium text-left text-gray-500"
+                className=" sm:table-cell px-2 py-3.5 text-sm font-medium text-left text-gray-500"
               >
                 Tiempo en sitio (Días)
               </th>
@@ -150,13 +150,13 @@ const TableOne = () => {
                       <td className="px-2 py-4 whitespace-nowrap text-base font-medium text-left text-gray-700">
                         {pedido.chofer}
                       </td>
-                      <td className="hidden sm:table-cell px-2 py-4 whitespace-nowrap text-base font-medium text-left text-gray-700">
+                      <td className="sm:table-cell px-2 py-4 whitespace-nowrap text-base font-medium text-left text-gray-700">
                         {pedido.remito}
                       </td>
-                      <td className="hidden sm:table-cell px-2 py-4 whitespace-nowrap text-base font-medium text-left text-gray-700">
+                      <td className="sm:table-cell px-2 py-4 whitespace-nowrap text-base font-medium text-left text-gray-700">
                         {formatDate(pedido.fechaPedido)}
                       </td>
-                      <td className="hidden sm:table-cell px-2 py-4 whitespace-nowrap text-base font-medium text-left text-gray-700">
+                      <td className="sm:table-cell px-2 py-4 whitespace-nowrap text-base font-medium text-left text-gray-700">
                         {formattedDifference}
                       </td>
                     </tr>
