@@ -7,16 +7,10 @@ import {
 } from "../firebase/firestore/firestore";
 import { useAsync } from "../hooks/useAsync";
 import { useState } from "react";
-import UpdatePedidoForm from "./UpdatePedidoForm";
 import DataPedidosTable from "./DataPedidosTable";
 import Link from "next/link";
 function PedidosTable() {
-  const [pedidoId, setPedidoId] = useState("");
-  const [estado, setActualEstado] = useState("");
-  const [showModal, setShowModal] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  const [showCancelModal, setShowCancelModal] = useState(false);
-  const [showCancelAnimation, setCancelAnimation] = useState(false);
   const [showAnimation, setAnimation] = useState(false);
   const [accionAnimation, setAccionAnimation] = useState("");
 
@@ -33,26 +27,6 @@ function PedidosTable() {
   // podremos recibir la data utilizando un useEffect (y con el refresh podemos refrescar los datos) y luego utilizar estos datos donde queramos
   const { data: dataPedidos, error: error } = useAsync(getPedidosFromFirestore, refresh);
 
-  // Modal para realizar el update del Chofer
-  const closeModal = () => {
-    setShowModal(false);
-  };
-
-  // button cancelar, muestra modal para confirmar si el pedido pasa estado cancelado y lo quita de la lista
-  const handleCancelModalConfirm = () => {
-    updateEstadoPedido(pedidoId, "cancelado");
-    updateEstadoContenedorDisponible(contenedorNumero)
-    setShowCancelModal(false);
-    setCancelAnimation(true);
-    setTimeout(() => {
-      setCancelAnimation(false);
-    }, 3000);
-    refreshContainers();
-  };
-
-  const handleCancelModalClose = () => {
-    setShowCancelModal(false);
-  };
 
   // button entregado.
   const onAccion = (pedidoId, accion) => {
@@ -68,41 +42,6 @@ function PedidosTable() {
 
   return (
     <>
-      {/* Seteamos animaciones para los estados del pedido cancel*/}
-      {showCancelAnimation && (
-        <div className={`alert-box ${showCancelAnimation ? "animate" : ""}`}>
-          <div className="px-8 py-6 bg-red-400 text-white flex justify-between rounded">
-            <div className="flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-7 w-7 mr-6"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
-              </svg>
-              <p>El pedido ha pasado a estado CANCELADO!</p>
-            </div>
-            <button className="text-green-100 hover:text-white">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* Seteamos animaciones para los estados del pedido cancel*/}
       {showAnimation && (
         <div className={`alert-box ${showAnimation ? "animate" : ""}`}>
@@ -135,34 +74,6 @@ function PedidosTable() {
                 />
               </svg>
             </button>
-          </div>
-        </div>
-      )}
-
-      {/* Modal de confirmación de cancelación */}
-      {showCancelModal && (
-        <div className="fixed inset-0 z-10 overflow-y-auto">
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="fixed inset-0 bg-black opacity-50"></div>
-            <div className="bg-white fixed p-8 rounded shadow-md">
-              <p className="mb-4">
-                ¿Estás seguro de que deseas cancelar el pedido?
-              </p>
-              <div className="flex justify-end">
-                <button
-                  className="mr-4 text-red-500 hover:text-red-700"
-                  onClick={handleCancelModalConfirm}
-                >
-                  Sí, cancelar
-                </button>
-                <button
-                  className="text-gray-500 hover:text-gray-700"
-                  onClick={handleCancelModalClose}
-                >
-                  No, mantener
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       )}
@@ -227,16 +138,8 @@ function PedidosTable() {
           </div>
         </div>
 
-        <DataPedidosTable source={dataPedidos} accionFunc={onAccion} setUpdateModal={setShowModal} setCancelModal={setShowCancelModal} setPedido={setPedidoId} setNewEstado={setActualEstado} />
+        <DataPedidosTable source={dataPedidos} accionFunc={onAccion} />
 
-        {showModal ? (
-          <UpdatePedidoForm
-            closeModal={closeModal}
-            pedidoId={pedidoId}
-            actualEstado={estado}
-            refresh={refreshContainers}
-          />
-        ) : null}
       </div>
     </>
   );
