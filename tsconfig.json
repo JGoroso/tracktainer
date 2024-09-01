@@ -28,7 +28,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "src/app/components/GoogleMapView.js"  ],
+, "src/app/components/GoogleMapView.js", "src/app/components/dashboard-componentes/Export/ExportExcel.js"  ],
   "exclude": [
     "node_modules"
   ]

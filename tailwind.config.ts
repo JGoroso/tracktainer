@@ -6,6 +6,7 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/react-tailwindcss-datepicker/dist/index.esm.{js,ts}",
   ],
   darkMode: "class",
   theme: {
@@ -20,7 +21,7 @@ const config: Config = {
     },
     extend: {
       backgroundImage: {
-        'hero-image': "url('/contenedores.jpeg')",
+        "hero-image": "url('/contenedores.jpeg')",
       },
       colors: {
         current: "currentColor",
