@@ -16,6 +16,7 @@
     "autoprefixer": "10.4.15",
     "axios": "^1.7.2",
     "chart.js": "^4.4.3",
+    "date-fns": "^3.6.0",
     "dayjs": "^1.11.13",
     "eslint-config-next": "13.4.19",
     "express": "^4.19.2",

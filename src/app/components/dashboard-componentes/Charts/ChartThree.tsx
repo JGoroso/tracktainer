@@ -1,56 +1,87 @@
 import { ApexOptions } from "apexcharts";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
+import axios from "axios";
 
-interface ChartThreeState {
-  series: number[];
-}
-
-const options: ApexOptions = {
-  chart: {
-    fontFamily: "Satoshi, sans-serif",
-    type: "donut",
-  },
-  colors: ["#3C50E0", "#6577F3", "#8FD0EF", "#0FADCF"],
-  labels: ["Betania", "Griguol", "Particular"],
-  legend: {
-    show: false,
-    position: "bottom",
-  },
-
-  plotOptions: {
-    pie: {
-      donut: {
-        size: "65%",
-        background: "transparent",
-      },
-    },
-  },
-  dataLabels: {
-    enabled: false,
-  },
-  responsive: [
-    {
-      breakpoint: 2600,
-      options: {
-        chart: {
-          width: 380,
-        },
-      },
-    },
-    {
-      breakpoint: 640,
-      options: {
-        chart: {
-          width: 200,
-        },
-      },
-    },
-  ],
-};
+const customColors = ["#3c50e0", "#0FADCF", "#8FD0EF", "#0FADCF", "#0FADCF"];
 
 const ChartThree: React.FC = () => {
-  const series = [40, 32, 28];
+  const [dataMensualLength, setDataMensualLength] = useState<number | null>(
+    null
+  );
+  const [dataAnualLength, setDataAnualLength] = useState<number | null>(null);
+  const [dataMensual, setDataMensual] = useState<
+    { cliente: string; porcentaje: string }[]
+  >([]);
+  const [dataAnual, setDataAnual] = useState<
+    { cliente: string; porcentaje: string }[]
+  >([]);
+  const [error, setError] = useState<string | null>(null);
+  const [chartOptions, setChartOptions] = useState<ApexOptions>({
+    labels: [],
+    colors: customColors,
+    chart: {
+      type: "donut",
+    },
+    plotOptions: {
+      pie: {
+        donut: {
+          size: "70%",
+        },
+      },
+    },
+    legend: {
+      show: true,
+    },
+    dataLabels: {
+      enabled: true,
+    },
+  });
+  const [selectedOption, setSelectedOption] = useState("Mensual");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const endpoint =
+          selectedOption === "Mensual"
+            ? "/api/get/pcmensualporcliente"
+            : "/api/get/pcanualporcliente";
+
+        const endpointLength =
+          selectedOption === "Mensual"
+            ? "/api/get/completadoscantidadmensual"
+            : "/api/get/completadoscantidadanual";
+
+        const [response, responseLength] = await Promise.all([
+          axios.get(endpoint),
+          axios.get(endpointLength),
+        ]);
+
+        if (selectedOption === "Mensual") {
+          setDataMensual(response.data);
+          setDataMensualLength(responseLength.data.totalPedidos); // Ajustar según la estructura de la respuesta
+        } else {
+          setDataAnual(response.data);
+          setDataAnualLength(responseLength.data.totalPedidos); // Ajustar según la estructura de la respuesta
+        }
+
+        // Set chart options based on the selected data
+        const data =
+          selectedOption === "Mensual" ? response.data : response.data;
+        setChartOptions((prevOptions) => ({
+          ...prevOptions,
+          labels: data.map((item: { cliente: string }) => item.cliente),
+        }));
+      } catch (error) {
+        setError((error as Error).message);
+      }
+    };
+
+    fetchData();
+  }, [selectedOption]);
+
+  const dataToDisplay = selectedOption === "Mensual" ? dataMensual : dataAnual;
+  const series = dataToDisplay.map((item) => parseFloat(item.porcentaje));
 
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-5">
@@ -59,19 +90,28 @@ const ChartThree: React.FC = () => {
           <h5 className="text-xl font-semibold text-black dark:text-white">
             Clientes principales
           </h5>
-          <p>Pedidos realizados: 160</p>
+          <p>
+            Pedidos completados:{" "}
+            {selectedOption === "Mensual"
+              ? dataMensualLength !== null
+                ? dataMensualLength
+                : "Cargando..."
+              : dataAnualLength !== null
+              ? dataAnualLength
+              : "Cargando..."}
+          </p>
         </div>
         <div>
           <div className="relative z-20 inline-block">
             <select
-              name=""
-              id=""
+              value={selectedOption}
+              onChange={(e) => setSelectedOption(e.target.value)}
               className="relative z-20 inline-flex appearance-none bg-transparent py-1 pl-3 pr-8 text-sm font-medium outline-none"
             >
-              <option value="" className="dark:bg-boxdark">
+              <option value="Mensual" className="dark:bg-boxdark">
                 Mensual
               </option>
-              <option value="" className="dark:bg-boxdark">
+              <option value="Anual" className="dark:bg-boxdark">
                 Anual
               </option>
             </select>
@@ -101,48 +141,36 @@ const ChartThree: React.FC = () => {
 
       <div className="mb-2">
         <div id="chartThree" className="mx-auto flex justify-center">
-          <ReactApexChart options={options} series={series} type="donut" />
+          <ReactApexChart options={chartOptions} series={series} type="donut" />
         </div>
       </div>
 
-      <div className="-mx-8 flex flex-wrap items-center justify-center gap-y-3">
-        <div className="w-full px-8 sm:w-1/2">
-          <div className="flex w-full items-center">
-            <span className="mr-2 block h-3 w-full max-w-3 rounded-full bg-primary"></span>
-            <p className="flex w-full justify-between text-sm font-medium text-black dark:text-white">
-              <span> Griguol </span>
-              <span> 32% </span>
-            </p>
+      <div className="-mx-8 flex items-center justify-center gap-y-3">
+        {dataToDisplay.map((item, index) => (
+          <div className="w-full px-8 sm:w-1/2" key={index}>
+            <div className="flex items-center">
+              <span
+                className={`mr-2 block h-3 w-full max-w-3 rounded-full ${
+                  index === 0
+                    ? "bg-primary"
+                    : index === 1
+                    ? "bg-[#0FADCF]"
+                    : "bg-[#8FD0EF]"
+                }`}
+              />
+              <span className="text-xs text-black dark:text-white">
+                {item.porcentaje}%
+              </span>
+            </div>
           </div>
-        </div>
-        <div className="w-full px-8 sm:w-1/2">
-          <div className="flex w-full items-center">
-          <span className="mr-2 block h-3 w-full max-w-3 rounded-full bg-[#0FADCF]"></span>
-            <p className="flex w-full justify-between text-sm font-medium text-black dark:text-white">
-              <span> Betania </span>
-              <span> 40% </span>
-            </p>
-          </div>
-        </div>
-        <div className="w-full px-8 sm:w-1/2">
-          <div className="flex w-full items-center">
-            <span className="mr-2 block h-3 w-full max-w-3 rounded-full bg-[#8FD0EF]"></span>
-            <p className="flex w-full justify-between text-sm font-medium text-black dark:text-white">
-              <span> Particular </span>
-              <span> 28% </span>
-            </p>
-          </div>
-        </div>
-        <div className="w-full px-8 sm:w-1/2">
-          {/* <div className="flex w-full items-center">
-          <span className="mr-2 block h-3 w-full max-w-3 rounded-full bg-[#0FADCF]"></span>
-            <p className="flex w-full justify-between text-sm font-medium text-black dark:text-white">
-              <span> Unknown </span>
-              <span> 12% </span>
-            </p>
-          </div> */}
-        </div>
+        ))}
       </div>
+
+      {error && (
+        <div className="mt-4 text-red-500">
+          <p>Error: {error}</p>
+        </div>
+      )}
     </div>
   );
 };

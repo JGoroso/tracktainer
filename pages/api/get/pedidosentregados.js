@@ -27,7 +27,7 @@ export default async function handler(req, res) {
     // Responder con la lista en formato JSON
     res.status(200).json(pedidosEntregados);
   } catch (error) {
-    console.error('Error al obtener los pedidos pendientes:', error);
-    res.status(500).send('Error al obtener los pedidos pendientes');
+    console.error('Error al obtener los pedidos entregados:', error);
+    res.status(500).send('Error al obtener los pedidos entregados');
   }
 }
