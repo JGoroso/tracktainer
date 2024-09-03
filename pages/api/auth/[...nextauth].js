@@ -17,24 +17,23 @@ export const authOptions = {
       if (!session) {
         return null;
       } else {
-        const usersFromFirestore = await getUsuarios();
-        const allowedEmails = new Set(usersFromFirestore.map(user => user.email));
-        const isUserAllowed = allowedEmails.has(session?.user?.email);
-        if (!isUserAllowed) {
-          session.user = {
-            userAllowed: false
-          }
-          return Promise.resolve(session)
-        } else {
-          console.log("usuario permitido, iniciando sesión");
-          const userRole = usersFromFirestore.find(user => user.email === session?.user.email)?.role;
-          // Establecer el rol del usuario en la sesión
-          session.user.email = token.email
-          session.user.userAllowed = true
-          session.user.role = userRole
+        // const usersFromFirestore = await getUsuarios();
+        // const allowedEmails = new Set(usersFromFirestore.map(user => user.email));
+        // const isUserAllowed = allowedEmails.has(session?.user?.email);
+        // if (!isUserAllowed) {
+        //   session.user = {
+        //     userAllowed: false
+        //   }
+        //   return Promise.resolve(session)
+        // } else {
+        //   console.log("usuario permitido, iniciando sesión");
+        //   const userRole = usersFromFirestore.find(user => user.email === session?.user.email)?.role;
+        //   // Establecer el rol del usuario en la sesión
+        session.user.email = token.email
+        session.user.userAllowed = true
+        session.user.role = "admin"
 
-          return Promise.resolve(session);
-        }
+        return Promise.resolve(session);
       }
     }
   }
