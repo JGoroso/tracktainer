@@ -276,6 +276,26 @@ export const updateEstadoPedido = async (docId, estado) => {
     });
 };
 
+export const updatePedido = async (docId, data) => {
+  await updateDoc(doc(db, "pedidos", docId), {
+    chofer: data.chofer,
+    cliente: data.cliente,
+    contenedor: data.contenedor,
+    direccion: data.direccion,
+    fechaPedido: data.fechaPedido,
+    lat: data.latitude,  // Coordenadas de latitud
+    lng: data.longitude, // Coordenadas de longitud
+    recibe: data.recibe,
+    telefono: data.telefono
+  })
+    .then(() => {
+      console.log("Pedido actualizado exitosamente");
+    })
+    .catch((error) => {
+      console.error("Error al actualizar el pedido:", error);
+    });
+};
+
 // Update estado del pedido
 export const updateRemitoPedido = async (docId, nroRemito) => {
   await updateDoc(doc(db, "pedidos", docId), {

@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { PencilSquareIcon, EllipsisVerticalIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import axios from 'axios'
-import NuevoPedidoModal from './NuevoPedidoModal';
+import UpdatePedidoModal from './UpdatePedidoModal';
 
 function DataPedidosTable({ source, accionFunc }) {
   // Estado para almacenar el filtro seleccionado
@@ -11,6 +11,7 @@ function DataPedidosTable({ source, accionFunc }) {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false); // Estado para mostrar/ocultar el modal de edición
   const [selectedPedido, setSelectedPedido] = useState(null); // Pedido seleccionado para editar
+
 
   const dropdownRef = useRef(null);
 
@@ -258,10 +259,10 @@ function DataPedidosTable({ source, accionFunc }) {
         </div>
 
         {/* Modal de edición */}
-        <NuevoPedidoModal isOpen={showEditModal} onClose={handleCloseModal} pedido={selectedPedido} />
+        <UpdatePedidoModal isOpen={showEditModal} onClose={handleCloseModal} pedido={selectedPedido} fetchPedidos={fetchPedidos} />
       </div>
 
-      
+
     </>
   );
 }
