@@ -11,7 +11,7 @@ function DataPedidosTable({ source, accionFunc }) {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false); // Estado para mostrar/ocultar el modal de edición
   const [selectedPedido, setSelectedPedido] = useState(null); // Pedido seleccionado para editar
-
+  const [pedidoData, setPedidoData] = useState(null)
 
   const dropdownRef = useRef(null);
 
@@ -21,6 +21,7 @@ function DataPedidosTable({ source, accionFunc }) {
     if (filtro === 'Todos') return true;
     return pedido.estado.toLowerCase() === filtro.toLowerCase();
   });
+
 
   const fetchPedidos = async () => {
     try {
@@ -46,8 +47,15 @@ function DataPedidosTable({ source, accionFunc }) {
   };
 
   // editamos un pedido
-  const handleEditClick = (pedidoId) => {
+  const handleEditClick = async (pedidoId) => {
+    try {
+      const response = await axios.get(`/api/get/pedidoinfo?id=${pedidoId}`);
+      setPedidoData(response.data); // Actualiza `pedidos` con los datos obtenidos
+    } catch (error) {
+      console.error('Error al obtener los pedidos:', error);
+    }
     console.log("Hi editing, " + pedidoId)
+    console.log("Hi editing, " + pedidoData)
     setSelectedPedido(pedidoId);
     setShowEditModal(true);
   };
@@ -259,7 +267,7 @@ function DataPedidosTable({ source, accionFunc }) {
         </div>
 
         {/* Modal de edición */}
-        <UpdatePedidoModal isOpen={showEditModal} onClose={handleCloseModal} pedido={selectedPedido} fetchPedidos={fetchPedidos} />
+        <UpdatePedidoModal isOpen={showEditModal} onClose={handleCloseModal} pedido={selectedPedido} fetchPedidos={fetchPedidos} pedidoInfo={pedidoData}/>
       </div>
 
 
