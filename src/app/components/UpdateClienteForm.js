@@ -98,7 +98,7 @@ function UpdateClienteForm({
               htmlFor="edit-telefono"
               className="block text-gray-700 font-bold mb-2"
             >
-              Cuit
+              CUIT
             </label>
             <input
               id="edit-cuit"

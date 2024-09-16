@@ -66,15 +66,12 @@ function GoogleMapView() {
   const handleGuardarRemito = (nroRemito) => {
     const docId = markerId;
     if (nroRemito) {
-      // Actualiza el campo Estado a Completado en Firestore
-      //setShowAnimation(true);
-      setShowModalGuardado(true);
       // entregado es el proximo estado luego de pendiente
       updateEstadoPedido(docId, "entregado");
       updateRemitoPedido(docId, nroRemito);
       setShowModalRemito(false);
+      setShowModalGuardado(true);
       setTimeout(() => {
-        setShowAnimation(false);
         setSelected(null);
         setRefresh(!refresh);
         setShowModalGuardado(false);
@@ -101,8 +98,8 @@ function GoogleMapView() {
           {data &&
             data.map((marker) =>
               marker["estado"] == "pendiente" ||
-              marker["estado"] == "entregado" ||
-              marker["estado"] == "retirar" ? (
+                marker["estado"] == "entregado" ||
+                marker["estado"] == "retirar" ? (
                 <Marker
                   key={marker.id}
                   position={{ lat: marker.lat, lng: marker.lng }}
@@ -150,7 +147,7 @@ function GoogleMapView() {
                                         "America/Argentina/Buenos_Aires",
                                     })
                                   )) /
-                                  (1000 * 60 * 60 * 24)
+                                (1000 * 60 * 60 * 24)
                               ),
                               0 // Ensure the result is non-negative
                             )}
@@ -199,34 +196,33 @@ function GoogleMapView() {
                       onClick={() => {
                         selected.estado === "pendiente"
                           ? handleOnClick(
-                              selected.contenedor,
-                              "entregado",
-                              true
-                            )
+                            selected.contenedor,
+                            "entregado",
+                            true
+                          )
                           : selected.estado === "entregado"
                             ? handleOnClick(
-                                selected.contenedor,
-                                "retirar",
-                                false
-                              )
+                              selected.contenedor,
+                              "retirar",
+                              false
+                            )
                             : selected.estado === "retirar"
                               ? handleOnClick(
-                                  selected.contenedor,
-                                  "completado",
-                                  false
-                                )
+                                selected.contenedor,
+                                "completado",
+                                false
+                              )
                               : null;
                       }}
                       className={`flex items-center justify-center px-4 py-2 text-sm text-white 
-                      ${
-                        selected.estado === "pendiente"
+                      ${selected.estado === "pendiente"
                           ? "bg-green-500 hover:bg-green-600"
                           : selected.estado === "entregado"
                             ? "bg-orange-500 hover:bg-orange-600"
                             : selected.estado === "retirar"
                               ? "bg-blue-500 hover:bg-blue-600"
                               : null
-                      } rounded-lg transition duration-200`}
+                        } rounded-lg transition duration-200`}
                     >
                       {selected.estado === "pendiente"
                         ? "Entregado"
