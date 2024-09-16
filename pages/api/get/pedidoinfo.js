@@ -12,6 +12,7 @@ export default async function handler(req, res) {
   try {
     const { id } = req.query; // Obtener el ID del pedido desde la consulta
 
+    console.log(id)
     if (!id) {
       return res.status(400).send('ID del pedido es requerido');
     }
