@@ -58,7 +58,7 @@ function NuevoPedidoForm() {
   } = useForm();
 
   useEffect(() => {
-    register("address", { required: "Por favor, ingrese una direccion" });
+    register("address", { required: "Por favor, ingrese una dirección" });
     register("latitude", { required: true, min: -90, max: 90 });
     register("longitude", { required: true, min: -180, max: 180 });
   }, [register]);
@@ -119,7 +119,7 @@ function NuevoPedidoForm() {
     setTimeout(async () => {
       await getContenedoresFromFirestore();
       setShowConfirmacionModal(false);
-    }, 1500);
+    }, 1000);
 
     reset();
   };
@@ -223,7 +223,7 @@ function NuevoPedidoForm() {
               htmlFor="recibe"
               className="text-gray-800 text-sm font-bold leading-tight tracking-normal"
             >
-              ¿Quien recibe?
+              ¿Quién recibe?
             </label>
             <input
               id="recibe"
@@ -276,14 +276,14 @@ function NuevoPedidoForm() {
               htmlFor="telefono_cliente"
               className="text-gray-800 text-sm font-bold leading-tight tracking-normal"
             >
-              Número de telefono
+              Número de teléfono
             </label>
             <input
               type="number"
               id="telefono_cliente"
               name="telefono_cliente"
               className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-yellow-500 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
-              placeholder="Número de telefono"
+              placeholder="Número de teléfono"
               {...register("telefono_cliente", {
                 required: false,
                 validate: (telefono_cliente) => {
@@ -291,7 +291,7 @@ function NuevoPedidoForm() {
                     telefono_cliente.length > 0 &&
                     telefono_cliente.length < 8
                   ) {
-                    return "Ingrese un numero de al menos 8 cifras";
+                    return "Ingrese un número de al menos 8 cifras";
                   }
                 },
               })}
