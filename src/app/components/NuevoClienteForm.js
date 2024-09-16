@@ -173,8 +173,8 @@ function NuevoClienteForm() {
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row lg:gap-8 px-4 lg:px-16 mt-10">
-        <div className="w-full lg:w-1/2">
+      <div className="flex flex-col lg:flex-row lg:gap-4 px-1 lg:px-16 mt-10">
+        <div className="w-full ">
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="max-w-md mx-auto p-6 shadow-lg rounded-lg bg-white border border-gray-200"
@@ -240,6 +240,27 @@ function NuevoClienteForm() {
                 </p>
               )}
             </div>
+            <div className="mb-6">
+              <label
+                htmlFor="telefono"
+                className="block text-gray-700 font-semibold mb-2"
+              >
+                Cuit
+              </label>
+              <input
+                id="cuit"
+                {...register("cuit", {
+                  required: "El cuit es obligatorio",
+                })}
+                className={`w-full px-4 py-2 border ${errors.cuit ? "border-red-500" : "border-gray-300"} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              />
+              {errors.cuit && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.cuit.message}
+                </p>
+              )}
+            </div>
+
             <input
               type="submit"
               value="Enviar"
@@ -247,7 +268,7 @@ function NuevoClienteForm() {
             />
           </form>
         </div>
-        <div className="card border border-gray-200 bg-white p-6 shadow-xl mt-8 lg:mt-0 lg:w-1/2 rounded-lg">
+        <div className="card border border-gray-200 bg-white p-6 shadow-xl mt-8 lg:mt-0  rounded-lg">
           <div id="secondbox" className="overflow-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
@@ -280,6 +301,12 @@ function NuevoClienteForm() {
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
+                    Cuit
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
                     Acciones
                   </th>
                 </tr>
@@ -303,6 +330,9 @@ function NuevoClienteForm() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold uppercase text-gray-500">
                           {cliente.telefono}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold uppercase text-gray-500">
+                          {cliente.cuit}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-2">
                           <button

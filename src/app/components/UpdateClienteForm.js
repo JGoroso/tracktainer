@@ -17,6 +17,7 @@ function UpdateClienteForm({
         setValue("nombreEmpresa", user.empresa);
         setValue("nombreCompleto", user.referente);
         setValue("telefono", user.telefono);
+        setValue("cuit", user.cuit);
       }
     },
     [user, setValue],
@@ -90,6 +91,24 @@ function UpdateClienteForm({
               <p className="text-red-500 text-sm mt-1">
                 {errors.telefono.message}
               </p>
+            )}
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="edit-telefono"
+              className="block text-gray-700 font-bold mb-2"
+            >
+              Cuit
+            </label>
+            <input
+              id="edit-cuit"
+              {...register("cuit", {
+                required: "El cuit es obligatorio",
+              })}
+              className={`w-full px-3 py-2 border ${errors.cuit ? "border-red-500" : "border-gray-300"} rounded-md`}
+            />
+            {errors.cuit && (
+              <p className="text-red-500 text-sm mt-1">{errors.cuit.message}</p>
             )}
           </div>
           <div className="flex justify-end">
