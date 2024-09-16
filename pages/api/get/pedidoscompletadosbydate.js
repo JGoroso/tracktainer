@@ -13,7 +13,7 @@ const db = getFirestore(app);
 // Función para formatear la fecha en formato D/M/Y
 const formatDate = (dateString) => {
   const [year, month, day] = dateString.split('-');
-  return `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year}`;
+  return `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
 };
 
 export default async function handler(req, res) {

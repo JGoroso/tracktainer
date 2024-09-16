@@ -35,7 +35,7 @@ function UpdateContenedorForm({ isOpen, onClose, contenedor, onSave, register, s
             <button
               type="button"
               onClick={onClose}
-              className="mr-2 px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+              className="mr-2 px-4 py-2 bg-slate-500 text-white rounded-md hover:bg-gray-600"
             >
               Cancelar
             </button>

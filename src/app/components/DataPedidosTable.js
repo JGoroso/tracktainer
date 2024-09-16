@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { PencilSquareIcon, EllipsisVerticalIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import axios from 'axios'
-import NuevoPedidoModal from './NuevoPedidoModal';
+import UpdatePedidoModal from './UpdatePedidoModal';
 
 function DataPedidosTable({ source, accionFunc }) {
   // Estado para almacenar el filtro seleccionado
@@ -11,6 +11,7 @@ function DataPedidosTable({ source, accionFunc }) {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false); // Estado para mostrar/ocultar el modal de edición
   const [selectedPedido, setSelectedPedido] = useState(null); // Pedido seleccionado para editar
+  const [dataPedidoSelected, setDataPedidoSelected] = useState(null)
 
   const dropdownRef = useRef(null);
 
@@ -20,6 +21,7 @@ function DataPedidosTable({ source, accionFunc }) {
     if (filtro === 'Todos') return true;
     return pedido.estado.toLowerCase() === filtro.toLowerCase();
   });
+
 
   const fetchPedidos = async () => {
     try {
@@ -45,10 +47,16 @@ function DataPedidosTable({ source, accionFunc }) {
   };
 
   // editamos un pedido
-  const handleEditClick = (pedidoId) => {
-    console.log("Hi editing, " + pedidoId)
-    setSelectedPedido(pedidoId);
-    setShowEditModal(true);
+  const handleEditClick = async (pedidoId,) => {
+    try {
+      const response = await axios.get(`/api/get/pedidoinfo?id=${pedidoId}`);
+      setDataPedidoSelected(response.data);
+      setSelectedPedido(pedidoId);
+      setShowEditModal(true);
+    } catch (error) {
+      console.log("problemas obteniendo el pedido")
+    }
+
   };
 
   // Efecto para sincronizar `pedidos` con `source` si `source` cambia
@@ -227,7 +235,7 @@ function DataPedidosTable({ source, accionFunc }) {
                               <button
                                 className="flex items-center w-full px-4 py-2 text-left text-gray-700 hover:bg-gray"
                                 onClick={() => {
-                                  handleEditClick(pedido.id);
+                                  handleEditClick(pedido.id, pedido);
                                   setOpenDropdown(null);
                                 }}
                               >
@@ -258,10 +266,10 @@ function DataPedidosTable({ source, accionFunc }) {
         </div>
 
         {/* Modal de edición */}
-        <NuevoPedidoModal isOpen={showEditModal} onClose={handleCloseModal} pedido={selectedPedido} />
+        <UpdatePedidoModal isOpen={showEditModal} onClose={handleCloseModal} pedido={selectedPedido} fetchPedidos={fetchPedidos} dataPedidoSelected={dataPedidoSelected} />
       </div>
 
-      
+
     </>
   );
 }
