@@ -2,6 +2,7 @@ import React from "react";
 
 function PedidoGuardadoModal({ show, message }) {
   if (!show) return null;
+  //Agregar Componente
 
   return (
     //"flex items-center justify-between mb-4"
