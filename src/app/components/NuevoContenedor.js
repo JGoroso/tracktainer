@@ -1,13 +1,12 @@
 'use client'
 import React, { useState } from 'react'
-import { addConteendor, addContenedor, getAllContenedores, updateEstadoContenedorRoto } from '../firebase/firestore/firestore'
+import { addContenedor, getAllContenedores, updateEstadoContenedor } from '../firebase/firestore/firestore'
 import { useAsync } from '../hooks/useAsync'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
-
-import * as yup from "yup";
-import { ArchiveBoxXMarkIcon, PencilSquareIcon } from '@heroicons/react/20/solid'
+import { PencilSquareIcon } from '@heroicons/react/20/solid'
 import UpdateContenedorForm from './UpdateContenedorForm'
+import PedidoGuardadoModal from './PedidoGuardadoModal'
 
 
 function NuevoContenedor() {
@@ -22,6 +21,7 @@ function NuevoContenedor() {
   const [refresh, setRefresh] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedContenedor, setSelectedContenedor] = useState(null);
+  const [showPedidoGuardadoModal, setShowPedidoGuardadoModal] = useState(false)
 
 
   // Se llama a la funcion getClientes que nos devuelve todos los objetos de la coleccion 'Clientes' en forma de promesa
@@ -50,11 +50,14 @@ function NuevoContenedor() {
     setSelectedContenedor(null);
   };
 
-  const handleSave = () => {
-    updateEstadoContenedorRoto(selectedContenedor)
-    handleCloseModal();
-    reset()
+  const handleSave = (data) => {
+    updateEstadoContenedor(selectedContenedor, data)
+
+    setShowPedidoGuardadoModal(true)
     setTimeout(() => {
+      setShowPedidoGuardadoModal(false)
+      handleCloseModal();
+      reset()
       setRefresh(!refresh)
     }, 1000)
   };
@@ -155,6 +158,7 @@ function NuevoContenedor() {
         handleSubmit={handleSubmit}
         errors={errors}
       />
+      <PedidoGuardadoModal show={showPedidoGuardadoModal} message={"Contenedor actualizado"} />
     </>
   );
 };
