@@ -4,6 +4,8 @@ import {
   getPedidos,
   updateRemitoPedido,
   updateEstadoPedido,
+  updateEstadoContenedorOcupado,
+  updateEstadoContenedorDisponible,
 } from "../firebase/firestore/firestore";
 import { useAsync } from "../hooks/useAsync";
 import { useState } from "react";
@@ -35,14 +37,15 @@ function PedidosTable() {
 
 
   // button entregado.
-  const onAccion = (pedidoId, ProximoEstado) => {
+  const onAccion = (pedidoId, ProximoEstado, contenedor) => {
     setProximoEstado(ProximoEstado)
     if (ProximoEstado == "entregado") {
       setSelected(pedidoId)
       setShowModalRemito(true)
-
-
     } else {
+      if (ProximoEstado == "completado") {
+        updateEstadoContenedorDisponible(contenedor)
+      }
       updateEstadoPedido(pedidoId, ProximoEstado);
       setPedidoGuardadoModal(true)
       setTimeout(async () => {

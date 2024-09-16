@@ -4,8 +4,8 @@ import { useForm } from "react-hook-form";
 import Searchbox from "./searchBox.js";
 import axios from "axios";
 import {
-  updatePedido,
   updateEstadoContenedorOcupado,
+  updatePedido,
 } from "../firebase/firestore/firestore.js";
 import PedidoGuardadoModal from "./PedidoGuardadoModal";
 
@@ -62,14 +62,17 @@ function UpdatePedidoModal({ isOpen, onClose, pedido, fetchPedidos, dataPedidoSe
   const onSubmit = async (newData) => {
     try {
       // Update the pedido with the form data
+      console.log(newData)
       await updatePedido(pedido, newData, dataPedidoSelected);
+      if (newData.contenedor) {
+        updateEstadoContenedorOcupado(newData.contenedor)
+      }
       console.log("Pedido Actualizado:", newData);
       setPedidoGuardadoModal(true);
 
       // Refresh the data and close the modal
       setTimeout(async () => {
         await fetchPedidos();
-        updateEstadoContenedorOcupado(newData.contenedor);
         setPedidoGuardadoModal(false);
         onClose();
         reset()
@@ -96,71 +99,66 @@ function UpdatePedidoModal({ isOpen, onClose, pedido, fetchPedidos, dataPedidoSe
           <p className="mt-2 text-sm sm:text-base md:text-lg text-center">Actualice la información del pedido</p>
 
           <form onSubmit={handleSubmit(onSubmit)} className="w-full mt-4 space-y-4">
+            <div className="flex flex-col">
+              <label htmlFor="direccion" className="text-gray-800 text-sm sm:text-base font-bold mb-2">
+                Dirección
+              </label>
+              <Searchbox
+                onSelectAddress={(address, latitude, longitude) => {
+                  setValue("direccion", address);
+                  setValue("latitude", latitude);
+                  setValue("longitude", longitude);
+                }}
+              />
+              {errors.direccion && <p className="text-red-500 text-sm">{errors.direccion.message}</p>}
+            </div>
 
-            {dataPedidoSelected ?
-              <>
-                <div className="flex flex-col">
-                  <label htmlFor="direccion" className="text-gray-800 text-sm sm:text-base font-bold mb-2">
-                    Dirección
-                  </label>
-                  <Searchbox
-                    onSelectAddress={(address, latitude, longitude) => {
-                      setValue("direccion", address);
-                      setValue("latitude", latitude);
-                      setValue("longitude", longitude);
-                    }}
-                  />
-                  {errors.direccion && <p className="text-red-500 text-sm">{errors.direccion.message}</p>}
-                </div>
+            <div className="flex flex-col">
+              <label htmlFor="recibe" className="text-gray-800 text-sm sm:text-base font-bold mb-2">
+                ¿Quién recibe?
+              </label>
+              <input
+                id="recibe"
+                name="recibe"
+                className="text-gray-600 focus:outline-none focus:border-yellow-500 w-full p-2 border border-gray-300 rounded-md"
+                {...register("recibe")}
+              />
+              {errors.recibe && <p className="text-red-500 text-sm">{errors.recibe.message}</p>}
+            </div>
 
-                <div className="flex flex-col">
-                  <label htmlFor="recibe" className="text-gray-800 text-sm sm:text-base font-bold mb-2">
-                    ¿Quién recibe?
-                  </label>
-                  <input
-                    id="recibe"
-                    name="recibe"
-                    className="text-gray-600 focus:outline-none focus:border-yellow-500 w-full p-2 border border-gray-300 rounded-md"
-                    {...register("recibe")}
-                  />
-                  {errors.recibe && <p className="text-red-500 text-sm">{errors.recibe.message}</p>}
-                </div>
+            <div className="flex flex-col">
+              <label htmlFor="cliente" className="text-gray-800 text-sm sm:text-base font-bold mb-2">
+                Cliente
+              </label>
+              <select
+                id="cliente"
+                {...register("cliente")}
+                className={`w-full p-2 border ${errors.cliente ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+              >
 
-                <div className="flex flex-col">
-                  <label htmlFor="cliente" className="text-gray-800 text-sm sm:text-base font-bold mb-2">
-                    Cliente
-                  </label>
-                  <select
-                    id="cliente"
-                    {...register("cliente")}
-                    className={`w-full p-2 border ${errors.cliente ? 'border-red-500' : 'border-gray-300'} rounded-md`}
-                  >
+                {clientesData.length > 0 ? (
+                  clientesData.map((cliente, index) => (
+                    <option key={index} value={cliente.empresa}>{cliente.empresa}</option>
+                  ))
+                ) : (
+                  <option value="N/A">Cargando clientes...</option>
+                )}
+              </select>
+            </div>
 
-                    {clientesData.length > 0 ? (
-                      clientesData.map((cliente, index) => (
-                        <option key={index} value={cliente.empresa}>{cliente.empresa}</option>
-                      ))
-                    ) : (
-                      <option value="N/A">Cargando clientes...</option>
-                    )}
-                  </select>
-                </div>
-
-                <div className="flex flex-col">
-                  <label htmlFor="telefono_cliente" className="text-gray-800 text-sm sm:text-base font-bold mb-2">
-                    Teléfono del cliente
-                  </label>
-                  <input
-                    type="text"
-                    id="telefono_cliente"
-                    name="telefono_cliente"
-                    className="text-gray-600 focus:outline-none focus:border-yellow-500 w-full p-2 border border-gray-300 rounded-md"
-                    placeholder="Número de teléfono"
-                    {...register("telefono_cliente")}
-                  />
-                </div>
-              </>
-              : null}
+            <div className="flex flex-col">
+              <label htmlFor="telefono_cliente" className="text-gray-800 text-sm sm:text-base font-bold mb-2">
+                Teléfono del cliente
+              </label>
+              <input
+                type="text"
+                id="telefono_cliente"
+                name="telefono_cliente"
+                className="text-gray-600 focus:outline-none focus:border-yellow-500 w-full p-2 border border-gray-300 rounded-md"
+                placeholder="Número de teléfono"
+                {...register("telefono_cliente")}
+              />
+            </div>
 
             <div className="flex flex-col">
               <label htmlFor="fechaPedido" className="text-gray-800 text-sm sm:text-base font-bold mb-2">
@@ -169,7 +167,6 @@ function UpdatePedidoModal({ isOpen, onClose, pedido, fetchPedidos, dataPedidoSe
               <input
                 type="date"
                 id="fechaPedido"
-                defaultValue={dataPedidoSelected.cliente}
                 {...register("fechaPedido", { required: "Ingrese la fecha del pedido" })}
                 className="text-gray-600 focus:outline-none focus:border-yellow-500 w-full p-2 border border-gray-300 rounded-md"
               />
@@ -213,6 +210,7 @@ function UpdatePedidoModal({ isOpen, onClose, pedido, fetchPedidos, dataPedidoSe
 
               <select
                 id="contenedor"
+                {...register("contenedor")}
                 className={`w-full p-2 border rounded-md ${isChecked ? '' : 'opacity-50 cursor-not-allowed'}`}
                 disabled={!isChecked}
               >
@@ -229,6 +227,8 @@ function UpdatePedidoModal({ isOpen, onClose, pedido, fetchPedidos, dataPedidoSe
                   <option value="N/A">Cargando contenedores...</option>
                 )}
               </select>
+
+
             </div>
 
             <div className="flex justify-center mt-4">
