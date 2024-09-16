@@ -2,12 +2,9 @@
 import React, { useState } from "react";
 import {
   addCliente,
-  addUsuario,
   getClientes,
   updateEstadoCliente,
-  updateEstadoUsuario,
   updateInfoCliente,
-  updateInfoUsuario,
 } from "../firebase/firestore/firestore";
 import { useAsync } from "../hooks/useAsync";
 import Link from "next/link";
@@ -37,6 +34,11 @@ const schema = yup
       .positive()
       .integer()
       .required("El telefono es obligatorio, no se permiten letras"),
+    cuit: yup
+      .number()
+      .positive()
+      .integer()
+      .required("El CUIT es obligatorio, no se permiten letras"),
   })
   .required();
 
@@ -78,6 +80,7 @@ function NuevoClienteForm() {
   };
 
   const handleCloseModal = () => {
+    reset()
     setIsModalOpen(false);
     setSelectedCliente(null);
   };
@@ -245,7 +248,7 @@ function NuevoClienteForm() {
                 htmlFor="telefono"
                 className="block text-gray-700 font-semibold mb-2"
               >
-                Cuit
+                CUIT
               </label>
               <input
                 id="cuit"

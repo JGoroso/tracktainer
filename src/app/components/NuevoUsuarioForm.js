@@ -24,10 +24,10 @@ const schema = yup
   .object({
     nombre: yup
       .string()
-      .required()
-      .matches(/^[aA-zZ\s]+$/, "No se permiten numeros ni simbolos"),
-    telefono: yup.number().positive().integer().required(),
-    email: yup.string().required(),
+      .required("El nombre es obligatorio.")
+      .matches(/^[aA-zZ\s]+$/, "No se permiten numeros ni simbolos."),
+    telefono: yup.number().typeError("El telefono deben ser numeros").positive().integer().required("El telefono es obligatorio, no se permiten letras"),
+    email: yup.string().email('Formato de email invalido').required("El email es requerido."),
   })
   .required();
 
@@ -70,6 +70,7 @@ function NuevoUsuarioForm() {
   };
 
   const handleCloseModal = () => {
+    reset()
     setIsModalOpen(false);
     setSelectedUser(null);
   };
