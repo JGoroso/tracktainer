@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { PencilSquareIcon, EllipsisVerticalIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import axios from 'axios'
 import UpdatePedidoModal from './UpdatePedidoModal';
+import { updateEstadoContenedorDisponible } from '../firebase/firestore/firestore';
 
 function DataPedidosTable({ source, accionFunc }) {
   // Estado para almacenar el filtro seleccionado
@@ -33,11 +34,11 @@ function DataPedidosTable({ source, accionFunc }) {
   };
 
   // funcionalidad para pasar el estado de un pedido a cancelado
-  const handleCancelClick = async (pedidoId) => {
+  const handleCancelClick = async (pedidoId, contenedor) => {
     try {
       await axios.put('/api/put/cancelarpedido', { pedidoId });
       console.log("Pedido cancelado: " + pedidoId);
-
+      updateEstadoContenedorDisponible(contenedor)
       // Actualiza la lista de pedidos después de cancelar
       fetchPedidos();
 
@@ -197,7 +198,8 @@ function DataPedidosTable({ source, accionFunc }) {
                                     ? 'retirar'
                                     : pedido.estado === 'retirar'
                                       ? 'completado'
-                                      : null
+                                      : null,
+                                pedido.contenedor
                               );
                             }}
                             className={`px-3 py-1 text-sm font-medium text-white rounded-lg ${pedido.estado === 'pendiente'
@@ -246,7 +248,7 @@ function DataPedidosTable({ source, accionFunc }) {
                                 <button
                                   className="flex items-center w-full px-4 py-2 text-left text-gray-700 hover:bg-gray"
                                   onClick={() => {
-                                    handleCancelClick(pedido.id);
+                                    handleCancelClick(pedido.id, pedido.contenedor);
                                     setOpenDropdown(null);
                                   }}
                                 >

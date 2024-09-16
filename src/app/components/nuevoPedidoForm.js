@@ -251,9 +251,8 @@ function NuevoPedidoForm() {
                 defaultValue={"N/A"}
                 id="cliente"
                 {...register("cliente")}
-                className={`w-full px-3 py-2 border ${
-                  errors.cliente ? "border-red-500" : "border-gray-300"
-                } rounded-md`}
+                className={`w-full px-3 py-2 border ${errors.cliente ? "border-red-500" : "border-gray-300"
+                  } rounded-md`}
               >
                 <option value={"N/A"} disabled>
                   Seleccionar cliente
@@ -342,9 +341,8 @@ function NuevoPedidoForm() {
                 defaultValue={"N/A"}
                 id="chofer"
                 {...register("chofer")}
-                className={`w-full px-3 py-2 border ${
-                  errors.chofer ? "border-red-500" : "border-gray-300"
-                } rounded-md`}
+                className={`w-full px-3 py-2 border ${errors.chofer ? "border-red-500" : "border-gray-300"
+                  } rounded-md`}
               >
                 <option value={"N/A"} disabled>
                   Seleccionar chofer
