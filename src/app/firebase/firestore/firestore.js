@@ -279,6 +279,35 @@ export const updateEstadoPedido = async (docId, estado) => {
       console.error("Error al borrar el documento:", error);
     });
 };
+// Función para combinar los datos nuevos con los datos existentes
+const mergeData = (newData, dataPedidoSelected) => {
+  return {
+    chofer: newData.chofer || dataPedidoSelected.chofer,
+    cliente: newData.cliente || dataPedidoSelected.cliente,
+    contenedor: newData.contenedor || dataPedidoSelected.contenedor,
+    direccion: newData.direccion || dataPedidoSelected.direccion,
+    fechaPedido: newData.fechaPedido || dataPedidoSelected.fechaPedido,
+    lat: newData.latitude || dataPedidoSelected.lat,
+    lng: newData.longitude || dataPedidoSelected.lng,
+    recibe: newData.recibe || dataPedidoSelected.recibe,
+    telefono: newData.telefono || dataPedidoSelected.telefono
+  };
+};
+
+// Función para actualizar el pedido en Firestore
+export const updatePedido = async (docId, newData, dataPedidoSelected) => {
+  try {
+    // Combina los datos nuevos con los datos existentes
+    const updatedData = mergeData(newData, dataPedidoSelected);
+
+    // Actualiza el documento en Firestore
+    await updateDoc(doc(db, "pedidos", docId), updatedData);
+
+    console.log("Pedido actualizado con éxito");
+  } catch (error) {
+    console.error("Error al actualizar el pedido:", error);
+  }
+};
 
 // Update estado del pedido
 export const updateRemitoPedido = async (docId, nroRemito) => {
@@ -353,19 +382,11 @@ export const updateEstadoContenedorDisponible = async (contNumero) => {
         // Obtenemos la referencia del documento y actualizamos el campo 'estado' a 'ocupado'
         const contenedorRef = doc.ref; // Accedemos a la referencia del documento con doc.ref
         updateDoc(contenedorRef, {
-          estado: "disponible",
-        })
-          .then(() => {
-            console.log(
-              `Estado actualizado a "disponible" para el contenedor con número ${contNumero}`
-            );
-          })
-          .catch((error) => {
-            console.error(
-              "Error actualizando el estado del contenedor:",
-              error
-            );
-          });
+          estado: "disponible"
+        }).then(() => {
+        }).catch((error) => {
+          console.error("Error actualizando el estado del contenedor:", error);
+        });
       });
     } catch (error) {
       console.error("Error obteniendo documentos:", error);
@@ -375,9 +396,13 @@ export const updateEstadoContenedorDisponible = async (contNumero) => {
   }
 };
 
-// Update estado del contenedor a roto
-export const updateEstadoContenedorRoto = async (contNumero) => {
-  if (contNumero.numero) {
+
+
+// Update estado del contenedor a roto o disponible
+export const updateEstadoContenedor = async (contNumero, data) => {
+  console.log(contNumero)
+  console.log(data)
+  if (contNumero) {
     try {
       // Creamos una referencia a la colección 'contenedores' y realizamos la consulta filtrando por el número de contenedor
       const contenedoresCollectionRef = collection(db, "contenedores");
@@ -394,19 +419,11 @@ export const updateEstadoContenedorRoto = async (contNumero) => {
         // Obtenemos la referencia del documento y actualizamos el campo 'estado' a 'ocupado'
         const contenedorRef = doc.ref; // Accedemos a la referencia del documento con doc.ref
         updateDoc(contenedorRef, {
-          estado: "roto",
-        })
-          .then(() => {
-            console.log(
-              `Estado actualizado a "disponible" para el contenedor con número ${contNumero}`
-            );
-          })
-          .catch((error) => {
-            console.error(
-              "Error actualizando el estado del contenedor:",
-              error
-            );
-          });
+          estado: data.estado
+        }).then(() => {
+        }).catch((error) => {
+          console.error("Error actualizando el estado del contenedor:", error);
+        });
       });
     } catch (error) {
       console.error("Error obteniendo documentos:", error);

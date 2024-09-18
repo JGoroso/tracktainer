@@ -1,22 +1,13 @@
-"use client";
-import React, { useState } from "react";
-import {
-  addConteendor,
-  addContenedor,
-  getAllContenedores,
-  updateEstadoContenedorRoto,
-} from "../firebase/firestore/firestore";
-import { useAsync } from "../hooks/useAsync";
-import Link from "next/link";
-import { useForm } from "react-hook-form";
+'use client'
+import React, { useState } from 'react'
+import { addContenedor, getAllContenedores, updateEstadoContenedor } from '../firebase/firestore/firestore'
+import { useAsync } from '../hooks/useAsync'
+import Link from 'next/link'
+import { useForm } from 'react-hook-form'
+import { PencilSquareIcon } from '@heroicons/react/20/solid'
+import UpdateContenedorForm from './UpdateContenedorForm'
+import PedidoGuardadoModal from './PedidoGuardadoModal'
 
-import * as yup from "yup";
-import {
-  ArchiveBoxXMarkIcon,
-  PencilSquareIcon,
-} from "@heroicons/react/20/solid";
-import UpdateContenedorForm from "./UpdateContenedorForm";
-import PedidoGuardadoModal from "./PedidoGuardadoModal";
 
 function NuevoContenedor() {
   const {
@@ -29,7 +20,9 @@ function NuevoContenedor() {
   const [refresh, setRefresh] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedContenedor, setSelectedContenedor] = useState(null);
-  const [showGuardadoModal, setShowGuardadoModal] = useState(false);
+  const [showPedidoGuardadoModal, setShowPedidoGuardadoModal] = useState(false)
+
+
   // Se llama a la funcion getClientes que nos devuelve todos los objetos de la coleccion 'Clientes' en forma de promesa
   const getContenedoresFromFirestore = () => getAllContenedores();
   // Utilizamos un hook que hara un async await al que le pasamos una funcion asincrona que retorna una promesa
@@ -57,15 +50,16 @@ function NuevoContenedor() {
     setSelectedContenedor(null);
   };
 
-  const handleSave = () => {
-    updateEstadoContenedorRoto(selectedContenedor);
-    setShowGuardadoModal(true);
-    handleCloseModal();
-    reset();
+  const handleSave = (data) => {
+    updateEstadoContenedor(selectedContenedor, data)
+
+    setShowPedidoGuardadoModal(true)
     setTimeout(() => {
-      setRefresh(!refresh);
-      setShowGuardadoModal(false);
-    }, 1000);
+      setShowPedidoGuardadoModal(false)
+      handleCloseModal();
+      reset()
+      setRefresh(!refresh)
+    }, 1000)
   };
 
   return (
@@ -221,11 +215,7 @@ function NuevoContenedor() {
         handleSubmit={handleSubmit}
         errors={errors}
       />
-
-      <PedidoGuardadoModal
-        show={showGuardadoModal}
-        message={"Contenedor guardado"}
-      />
+      <PedidoGuardadoModal show={showPedidoGuardadoModal} message={"Contenedor actualizado"} />
     </>
   );
 }
