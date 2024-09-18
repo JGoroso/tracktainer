@@ -1,3 +1,4 @@
+
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import {
@@ -9,6 +10,11 @@ import axios from "axios";
 import NuevoPedidoModal from "./NuevoPedidoModal";
 import PedidoGuardadoModal from "./PedidoGuardadoModal";
 
+
+import UpdatePedidoModal from './UpdatePedidoModal';
+import { updateEstadoContenedorDisponible } from '../firebase/firestore/firestore';
+
+
 function DataPedidosTable({ source, accionFunc }) {
   // Estado para almacenar el filtro seleccionado
   const [filtro, setFiltro] = useState("Todos");
@@ -16,7 +22,11 @@ function DataPedidosTable({ source, accionFunc }) {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false); // Estado para mostrar/ocultar el modal de edición
   const [selectedPedido, setSelectedPedido] = useState(null); // Pedido seleccionado para editar
+
   const [showPedidoGuardadoModal, setShowPedidoGuardadoModal] = useState(false);
+
+  const [dataPedidoSelected, setDataPedidoSelected] = useState(null)
+
 
   const dropdownRef = useRef(null);
 
@@ -28,6 +38,7 @@ function DataPedidosTable({ source, accionFunc }) {
       return pedido.estado.toLowerCase() === filtro.toLowerCase();
     });
 
+
   const fetchPedidos = async () => {
     try {
       const response = await axios.get("/api/get/pedidos");
@@ -38,11 +49,11 @@ function DataPedidosTable({ source, accionFunc }) {
   };
 
   // funcionalidad para pasar el estado de un pedido a cancelado
-  const handleCancelClick = async (pedidoId) => {
+  const handleCancelClick = async (pedidoId, contenedor) => {
     try {
       await axios.put("/api/put/cancelarpedido", { pedidoId });
       console.log("Pedido cancelado: " + pedidoId);
-
+      updateEstadoContenedorDisponible(contenedor)
       // Actualiza la lista de pedidos después de cancelar
       fetchPedidos();
     } catch (error) {
@@ -51,6 +62,7 @@ function DataPedidosTable({ source, accionFunc }) {
   };
 
   // editamos un pedido
+
   const handleEditClick = (pedidoId) => {
     console.log("Hi editing, " + pedidoId);
     setSelectedPedido(pedidoId);
@@ -58,6 +70,18 @@ function DataPedidosTable({ source, accionFunc }) {
     setTimeout(async () => {
       setShowPedidoGuardadoModal(false);
     }, 1500);
+
+  const handleEditClick = async (pedidoId,) => {
+    try {
+      const response = await axios.get(`/api/get/pedidoinfo?id=${pedidoId}`);
+      setDataPedidoSelected(response.data);
+      setSelectedPedido(pedidoId);
+      setShowEditModal(true);
+    } catch (error) {
+      console.log("problemas obteniendo el pedido")
+    }
+
+
   };
 
   // Efecto para sincronizar `pedidos` con `source` si `source` cambia
@@ -288,6 +312,7 @@ function DataPedidosTable({ source, accionFunc }) {
                             onClick={() => {
                               accionFunc(
                                 pedido.id,
+
                                 pedido.estado === "pendiente"
                                   ? "entregado"
                                   : pedido.estado === "entregado"
@@ -295,6 +320,16 @@ function DataPedidosTable({ source, accionFunc }) {
                                     : pedido.estado === "retirar"
                                       ? "completado"
                                       : null
+
+                                pedido.estado === 'pendiente'
+                                  ? 'entregado'
+                                  : pedido.estado === 'entregado'
+                                    ? 'retirar'
+                                    : pedido.estado === 'retirar'
+                                      ? 'completado'
+                                      : null,
+                                pedido.contenedor
+
                               );
                             }}
                             className={`px-3 py-1 text-sm font-medium text-white rounded-lg ${
@@ -342,7 +377,7 @@ function DataPedidosTable({ source, accionFunc }) {
                               <button
                                 className="flex items-center w-full px-4 py-2 text-left text-gray-700 hover:bg-gray"
                                 onClick={() => {
-                                  handleEditClick(pedido.id);
+                                  handleEditClick(pedido.id, pedido);
                                   setOpenDropdown(null);
                                 }}
                               >
@@ -353,7 +388,7 @@ function DataPedidosTable({ source, accionFunc }) {
                                 <button
                                   className="flex items-center w-full px-4 py-2 text-left text-gray-700 hover:bg-gray"
                                   onClick={() => {
-                                    handleCancelClick(pedido.id);
+                                    handleCancelClick(pedido.id, pedido.contenedor);
                                     setOpenDropdown(null);
                                   }}
                                 >
@@ -372,6 +407,7 @@ function DataPedidosTable({ source, accionFunc }) {
         </div>
 
         {/* Modal de edición */}
+
         <NuevoPedidoModal
           isOpen={showEditModal}
           onClose={handleCloseModal}
@@ -382,6 +418,12 @@ function DataPedidosTable({ source, accionFunc }) {
           message={"Pedido guardado"}
         />
       </div>
+
+        <UpdatePedidoModal isOpen={showEditModal} onClose={handleCloseModal} pedido={selectedPedido} fetchPedidos={fetchPedidos} dataPedidoSelected={dataPedidoSelected} />
+      </div>
+
+
+
     </>
   );
 }

@@ -1,3 +1,4 @@
+
 "use client";
 import React, { useState } from "react";
 import {
@@ -18,6 +19,11 @@ import {
 import UpdateContenedorForm from "./UpdateContenedorForm";
 import PedidoGuardadoModal from "./PedidoGuardadoModal";
 
+import { PencilSquareIcon } from '@heroicons/react/20/solid'
+
+
+
+
 function NuevoContenedor() {
   const {
     register,
@@ -29,7 +35,13 @@ function NuevoContenedor() {
   const [refresh, setRefresh] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedContenedor, setSelectedContenedor] = useState(null);
+
   const [showGuardadoModal, setShowGuardadoModal] = useState(false);
+
+  const [showPedidoGuardadoModal, setShowPedidoGuardadoModal] = useState(false)
+
+
+
   // Se llama a la funcion getClientes que nos devuelve todos los objetos de la coleccion 'Clientes' en forma de promesa
   const getContenedoresFromFirestore = () => getAllContenedores();
   // Utilizamos un hook que hara un async await al que le pasamos una funcion asincrona que retorna una promesa
@@ -57,6 +69,7 @@ function NuevoContenedor() {
     setSelectedContenedor(null);
   };
 
+
   const handleSave = () => {
     updateEstadoContenedorRoto(selectedContenedor);
     setShowGuardadoModal(true);
@@ -66,6 +79,7 @@ function NuevoContenedor() {
       setRefresh(!refresh);
       setShowGuardadoModal(false);
     }, 1000);
+
   };
 
   return (
@@ -222,10 +236,12 @@ function NuevoContenedor() {
         errors={errors}
       />
 
+
       <PedidoGuardadoModal
         show={showGuardadoModal}
         message={"Contenedor guardado"}
       />
+
     </>
   );
 }

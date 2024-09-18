@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 function RemitoModal({ show, onClose, onSave }) {
   const [nroRemito, setNroRemito] = useState('');
 
-  if (!show) return console.log("null");
+  if (!show) return null;
 
   const handleSave = () => {
     onSave(nroRemito)

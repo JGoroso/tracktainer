@@ -119,7 +119,9 @@ function NuevoPedidoForm() {
     setTimeout(async () => {
       await getContenedoresFromFirestore();
       setShowConfirmacionModal(false);
+
     }, 1000);
+
 
     reset();
   };
@@ -223,7 +225,9 @@ function NuevoPedidoForm() {
               htmlFor="recibe"
               className="text-gray-800 text-sm font-bold leading-tight tracking-normal"
             >
+
               ¿Quién recibe?
+
             </label>
             <input
               id="recibe"
@@ -275,14 +279,18 @@ function NuevoPedidoForm() {
               htmlFor="telefono_cliente"
               className="text-gray-800 text-sm font-bold leading-tight tracking-normal"
             >
+
               Número de teléfono
+
             </label>
             <input
               type="number"
               id="telefono_cliente"
               name="telefono_cliente"
               className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-yellow-500 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
+
               placeholder="Número de teléfono"
+
               {...register("telefono_cliente", {
                 required: false,
                 validate: (telefono_cliente) => {
@@ -290,14 +298,16 @@ function NuevoPedidoForm() {
                     telefono_cliente.length > 0 &&
                     telefono_cliente.length < 8
                   ) {
+
                     return "Ingrese un número de al menos 8 cifras";
-                  }
+      }
                 },
               })}
             />
             {errors.telefono_cliente && (
               <p>{errors.telefono_cliente.message}</p>
             )}
+
 
             <div className="w-full mb-4">
               <label
@@ -331,6 +341,7 @@ function NuevoPedidoForm() {
                   <span>La fecha debe ser posterior a la fecha actual </span>
                 )}
               </div>
+
             </div>
 
             <label
