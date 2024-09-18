@@ -2,10 +2,8 @@ import React from "react";
 
 function PedidoGuardadoModal({ show, message }) {
   if (!show) return null;
-  //Agregar Componente
 
   return (
-    //"flex items-center justify-between mb-4"
     <>
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
         <div className="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
@@ -26,7 +24,7 @@ function PedidoGuardadoModal({ show, message }) {
               </svg>
               <div className="ml-3">
                 <h3
-                  className="text-base font-semibold leading-6 text-gray-900"
+                  className="text-base font-semibold leading-6"
                   id="modal-title"
                 >
                   {message}

@@ -78,10 +78,6 @@ const ExportReports = () => {
     document.body.removeChild(link); // Remove link from body after download
   };
 
-  console.log(value)
-
-
-
   return (
     <div className="max-w-6xl mx-auto " >
       <div className="flex flex-col items-center">

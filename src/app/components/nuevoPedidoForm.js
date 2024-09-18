@@ -119,7 +119,7 @@ function NuevoPedidoForm() {
     setTimeout(async () => {
       await getContenedoresFromFirestore();
       setShowConfirmacionModal(false);
-    }, 1000);
+    }, 1500);
 
     reset();
   };
@@ -223,7 +223,7 @@ function NuevoPedidoForm() {
               htmlFor="recibe"
               className="text-gray-800 text-sm font-bold leading-tight tracking-normal"
             >
-              ¿Quién recibe?
+              ¿Quien recibe?
             </label>
             <input
               id="recibe"
@@ -275,14 +275,14 @@ function NuevoPedidoForm() {
               htmlFor="telefono_cliente"
               className="text-gray-800 text-sm font-bold leading-tight tracking-normal"
             >
-              Número de teléfono
+              Número de telefono
             </label>
             <input
               type="number"
               id="telefono_cliente"
               name="telefono_cliente"
               className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-yellow-500 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
-              placeholder="Número de teléfono"
+              placeholder="Número de telefono"
               {...register("telefono_cliente", {
                 required: false,
                 validate: (telefono_cliente) => {
@@ -290,7 +290,7 @@ function NuevoPedidoForm() {
                     telefono_cliente.length > 0 &&
                     telefono_cliente.length < 8
                   ) {
-                    return "Ingrese un número de al menos 8 cifras";
+                    return "Ingrese un numero de al menos 8 cifras";
                   }
                 },
               })}
@@ -299,39 +299,37 @@ function NuevoPedidoForm() {
               <p>{errors.telefono_cliente.message}</p>
             )}
 
-            <div className="w-full mb-4">
+            <div>
               <label
                 htmlFor="fechaPedido"
-                className="block text-gray-800 text-sm font-bold mb-2"
+                className="text-gray-800 text-sm pr-4 font-bold leading-tight tracking-normal"
               >
                 Fecha del pedido
               </label>
-              <div className="w-full">
-                <input
-                  type="date"
-                  id="fechaPedido"
-                  placeholder="Agregar fecha por favor"
-                  {...register("fechaPedido", {
-                    required: {
-                      value: true,
-                    },
-                    validate: (value) => {
-                      const fechaPedido = new Date(value);
-                      if (fechaPedido < defaultFecha) {
-                        return "La fecha debe ser posterior a la fecha actual";
-                      }
-                    },
-                  })}
-                  className="block text-base text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm placeholder-gray"
-                />
-                {errors.fechaPedido && errors.fechaPedido.type === "required" && (
-                  <span>Ingrese la fecha de entrega por favor</span>
-                )}
-                {errors.fechaPedido && errors.fechaPedido.type === "validate" && (
-                  <span>La fecha debe ser posterior a la fecha actual </span>
-                )}
-              </div>
+              <input
+                type="date"
+                id="fechaPedido"
+                {...register("fechaPedido", {
+                  required: {
+                    value: true,
+                  },
+                  validate: (value) => {
+                    const fechaPedido = new Date(value);
+                    if (fechaPedido < defaultFecha) {
+                      return "La fecha debe ser posterior a la fecha actual";
+                    }
+                  },
+                })}
+                className="block py-2.5 px-0 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-yellow-500 peer"
+              />
+              {errors.fechaPedido && errors.fechaPedido.type === "required" && (
+                <span>Ingrese la fecha de entrega por favor</span>
+              )}
+              {errors.fechaPedido && errors.fechaPedido.type === "validate" && (
+                <span>La fecha debe ser posterior a la fecha actual </span>
+              )}
             </div>
+            
 
             <label
               htmlFor="chofer"
