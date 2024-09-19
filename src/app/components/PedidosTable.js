@@ -33,8 +33,10 @@ function PedidosTable() {
   const getPedidosFromFirestore = () => getPedidos();
   // Utilizamos un hook que hara un async await al que le pasamos una funcion asincrona que retorna una promesa (get pedidos from firestore)
   // podremos recibir la data utilizando un useEffect (y con el refresh podemos refrescar los datos) y luego utilizar estos datos donde queramos
-  const { data: dataPedidos, error: error } = useAsync(getPedidosFromFirestore, refresh);
-
+  const { data: dataPedidos, error: error } = useAsync(
+    getPedidosFromFirestore,
+    refresh
+  );
 
   // button entregado.
   const onAccion = (pedidoId, ProximoEstado, contenedor) => {
@@ -77,6 +79,8 @@ function PedidosTable() {
     <>
       {/* Seteamos animaciones para los estados del pedido cancel*/}
 
+
+
       <div className="px-4 mx-auto">
         <div className="sm:flex  mb-10 sm:items-center sm:justify-between">
           <div>
@@ -87,7 +91,6 @@ function PedidosTable() {
               En esta sección se encontraran los pedidos pendientes y entregados
             </p>
           </div>
-
 
           <div className="flex items-center mt-2 gap-x-3">
             <Link href={"/"}>

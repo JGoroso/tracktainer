@@ -49,9 +49,7 @@ export const getContenedores = async () => {
 };
 
 export const getAllContenedores = async () => {
-  const contenedoresCollectionRef = query(
-    collection(db, "contenedores")
-  );
+  const contenedoresCollectionRef = query(collection(db, "contenedores"));
   try {
     const response = await getDocs(contenedoresCollectionRef);
     const contenedoresFromDoc = response.docs.map((c) => {
@@ -67,15 +65,17 @@ export const getAllContenedores = async () => {
 
 // Función para generar un string alfanumérico de 5 caracteres
 const generateUniqueNumero = (existingNumeros) => {
-  const characters = '0123456789';
+  const characters = "0123456789";
   let newNumero;
   do {
-    newNumero = '';
+    newNumero = "";
     for (let i = 0; i < 5; i++) {
-      newNumero += characters.charAt(Math.floor(Math.random() * characters.length));
+      newNumero += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
     }
   } while (existingNumeros.includes(newNumero));
-  return 'TT' + newNumero;
+  return "TT" + newNumero;
 };
 
 export const addContenedor = async () => {
@@ -86,11 +86,13 @@ export const addContenedor = async () => {
 
     const contenedoresFromDoc = response.docs.map((c) => ({
       id: c.id,
-      ...c.data()
+      ...c.data(),
     }));
 
     // Obtener todos los números existentes
-    const existingNumeros = contenedoresFromDoc.map(contenedor => contenedor.numero);
+    const existingNumeros = contenedoresFromDoc.map(
+      (contenedor) => contenedor.numero
+    );
 
     // Generar un número único
     const newNumero = generateUniqueNumero(existingNumeros);
@@ -98,7 +100,7 @@ export const addContenedor = async () => {
     // Agregar el nuevo contenedor con el número generado
     const docRef = await addDoc(collection(db, "contenedores"), {
       estado: "disponible",
-      numero: newNumero
+      numero: newNumero,
     });
 
     console.log("Document written with ID: ", docRef.id);
@@ -176,6 +178,7 @@ export const addCliente = async (data) => {
       empresa: data.nombreEmpresa,
       referente: data.nombreCompleto,
       telefono: data.telefono,
+      cuit: data.cuit,
       estado: "activo",
     });
     console.log("Document written with ID: ", docRef.id);
@@ -230,6 +233,7 @@ export const updateInfoCliente = async (docId, data) => {
     empresa: data.nombreEmpresa,
     referente: data.nombreCompleto,
     telefono: data.telefono,
+    cuit: data.cuit,
   })
     .then(() => {
       console.log("Documento actualizado exitosamente");
@@ -324,7 +328,10 @@ export const updateEstadoContenedorOcupado = async (contNumero) => {
     try {
       // Creamos una referencia a la colección 'contenedores' y realizamos la consulta filtrando por el número de contenedor
       const contenedoresCollectionRef = collection(db, "contenedores");
-      const q = query(contenedoresCollectionRef, where("numero", "==", contNumero));
+      const q = query(
+        contenedoresCollectionRef,
+        where("numero", "==", contNumero)
+      );
 
       // Ejecutamos la consulta para obtener los documentos que coinciden
       const querySnapshot = await getDocs(q);
@@ -334,19 +341,25 @@ export const updateEstadoContenedorOcupado = async (contNumero) => {
         // Obtenemos la referencia del documento y actualizamos el campo 'estado' a 'ocupado'
         const contenedorRef = doc.ref; // Accedemos a la referencia del documento con doc.ref
         updateDoc(contenedorRef, {
-          estado: "ocupado"
-        }).then(() => {
-          console.log(`Estado actualizado a "ocupado" para el contenedor con número ${contNumero}`);
-        }).catch((error) => {
-          console.error("Error actualizando el estado del contenedor:", error);
-        });
+          estado: "ocupado",
+        })
+          .then(() => {
+            console.log(
+              `Estado actualizado a "ocupado" para el contenedor con número ${contNumero}`
+            );
+          })
+          .catch((error) => {
+            console.error(
+              "Error actualizando el estado del contenedor:",
+              error
+            );
+          });
       });
-
     } catch (error) {
       console.error("Error obteniendo documentos:", error);
     }
   } else {
-    console.log("no se asignaron contenedores")
+    console.log("no se asignaron contenedores");
   }
 };
 
@@ -356,7 +369,10 @@ export const updateEstadoContenedorDisponible = async (contNumero) => {
     try {
       // Creamos una referencia a la colección 'contenedores' y realizamos la consulta filtrando por el número de contenedor
       const contenedoresCollectionRef = collection(db, "contenedores");
-      const q = query(contenedoresCollectionRef, where("numero", "==", contNumero));
+      const q = query(
+        contenedoresCollectionRef,
+        where("numero", "==", contNumero)
+      );
 
       // Ejecutamos la consulta para obtener los documentos que coinciden
       const querySnapshot = await getDocs(q);
@@ -372,12 +388,11 @@ export const updateEstadoContenedorDisponible = async (contNumero) => {
           console.error("Error actualizando el estado del contenedor:", error);
         });
       });
-
     } catch (error) {
       console.error("Error obteniendo documentos:", error);
     }
   } else {
-    console.log("no se asignaron contenedores")
+    console.log("no se asignaron contenedores");
   }
 };
 
@@ -391,7 +406,10 @@ export const updateEstadoContenedor = async (contNumero, data) => {
     try {
       // Creamos una referencia a la colección 'contenedores' y realizamos la consulta filtrando por el número de contenedor
       const contenedoresCollectionRef = collection(db, "contenedores");
-      const q = query(contenedoresCollectionRef, where("numero", "==", contNumero.numero));
+      const q = query(
+        contenedoresCollectionRef,
+        where("numero", "==", contNumero.numero)
+      );
 
       // Ejecutamos la consulta para obtener los documentos que coinciden
       const querySnapshot = await getDocs(q);
@@ -401,21 +419,29 @@ export const updateEstadoContenedor = async (contNumero, data) => {
         // Obtenemos la referencia del documento y actualizamos el campo 'estado' a 'ocupado'
         const contenedorRef = doc.ref; // Accedemos a la referencia del documento con doc.ref
         updateDoc(contenedorRef, {
-          estado: data.estado
-        }).then(() => {
-        }).catch((error) => {
-          console.error("Error actualizando el estado del contenedor:", error);
-        });
-      });
 
+          estado: "roto",
+        })
+          .then(() => {
+            console.log(
+              `Estado actualizado a "disponible" para el contenedor con número ${contNumero}`
+            );
+          })
+          .catch((error) => {
+            console.error(
+              "Error actualizando el estado del contenedor:",
+              error
+            );
+          });
+
+      });
     } catch (error) {
       console.error("Error obteniendo documentos:", error);
     }
   } else {
-    console.log("no se asignaron contenedores")
+    console.log("no se asignaron contenedores");
   }
 };
-
 
 export const fetchOrdersByDateRange = async (
   startDateStr,
