@@ -81,7 +81,7 @@ function PedidosTable() {
 
 
 
-      <div className="px-4 mx-auto">
+      <div className="px-4 pt-4 mx-auto">
         <div className="sm:flex  mb-10 sm:items-center sm:justify-between">
           <div>
             <div className="flex items-center gap-x-3">

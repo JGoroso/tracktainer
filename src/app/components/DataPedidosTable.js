@@ -93,7 +93,7 @@ function DataPedidosTable({ source, accionFunc }) {
   return (
     <>
       <div className="w-full">
-        <div className="bg-white py-4 md:py-7 px-4 md:px-8 overflow-x-auto">
+        <div className="bg-white pt-4 py-4 md:py-7 px-4 md:px-8 overflow-x-auto">
           <div className="flex flex-col sm:items-center sm:gap-4 sm:flex-row">
             <a
               onClick={() => setFiltro('Todos')} className="cursor-pointer rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800">
@@ -159,11 +159,12 @@ function DataPedidosTable({ source, accionFunc }) {
                         </td>
                         <td className="px-2 py-4 whitespace-nowrap">
                           <p className="text-base font-medium text-left text-gray-700">
-                            {new Date(pedido.fechaPedido).toLocaleDateString('es-AR', {
-                              day: '2-digit',
-                              month: '2-digit',
-                              year: 'numeric',
-                            })}
+
+                            {(() => {
+                              const [year, month, day] = pedido.fechaPedido.split('-');
+                              return `${day}/${month}/${year}`;
+                            })()}
+
                           </p>
                         </td>
                         <td className="px-2 py-4 whitespace-nowrap">
