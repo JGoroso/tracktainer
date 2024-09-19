@@ -40,11 +40,11 @@ function NuevoPedidoForm() {
     getContenedoresFromFirestore();
   }, []);
 
-  const { data: clientesData, error: clientesError } = useAsync(
+  const { data: clientesData } = useAsync(
     getClienteFromFirestore,
     ""
   );
-  const { data: choferesData, error: choferesError } = useAsync(
+  const { data: choferesData } = useAsync(
     getChoferesFromFirestore,
     ""
   );
@@ -130,6 +130,7 @@ function NuevoPedidoForm() {
     setIsCheckboxChecked(!isCheckboxChecked);
   };
 
+  console.log(defaultFecha)
   return (
     <>
       <div>
@@ -300,7 +301,7 @@ function NuevoPedidoForm() {
                   ) {
 
                     return "Ingrese un número de al menos 8 cifras";
-      }
+                  }
                 },
               })}
             />
@@ -343,7 +344,7 @@ function NuevoPedidoForm() {
               </div>
 
             </div>
-            
+
 
             <label
               htmlFor="chofer"

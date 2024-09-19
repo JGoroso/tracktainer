@@ -184,7 +184,10 @@ function GoogleMapView() {
                       <p className="text-gray-900 font-bold">
                         Fecha de entrega{" "}
                       </p>
-                      <p className="text-gray-700"> {selected.fechaPedido} </p>
+                      <p className="text-gray-700"> {(() => {
+                        const [year, month, day] = selected.fechaPedido.split('-');
+                        return `${day}/${month}/${year}`;
+                      })()} </p>
                     </div>
                   </div>
 
