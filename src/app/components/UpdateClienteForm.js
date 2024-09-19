@@ -1,16 +1,31 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from "react";
+import PedidoGuardadoModal from "./PedidoGuardadoModal";
 
-
-function UpdateClienteForm({ isOpen, onClose, user, onSave, register, setValue, handleSubmit, errors }) {
-
-  useEffect(() => {
-    if (user) {
-      setValue("nombreEmpresa", user.empresa)
-      setValue("nombreCompleto", user.referente)
-      setValue("telefono", user.telefono)
-    }
-  }, [user, setValue]);
-
+function UpdateClienteForm({
+  isOpen,
+  onClose,
+  user,
+  onSave,
+  register,
+  setValue,
+  handleSubmit,
+  errors,
+}) {
+  useEffect(
+    () => {
+      if (user) {
+        setValue("nombreEmpresa", user.empresa);
+        setValue("nombreCompleto", user.referente);
+        setValue("telefono", user.telefono);
+        setValue("cuit", user.cuit);
+      }
+    },
+    [user, setValue],
+    setTimeout(async () => {
+      setShowGuardadoModal(false);
+    }, 1500)
+  );
+  const [showGuardadoModal, setShowGuardadoModal] = useState(false);
   if (!isOpen) return null;
 
   return (
@@ -19,37 +34,88 @@ function UpdateClienteForm({ isOpen, onClose, user, onSave, register, setValue, 
         <h2 className="text-xl font-bold mb-4">Editar Cliente</h2>
         <form onSubmit={handleSubmit(onSave)}>
           <div className="mb-4">
-            <label htmlFor="edit-nombreEmpresa" className="block text-gray-700 font-bold mb-2">Empresa</label>
+            <label
+              htmlFor="edit-nombreEmpresa"
+              className="block text-gray-700 font-bold mb-2"
+            >
+              Empresa
+            </label>
             <input
               id="edit-nombreEmpresa"
-              {...register("nombreEmpresa", { required: "El nombre de la empresa es es obligatorio" })}
-              className={`w-full px-3 py-2 border ${errors.nombreEmpresa ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+              {...register("nombreEmpresa", {
+                required: "El nombre de la empresa es obligatorio",
+              })}
+              className={`w-full px-3 py-2 border ${errors.nombreEmpresa ? "border-red-500" : "border-gray-300"} rounded-md`}
             />
-            {errors.nombreEmpresa && <p className="text-red-500 text-sm mt-1">{errors.nombreEmpresa.message}</p>}
+            {errors.nombreEmpresa && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.nombreEmpresa.message}
+              </p>
+            )}
           </div>
           <div className="mb-4">
-            <label htmlFor="edit-nombreCompleto" className="block text-gray-700 font-bold mb-2">Nombre y apellido</label>
+            <label
+              htmlFor="edit-nombreCompleto"
+              className="block text-gray-700 font-bold mb-2"
+            >
+              Nombre y apellido
+            </label>
             <input
               id="edit-nombreCompleto"
-              {...register("nombreCompleto", { required: "El nombre de la empresa es es obligatorio" })}
-              className={`w-full px-3 py-2 border ${errors.nombreCompleto ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+              {...register("nombreCompleto", {
+                required: "El nombre de la empresa es es obligatorio",
+              })}
+              className={`w-full px-3 py-2 border ${errors.nombreCompleto ? "border-red-500" : "border-gray-300"} rounded-md`}
             />
-            {errors.nombreCompleto && <p className="text-red-500 text-sm mt-1">{errors.nombreCompleto.message}</p>}
+            {errors.nombreCompleto && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.nombreCompleto.message}
+              </p>
+            )}
           </div>
           <div className="mb-4">
-            <label htmlFor="edit-telefono" className="block text-gray-700 font-bold mb-2">Teléfono</label>
+            <label
+              htmlFor="edit-telefono"
+              className="block text-gray-700 font-bold mb-2"
+            >
+              Teléfono
+            </label>
             <input
               id="edit-telefono"
-              {...register("telefono", { required: "El teléfono es obligatorio" })}
-              className={`w-full px-3 py-2 border ${errors.telefono ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+              {...register("telefono", {
+                required: "El teléfono es obligatorio",
+              })}
+              className={`w-full px-3 py-2 border ${errors.telefono ? "border-red-500" : "border-gray-300"} rounded-md`}
             />
-            {errors.telefono && <p className="text-red-500 text-sm mt-1">{errors.telefono.message}</p>}
+            {errors.telefono && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.telefono.message}
+              </p>
+            )}
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="edit-telefono"
+              className="block text-gray-700 font-bold mb-2"
+            >
+              CUIT
+            </label>
+            <input
+              id="edit-cuit"
+              {...register("cuit", {
+                required: "El cuit es obligatorio",
+              })}
+              className={`w-full px-3 py-2 border ${errors.cuit ? "border-red-500" : "border-gray-300"} rounded-md`}
+            />
+            {errors.cuit && (
+              <p className="text-red-500 text-sm mt-1">{errors.cuit.message}</p>
+            )}
           </div>
           <div className="flex justify-end">
             <button
               type="button"
               onClick={onClose}
-              className="mr-2 px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+              className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-gray-600"
             >
               Cancelar
             </button>
@@ -62,8 +128,12 @@ function UpdateClienteForm({ isOpen, onClose, user, onSave, register, setValue, 
           </div>
         </form>
       </div>
+      <PedidoGuardadoModal
+        show={showGuardadoModal}
+        message={"Cliente guardado"}
+      />
     </div>
   );
-};
+}
 
-export default UpdateClienteForm
+export default UpdateClienteForm;
