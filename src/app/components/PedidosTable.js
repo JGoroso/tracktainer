@@ -79,6 +79,8 @@ function PedidosTable() {
     <>
       {/* Seteamos animaciones para los estados del pedido cancel*/}
 
+
+
       <div className="px-4 mx-auto">
         <div className="sm:flex  mb-10 sm:items-center sm:justify-between">
           <div>

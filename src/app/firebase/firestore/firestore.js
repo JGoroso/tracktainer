@@ -419,11 +419,21 @@ export const updateEstadoContenedor = async (contNumero, data) => {
         // Obtenemos la referencia del documento y actualizamos el campo 'estado' a 'ocupado'
         const contenedorRef = doc.ref; // Accedemos a la referencia del documento con doc.ref
         updateDoc(contenedorRef, {
-          estado: data.estado
-        }).then(() => {
-        }).catch((error) => {
-          console.error("Error actualizando el estado del contenedor:", error);
-        });
+
+          estado: "roto",
+        })
+          .then(() => {
+            console.log(
+              `Estado actualizado a "disponible" para el contenedor con número ${contNumero}`
+            );
+          })
+          .catch((error) => {
+            console.error(
+              "Error actualizando el estado del contenedor:",
+              error
+            );
+          });
+
       });
     } catch (error) {
       console.error("Error obteniendo documentos:", error);

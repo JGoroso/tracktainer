@@ -55,7 +55,9 @@ function UpdateContenedorForm({
             <button
               type="button"
               onClick={onClose}
-              className="mr-2 px-4 py-2 bg-slate-500 text-white rounded-md hover:bg-gray-600"
+
+              className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-gray-600"
+
             >
               Cancelar
             </button>

@@ -20,7 +20,10 @@ function NuevoContenedor() {
   const [refresh, setRefresh] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedContenedor, setSelectedContenedor] = useState(null);
-  const [showPedidoGuardadoModal, setShowPedidoGuardadoModal] = useState(false)
+
+  const [showGuardadoModal, setShowGuardadoModal] = useState(false);
+
+
 
 
   // Se llama a la funcion getClientes que nos devuelve todos los objetos de la coleccion 'Clientes' en forma de promesa
@@ -50,16 +53,17 @@ function NuevoContenedor() {
     setSelectedContenedor(null);
   };
 
-  const handleSave = (data) => {
-    updateEstadoContenedor(selectedContenedor, data)
 
-    setShowPedidoGuardadoModal(true)
+  const handleSave = () => {
+    updateEstadoContenedorRoto(selectedContenedor);
+    setShowGuardadoModal(true);
+    handleCloseModal();
+    reset();
     setTimeout(() => {
-      setShowPedidoGuardadoModal(false)
-      handleCloseModal();
-      reset()
-      setRefresh(!refresh)
-    }, 1000)
+      setRefresh(!refresh);
+      setShowGuardadoModal(false);
+    }, 1000);
+
   };
 
   return (
@@ -215,7 +219,13 @@ function NuevoContenedor() {
         handleSubmit={handleSubmit}
         errors={errors}
       />
-      <PedidoGuardadoModal show={showPedidoGuardadoModal} message={"Contenedor actualizado"} />
+
+
+      <PedidoGuardadoModal
+        show={showGuardadoModal}
+        message={"Contenedor guardado"}
+      />
+
     </>
   );
 }
