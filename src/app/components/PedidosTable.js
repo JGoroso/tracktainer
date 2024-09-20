@@ -115,7 +115,7 @@ function PedidosTable() {
               </button>
             </Link>
             <Link href={"/Agregarpedidos"}>
-              <button className="flex items-center justify-center w-full sm:w-auto px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-400 rounded-lg gap-x-2 hover:bg-blue-500">
+              <button className="flex items-center justify-center w-full sm:w-auto px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-yellow-400 rounded-lg gap-x-2 hover:bg-yellow-500">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
