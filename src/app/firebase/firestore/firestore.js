@@ -49,9 +49,7 @@ export const getContenedores = async () => {
 };
 
 export const getAllContenedores = async () => {
-  const contenedoresCollectionRef = query(
-    collection(db, "contenedores")
-  );
+  const contenedoresCollectionRef = query(collection(db, "contenedores"));
   try {
     const response = await getDocs(contenedoresCollectionRef);
     const contenedoresFromDoc = response.docs.map((c) => {
@@ -67,15 +65,17 @@ export const getAllContenedores = async () => {
 
 // Función para generar un string alfanumérico de 5 caracteres
 const generateUniqueNumero = (existingNumeros) => {
-  const characters = '0123456789';
+  const characters = "0123456789";
   let newNumero;
   do {
-    newNumero = '';
+    newNumero = "";
     for (let i = 0; i < 5; i++) {
-      newNumero += characters.charAt(Math.floor(Math.random() * characters.length));
+      newNumero += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
     }
   } while (existingNumeros.includes(newNumero));
-  return 'TT' + newNumero;
+  return "TT" + newNumero;
 };
 
 export const addContenedor = async () => {
@@ -86,11 +86,13 @@ export const addContenedor = async () => {
 
     const contenedoresFromDoc = response.docs.map((c) => ({
       id: c.id,
-      ...c.data()
+      ...c.data(),
     }));
 
     // Obtener todos los números existentes
-    const existingNumeros = contenedoresFromDoc.map(contenedor => contenedor.numero);
+    const existingNumeros = contenedoresFromDoc.map(
+      (contenedor) => contenedor.numero
+    );
 
     // Generar un número único
     const newNumero = generateUniqueNumero(existingNumeros);
@@ -98,7 +100,7 @@ export const addContenedor = async () => {
     // Agregar el nuevo contenedor con el número generado
     const docRef = await addDoc(collection(db, "contenedores"), {
       estado: "disponible",
-      numero: newNumero
+      numero: newNumero,
     });
 
     console.log("Document written with ID: ", docRef.id);
@@ -176,6 +178,7 @@ export const addCliente = async (data) => {
       empresa: data.nombreEmpresa,
       referente: data.nombreCompleto,
       telefono: data.telefono,
+      cuit: data.cuit,
       estado: "activo",
     });
     console.log("Document written with ID: ", docRef.id);
@@ -230,6 +233,7 @@ export const updateInfoCliente = async (docId, data) => {
     empresa: data.nombreEmpresa,
     referente: data.nombreCompleto,
     telefono: data.telefono,
+    cuit: data.cuit,
   })
     .then(() => {
       console.log("Documento actualizado exitosamente");
@@ -415,7 +419,6 @@ export const updateEstadoContenedor = async (contNumero, data) => {
     console.log("no se asignaron contenedores")
   }
 };
-
 
 export const fetchOrdersByDateRange = async (
   startDateStr,
