@@ -34,7 +34,7 @@ main {
   color: orange !important;
 }
 .text-green-important {
-  color: green !important;
+  color: rgb(41, 199, 41) !important;
 }
 .text-blue-important {
   color: blue !important;
