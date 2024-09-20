@@ -34,8 +34,10 @@ function NuevoContenedor() {
   // add, update, delete
   const onSubmit = () => {
     addContenedor()
+    setShowPedidoGuardadoModal(true)
     reset()
     setTimeout(() => {
+      setShowPedidoGuardadoModal(false)
       setRefresh(!refresh)
     }, 1000)
   }
@@ -158,7 +160,7 @@ function NuevoContenedor() {
         handleSubmit={handleSubmit}
         errors={errors}
       />
-      <PedidoGuardadoModal show={showPedidoGuardadoModal} message={"Contenedor actualizado"} />
+      <PedidoGuardadoModal show={showPedidoGuardadoModal} message={"Contenedor guardado"} />
     </>
   );
 };
