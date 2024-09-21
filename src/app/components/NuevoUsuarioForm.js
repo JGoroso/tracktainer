@@ -130,16 +130,12 @@ function NuevoUsuarioForm() {
 
       <div className="sm:flex sm:items-center sm:justify-between p-4">
         <div>
-          <div className="flex items-center gap-x-3">
-            <h2 className="font-medium text-xl text-gray-800">
+          <div className="flex items-center mt-4 gap-x-3">
+            <h2 className="font-medium text-3xl text-gray-800">
               Agregar Usuario
             </h2>
           </div>
-          <p className="mt-1 text-sm text-gray-800">
-            En esta sección podrá asignar los usuarios que ingresarán a la
-            aplicación
-          </p>
-        </div>
+                  </div>
         <div className="flex items-center mt-4 gap-x-3">
           <Link href={"/"}>
             <button className="flex items-center justify-center w-full px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto hover:bg-gray-100">
