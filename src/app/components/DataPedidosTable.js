@@ -4,6 +4,7 @@ import { PencilSquareIcon, EllipsisVerticalIcon, XMarkIcon } from '@heroicons/re
 import axios from 'axios'
 import UpdatePedidoModal from './UpdatePedidoModal';
 import { updateEstadoContenedorDisponible } from '../firebase/firestore/firestore';
+import ModalCancelado from "./ModalCancelado"
 
 function DataPedidosTable({ source, accionFunc }) {
   // Estado para almacenar el filtro seleccionado
@@ -13,6 +14,7 @@ function DataPedidosTable({ source, accionFunc }) {
   const [showEditModal, setShowEditModal] = useState(false); // Estado para mostrar/ocultar el modal de edición
   const [selectedPedido, setSelectedPedido] = useState(null); // Pedido seleccionado para editar
   const [dataPedidoSelected, setDataPedidoSelected] = useState(null)
+  const [showModalCancelado, setModalCancelado] = useState(false)
 
   const dropdownRef = useRef(null);
 
@@ -39,9 +41,12 @@ function DataPedidosTable({ source, accionFunc }) {
       await axios.put('/api/put/cancelarpedido', { pedidoId });
       console.log("Pedido cancelado: " + pedidoId);
       updateEstadoContenedorDisponible(contenedor)
+      setModalCancelado(true)
       // Actualiza la lista de pedidos después de cancelar
       fetchPedidos();
-
+      setTimeout(() => { 
+        setModalCancelado(false);
+      }, 1000);
     } catch (error) {
       console.error('Error al cancelar el pedido:', error);
     }
@@ -271,7 +276,10 @@ function DataPedidosTable({ source, accionFunc }) {
         {/* Modal de edición */}
         <UpdatePedidoModal isOpen={showEditModal} onClose={handleCloseModal} pedido={selectedPedido} fetchPedidos={fetchPedidos} dataPedidoSelected={dataPedidoSelected} />
       </div>
-
+      <ModalCancelado
+        show={showModalCancelado}
+        message={"Pedido eliminado"}
+      />
 
     </>
   );
