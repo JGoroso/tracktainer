@@ -52,7 +52,7 @@ function PedidosTable() {
       setPedidoGuardadoModal(true)
       setTimeout(async () => {
         setPedidoGuardadoModal(false)
-      }, 3000);
+      }, 1000);
       refreshContainers();
 
     }
@@ -77,19 +77,16 @@ function PedidosTable() {
 
   return (
     <>
-      {/* Seteamos animaciones para los estados del pedido cancel*/}
+      
 
 
 
       <div className="px-4 pt-4 mx-auto">
         <div className="sm:flex  mb-10 sm:items-center sm:justify-between">
           <div>
-            <div className="flex items-center gap-x-3">
-              <h2 className="font-medium text-xl text-gray-800 ">Pedidos</h2>
+            <div className="flex items-bottom mt-2 gap-x-3">
+              <h2 className="font-medium text-3xl text-gray-800 ">Pedidos</h2>
             </div>
-            <p className="mt-1 text-sm text-gray-800 ">
-              En esta sección se encontraran los pedidos pendientes y entregados
-            </p>
           </div>
 
           <div className="flex items-center mt-2 gap-x-3">
