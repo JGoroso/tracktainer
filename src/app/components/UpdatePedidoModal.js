@@ -76,7 +76,7 @@ function UpdatePedidoModal({ isOpen, onClose, pedido, fetchPedidos, dataPedidoSe
         setPedidoGuardadoModal(false);
         onClose();
         reset()
-      }, 1500);
+      }, 1000);
     } catch (error) {
       console.error("Error al actualizar el pedido:", error.message);
     }
