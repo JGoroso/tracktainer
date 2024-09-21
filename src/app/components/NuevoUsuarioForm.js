@@ -18,6 +18,7 @@ import {
 } from "@heroicons/react/20/solid";
 import UpdateUsuarioForm from "./UpdateUsuarioForm";
 import PedidoGuardadoModal from "./PedidoGuardadoModal";
+import ModalCancelado from "./ModalCancelado";
 
 // utilizamos un schema yup para realizar verificaciones
 const schema = yup
@@ -47,6 +48,7 @@ function NuevoUsuarioForm() {
   const [showBajaModal, setShowBajaModal] = useState(false);
   const roles = ["admin", "chofer"];
   const [showGuardadoModal, setShowGuardadoModal] = useState(false);
+  const [showModalCancelado, setModalCancelado] = useState(false) 
   // Se llama a la funcion getClientes que nos devuelve todos los objetos de la coleccion 'Clientes' en forma de promesa
   const getUsuariosFromFirestore = () => getUsuarios();
   // Utilizamos un hook que hara un async await al que le pasamos una funcion asincrona que retorna una promesa
@@ -78,9 +80,10 @@ function NuevoUsuarioForm() {
   const handleBaja = () => {
     updateEstadoUsuario(selectedUser);
     setShowBajaModal(false);
-
+    setModalCancelado(true)
     setTimeout(() => {
       setRefresh(!refresh);
+      setModalCancelado(false)
     }, 1000);
   };
 
@@ -331,6 +334,7 @@ function NuevoUsuarioForm() {
                             onClick={() => {
                               setShowBajaModal(true), setSelectedUser(user.id);
                             }}
+                            
                           >
                             <ArchiveBoxXMarkIcon
                               className="h-5 w-5 mr-2"
@@ -362,6 +366,10 @@ function NuevoUsuarioForm() {
       <PedidoGuardadoModal
         show={showGuardadoModal}
         message={"Usuario guardado"}
+      />
+      <ModalCancelado
+        show={showModalCancelado}
+        message={"Usuario eliminado"}
       />
     </>
   );

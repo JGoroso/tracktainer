@@ -17,6 +17,7 @@ import {
 } from "@heroicons/react/20/solid";
 import UpdateClienteForm from "./UpdateClienteForm";
 import PedidoGuardadoModal from "./PedidoGuardadoModal";
+import ModalCancelado from "./ModalCancelado";
 
 // utilizamos un schema yup para realizar verificaciones
 const schema = yup
@@ -57,6 +58,7 @@ function NuevoClienteForm() {
   const [selectedCliente, setSelectedCliente] = useState(null);
   const [showBajaModal, setShowBajaModal] = useState(false);
   const [showGuardadoModal, setShowGuardadoModal] = useState(false);
+  const [showModalCancelado, setModalCancelado] = useState(false) 
   // Se llama a la funcion getClientes que nos devuelve todos los objetos de la coleccion 'Clientes' en forma de promesa
   const getClientesFromFirestore = () => getClientes();
   // Utilizamos un hook que hara un async await al que le pasamos una funcion asincrona que retorna una promesa
@@ -88,8 +90,10 @@ function NuevoClienteForm() {
   const handleBaja = () => {
     updateEstadoCliente(selectedCliente);
     setShowBajaModal(false);
+    setModalCancelado(true)
     setTimeout(() => {
       setRefresh(!refresh);
+      setModalCancelado(false)
     }, 1000);
   };
 
@@ -383,6 +387,11 @@ function NuevoClienteForm() {
       <PedidoGuardadoModal
         show={showGuardadoModal}
         message={"Cliente registrado"}
+      />
+
+<ModalCancelado
+        show={showModalCancelado}
+        message={"Cliente eliminado"}
       />
     </>
   );
