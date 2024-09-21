@@ -34,8 +34,10 @@ function NuevoContenedor() {
   // add, update, delete
   const onSubmit = () => {
     addContenedor()
+    setShowPedidoGuardadoModal(true)
     reset()
     setTimeout(() => {
+      setShowPedidoGuardadoModal(false)
       setRefresh(!refresh)
     }, 1000)
   }
@@ -67,10 +69,10 @@ function NuevoContenedor() {
     <>
       <div className="sm:flex sm:items-center sm:justify-between p-4">
         <div>
-          <div className="flex items-center gap-x-3">
-            <h2 className="font-medium text-xl text-gray-800">Agregar Contenedor</h2>
+          <div className="flex items-center mt-4 gap-x-3">
+            <h2 className="font-medium text-3xl text-gray-800">Agregar Contenedor</h2>
           </div>
-          <p className="mt-1 text-sm text-gray-800">Sección que permite agregar contenedores a la empresa</p>
+          
         </div>
         <div className="flex items-center mt-4 gap-x-3">
           <Link href={"/"}>
@@ -158,7 +160,7 @@ function NuevoContenedor() {
         handleSubmit={handleSubmit}
         errors={errors}
       />
-      <PedidoGuardadoModal show={showPedidoGuardadoModal} message={"Contenedor actualizado"} />
+      <PedidoGuardadoModal show={showPedidoGuardadoModal} message={"Contenedor guardado"} />
     </>
   );
 };
