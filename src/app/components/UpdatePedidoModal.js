@@ -147,16 +147,16 @@ function UpdatePedidoModal({ isOpen, onClose, pedido, fetchPedidos, dataPedidoSe
             </div>
 
             <div className="flex flex-col">
-              <label htmlFor="telefono_cliente" className="text-gray-800 text-sm sm:text-base font-bold mb-2">
+              <label htmlFor="telefono" className="text-gray-800 text-sm sm:text-base font-bold mb-2">
                 Teléfono del cliente
               </label>
               <input
                 type="text"
-                id="telefono_cliente"
-                name="telefono_cliente"
+                id="telefono"
+                name="telefono"
                 className="text-gray-600 focus:outline-none focus:border-yellow-500 w-full p-2 border border-gray-300 rounded-md"
                 placeholder="Número de teléfono"
-                {...register("telefono_cliente")}
+                {...register("telefono")}
               />
             </div>
 
