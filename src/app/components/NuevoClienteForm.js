@@ -58,7 +58,7 @@ function NuevoClienteForm() {
   const [selectedCliente, setSelectedCliente] = useState(null);
   const [showBajaModal, setShowBajaModal] = useState(false);
   const [showGuardadoModal, setShowGuardadoModal] = useState(false);
-  const [showModalCancelado, setModalCancelado] = useState(false) 
+  const [showModalCancelado, setModalCancelado] = useState(false)
   // Se llama a la funcion getClientes que nos devuelve todos los objetos de la coleccion 'Clientes' en forma de promesa
   const getClientesFromFirestore = () => getClientes();
   // Utilizamos un hook que hara un async await al que le pasamos una funcion asincrona que retorna una promesa
@@ -148,7 +148,7 @@ function NuevoClienteForm() {
               Agregar Cliente
             </h2>
           </div>
-          
+
         </div>
         <div className="flex items-center mt-4 gap-x-3">
           <Link href={"/"}>
@@ -319,53 +319,53 @@ function NuevoClienteForm() {
               <tbody className="bg-white divide-y divide-gray-200">
                 {data &&
                   data.map((cliente) =>
-                    cliente.estado === "activo" ? (
-                      <tr
-                        key={cliente.id}
-                        className="hover:bg-gray-100 transition duration-200"
-                      >
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          {cliente.empresa}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {cliente.referente}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold uppercase text-green-500">
-                          {cliente.estado}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold uppercase text-gray-500">
-                          {cliente.telefono}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold uppercase text-gray-500">
-                          {cliente.cuit}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-2">
-                          <button
-                            className="btn btn-warning btn-sm flex flex-row items-center px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-300"
-                            onClick={() => handleEdit(cliente)}
-                          >
-                            <PencilSquareIcon
-                              className="h-5 w-5 mr-2"
-                              aria-hidden="true"
-                            />
-                            Editar
-                          </button>
-                          <button
-                            className="btn btn-error btn-sm flex flex-row items-center px-4 py-2 bg-red-500 text-white bg-black rounded-md hover:bg-red-600 transition duration-300"
-                            onClick={() => {
-                              setShowBajaModal(true),
-                                setSelectedCliente(cliente.id);
-                            }}
-                          >
-                            <ArchiveBoxXMarkIcon
-                              className="h-5 w-5 mr-2"
-                              aria-hidden="true"
-                            />
-                            Baja
-                          </button>
-                        </td>
-                      </tr>
-                    ) : null
+                  (
+                    <tr
+                      key={cliente.id}
+                      className="hover:bg-gray-100 transition duration-200"
+                    >
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {cliente.empresa}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {cliente.referente}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold uppercase text-green-500">
+                        {cliente.estado}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold uppercase text-gray-500">
+                        {cliente.telefono}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold uppercase text-gray-500">
+                        {cliente.cuit}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-2">
+                        <button
+                          className="btn btn-warning btn-sm flex flex-row items-center px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-300"
+                          onClick={() => handleEdit(cliente)}
+                        >
+                          <PencilSquareIcon
+                            className="h-5 w-5 mr-2"
+                            aria-hidden="true"
+                          />
+                          Editar
+                        </button>
+                        <button
+                          className="btn btn-error btn-sm flex flex-row items-center px-4 py-2 bg-red-500 text-white bg-black rounded-md hover:bg-red-600 transition duration-300"
+                          onClick={() => {
+                            setShowBajaModal(true),
+                              setSelectedCliente(cliente.id);
+                          }}
+                        >
+                          <ArchiveBoxXMarkIcon
+                            className="h-5 w-5 mr-2"
+                            aria-hidden="true"
+                          />
+                          Baja
+                        </button>
+                      </td>
+                    </tr>
+                  ), null
                   )}
               </tbody>
             </table>
@@ -389,7 +389,7 @@ function NuevoClienteForm() {
         message={"Cliente registrado"}
       />
 
-<ModalCancelado
+      <ModalCancelado
         show={showModalCancelado}
         message={"Cliente eliminado"}
       />
