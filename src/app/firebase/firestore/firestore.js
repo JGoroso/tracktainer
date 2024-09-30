@@ -143,7 +143,8 @@ export const addUsuario = async (data) => {
 };
 
 export const getUsuarios = async () => {
-  const coleccionUsers = query(collection(db, "users"));
+  const coleccionUsers = query(collection(db, "users"),
+    where("estado", "==", "activo"));
   return getDocs(coleccionUsers)
     .then((response) => {
       const usersFromDocs = response.docs.map((user) => {
@@ -158,7 +159,8 @@ export const getUsuarios = async () => {
 };
 
 export const getClientes = async () => {
-  const coleccionClientes = query(collection(db, "clientes"));
+  const coleccionClientes = query(collection(db, "clientes"),
+    where("estado", "==", "activo"));
   return getDocs(coleccionClientes)
     .then((response) => {
       const clientesFromDocs = response.docs.map((cliente) => {
