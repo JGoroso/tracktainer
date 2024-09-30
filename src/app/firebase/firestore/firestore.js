@@ -154,7 +154,7 @@ export const getUsuarios = async () => {
       return usersFromDocs;
     })
     .catch((error) => {
-      console.log(error);
+      console.log("an  erro", error);
     });
 };
 
