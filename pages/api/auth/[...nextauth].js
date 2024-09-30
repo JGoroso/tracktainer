@@ -10,6 +10,9 @@ export const authOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
+  session: {
+    maxAge: 30 * 60, // 30 minutos
+  },
   callbacks: {
     async session({ session, token }) {
       if (!session) {
