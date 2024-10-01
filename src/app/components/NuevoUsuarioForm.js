@@ -48,7 +48,7 @@ function NuevoUsuarioForm() {
   const [showBajaModal, setShowBajaModal] = useState(false);
   const roles = ["admin", "chofer"];
   const [showGuardadoModal, setShowGuardadoModal] = useState(false);
-  const [showModalCancelado, setModalCancelado] = useState(false) 
+  const [showModalCancelado, setModalCancelado] = useState(false)
   // Se llama a la funcion getClientes que nos devuelve todos los objetos de la coleccion 'Clientes' en forma de promesa
   const getUsuariosFromFirestore = () => getUsuarios();
   // Utilizamos un hook que hara un async await al que le pasamos una funcion asincrona que retorna una promesa
@@ -138,7 +138,7 @@ function NuevoUsuarioForm() {
               Agregar Usuario
             </h2>
           </div>
-                  </div>
+        </div>
         <div className="flex items-center mt-4 gap-x-3">
           <Link href={"/"}>
             <button className="flex items-center justify-center w-full px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto hover:bg-gray-100">
@@ -265,7 +265,7 @@ function NuevoUsuarioForm() {
             <input
               type="submit"
               value="Enviar"
-              className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
+              className="w-full bg-yellow-500 text-white font-bold py-2 px-4 rounded-md hover:bg-yellow-600 transition duration-300"
             />
           </form>
         </div>
@@ -275,6 +275,18 @@ function NuevoUsuarioForm() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Nombre
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Teléfono
+                  </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -310,6 +322,12 @@ function NuevoUsuarioForm() {
                         className="hover:bg-gray-100 transition duration-200"
                       >
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {user.nombre}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {user.telefono}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           {user.email}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -334,7 +352,7 @@ function NuevoUsuarioForm() {
                             onClick={() => {
                               setShowBajaModal(true), setSelectedUser(user.id);
                             }}
-                            
+
                           >
                             <ArchiveBoxXMarkIcon
                               className="h-5 w-5 mr-2"
