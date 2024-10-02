@@ -168,7 +168,7 @@ function NuevoUsuarioForm() {
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8 px-4 sm:px-8 md:px-16 lg:px-24 mt-10">
-        <div className="w-full lg:w-1/2">
+        <div className="w-full ">
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="max-w-md mx-auto p-4 shadow-md rounded-lg bg-white"
@@ -270,7 +270,7 @@ function NuevoUsuarioForm() {
           </form>
         </div>
 
-        <div className="w-full lg:w-1/2">
+        <div className="w-full">
           <div className="p-4 shadow-md rounded-lg bg-white overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
