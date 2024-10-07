@@ -1,6 +1,6 @@
 ## TrackTainer
 
-### How to
+### Como utilizar la App
 
 1. Clonar el repo
 2. Dentro del repositorio ejecutar el comando npm install para que se descarguen las dependencias que correspondan (https://docs.npmjs.com/cli/v8/commands/npm-install) 
