@@ -26,13 +26,13 @@ function ConfirmacionModal({ show, onClose, onSave, source }) {
           <div className="flow-root">
             <ul
               role="list"
-              className="divide-y divide-gray-200 dark:divide-gray-700"
+              className="divide-y divide-gray-200 dark:divide-gray-700 border border-gray-200 rounded dark:border-gray-700"
             >
               <li className="py-3 sm:py-4">
                 <div className="flex items-center">
                   <div className="flex-1 min-w-0 ms-4">
-                    <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                      Dirección
+                    <p className="text-sm font-bold text-gray-900 truncate dark:text-white">
+                      Dirección:
                     </p>
                     <p className="text-sm text-gray-500 truncate dark:text-gray-400">
                       {source ? source.address : null}
@@ -43,8 +43,8 @@ function ConfirmacionModal({ show, onClose, onSave, source }) {
               <li className="py-3 sm:py-4">
                 <div className="flex items-center ">
                   <div className="flex-1 min-w-0 ms-4">
-                    <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                      ¿Quién recibe?
+                    <p className="text-sm font-bold text-gray-900 truncate dark:text-white">
+                      ¿Quién recibe?:
                     </p>
                     <p className="text-sm text-gray-500 truncate dark:text-gray-400">
                       {source.recibe}
@@ -55,8 +55,8 @@ function ConfirmacionModal({ show, onClose, onSave, source }) {
               <li className="py-3 sm:py-4">
                 <div className="flex items-center">
                   <div className="flex-1 min-w-0 ms-4">
-                    <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                      Cliente
+                    <p className="text-sm font-bold text-gray-900 truncate dark:text-white">
+                      Cliente:
                     </p>
                     <p className="text-sm text-gray-500 truncate dark:text-gray-400">
                       {source.cliente}
@@ -67,7 +67,7 @@ function ConfirmacionModal({ show, onClose, onSave, source }) {
               <li className="py-3 sm:py-4">
                 <div className="flex items-center ">
                   <div className="flex-1 min-w-0 ms-4">
-                    <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                    <p className="text-sm font-bold text-gray-900 truncate dark:text-white">
                       Teléfono:
                     </p>
                     <p className="text-sm text-gray-500 truncate dark:text-gray-400">
@@ -76,10 +76,10 @@ function ConfirmacionModal({ show, onClose, onSave, source }) {
                   </div>
                 </div>
               </li>
-              <li className="pt-3 pb-0 sm:pt-4">
+              <li className="py-3 sm:py-4">
                 <div className="flex items-center ">
                   <div className="flex-1 min-w-0 ms-4">
-                    <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                    <p className="text-sm font-bold text-gray-900 truncate dark:text-white">
                       Fecha:
                     </p>
                     <p className="text-sm text-gray-500 truncate dark:text-gray-400">
@@ -88,10 +88,10 @@ function ConfirmacionModal({ show, onClose, onSave, source }) {
                   </div>
                 </div>
               </li>
-              <li className="py-3 sm:py-4">
-                <div className="flex items-center ">
+              <li className="py-3 sm:py-4 last:border-b border-gray-200 dark:border-gray-700">
+                <div className="flex items-center">
                   <div className="flex-1 min-w-0 ms-4">
-                    <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                    <p className="text-sm font-bold text-gray-900 truncate dark:text-white">
                       Chofer asignado:
                     </p>
                     <p className="text-sm text-gray-500 truncate dark:text-gray-400">
@@ -103,7 +103,7 @@ function ConfirmacionModal({ show, onClose, onSave, source }) {
             </ul>
           </div>
 
-          <div className="flex justify-end space-x-4 mt-4">
+          <div className="flex justify-center space-x-4 mt-4">
             <button
               className="text-black mt-4 focus:ring-4 focus:outline-none bg-white gap-x-2 hover:bg-grey-500 focus:ring-grey font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center hover:bg-gray-100 border border-gray-300"
               onClick={onClose}

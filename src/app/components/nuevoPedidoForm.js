@@ -134,12 +134,12 @@ function NuevoPedidoForm() {
   return (
     <>
       <div>
-        <div className="sm:flex sm:items-center sm:justify-between">
+        <div className="sm:flex sm:justify-between">
           <div></div>
 
-          <div className="flex items-center mt-2 gap-x-3">
+          <div className="mt-4 px-30">
             <Link href={"/"}>
-              <button className="flex items-center justify-center w-full sm:w-auto px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 hover:bg-gray-100">
+              <button className="flex items-center justify-center  sm:w-auto px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 hover:bg-gray-100">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -160,25 +160,6 @@ function NuevoPedidoForm() {
                   />
                 </svg>
                 <span>Volver al mapa</span>
-              </button>
-            </Link>
-            <Link href={"Pedidos"}>
-              <button className="flex items-center justify-center w-full sm:w-auto px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-yellow-400 rounded-lg gap-x-2 hover:bg-yellow-500">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="w-5 h-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <span>Pedidos</span>
               </button>
             </Link>
           </div>
@@ -256,7 +237,7 @@ function NuevoPedidoForm() {
                 defaultValue={"N/A"}
                 id="cliente"
                 {...register("cliente")}
-                className={`w-full px-3 py-2 border ${errors.cliente ? "border-red-500" : "border-gray-300"
+                className={`w-full px-3 py-2 border focus:border-yellow-500 ${errors.cliente ? "border-red-500" : "border-gray-300"
                   } rounded-md`}
               >
                 <option value={"N/A"} disabled>
@@ -357,8 +338,8 @@ function NuevoPedidoForm() {
                 defaultValue={"N/A"}
                 id="chofer"
                 {...register("chofer")}
-                className={`w-full px-3 py-2 border ${errors.chofer ? "border-red-500" : "border-gray-300"
-                  } rounded-md`}
+                className={`w-full px-3 py-2 border focus:border-yellow-500 ${errors.chofer ? "border-red-500" : "border-gray-300"
+                  } rounded-md `}
               >
                 <option value={"N/A"} disabled>
                   Seleccionar chofer
