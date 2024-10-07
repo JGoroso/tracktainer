@@ -131,15 +131,15 @@ function NuevoUsuarioForm() {
         </div>
       )}
 
-      <div className="sm:flex sm:items-center sm:justify-between p-4">
+      <div className="sm:flex sm:justify-between p-4">
         <div>
-          <div className="flex items-center mt-4 gap-x-3">
+          <div className="flex items-center mt-4 ml-20">
             <h2 className="font-medium text-3xl text-gray-800">
               Agregar Usuario
             </h2>
           </div>
         </div>
-        <div className="flex items-center mt-4 gap-x-3">
+        <div className="flex items-center mt-4 mr-15">
           <Link href={"/"}>
             <button className="flex items-center justify-center w-full px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto hover:bg-gray-100">
               <svg
@@ -265,7 +265,7 @@ function NuevoUsuarioForm() {
             <input
               type="submit"
               value="Enviar"
-              className="w-full bg-yellow-500 text-white font-bold py-2 px-4 rounded-md hover:bg-yellow-600 transition duration-300"
+              className="w-full bg-yellow-400 text-white font-bold py-2 px-4 rounded-md hover:bg-yellow-500 transition duration-300"
             />
           </form>
         </div>

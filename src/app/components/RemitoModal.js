@@ -24,16 +24,16 @@ function RemitoModal({ show, onClose, onSave }) {
 
         <div className="flex justify-end space-x-4">
           <button
-            onClick={handleSave}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+            onClick={onClose}
+            className=" mr-2 px-4 py-2  text-gray-700 border rounded-lg"
           >
-            Ingresar
+            Cancelar
           </button>
           <button
-            onClick={onClose}
-            className="bg-black text-white px-4 py-2 rounded-md"
+            onClick={handleSave}
+            className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600"
           >
-            Cerrar
+            Ingresar
           </button>
         </div>
       </div>

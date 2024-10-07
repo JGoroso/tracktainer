@@ -44,7 +44,7 @@ function DataPedidosTable({ source, accionFunc }) {
       setModalCancelado(true)
       // Actualiza la lista de pedidos después de cancelar
       fetchPedidos();
-      setTimeout(() => { 
+      setTimeout(() => {
         setModalCancelado(false);
       }, 1000);
     } catch (error) {
@@ -127,8 +127,8 @@ function DataPedidosTable({ source, accionFunc }) {
           </div>
 
 
-          <div className="mt-7 overflow-x-auto">
-            <table className="min-w-full table-auto">
+          <div className="mt-7 ">
+            <table className="min-w-full ">
               <thead className="bg-gray-100 font-bold uppercase bg-gray-2 rounded-sm ">
                 <tr>
                   <th scope="col" className="px-2 py-3.5 text-sm font-medium text-left text-gray-500">Estado</th>
@@ -209,7 +209,7 @@ function DataPedidosTable({ source, accionFunc }) {
                               );
                             }}
                             className={`px-3 py-1 text-sm font-medium text-white rounded-lg ${pedido.estado === 'pendiente'
-                              ? 'bg-green-500 hover:bg-green-600'
+                              ? 'bg-green-600 hover:bg-green-700'
                               : pedido.estado === 'entregado'
                                 ? 'bg-orange-500 hover:bg-orange-600'
                                 : pedido.estado === 'retirar'
@@ -228,7 +228,7 @@ function DataPedidosTable({ source, accionFunc }) {
                         </td>
 
                         {/* Boton editar/cancelar pedidos */}
-                        <td className="px-2 py-4 whitespace-nowrap relative">
+                        <td className="px-2 py-4 whitespace-nowrap relative ">
                           <button
                             className="flex items-center px-3 py-1 text-sm font-medium bg-gray-500 rounded-lg hover:bg-gray"
                             onClick={() => setOpenDropdown(openDropdown === pedido.id ? null : pedido.id)}
@@ -239,7 +239,7 @@ function DataPedidosTable({ source, accionFunc }) {
 
                           {/* Dropdown menu */}
                           {openDropdown === pedido.id && (
-                            <div className="absolute right-0 z-10 w-50 mt-2 bg-white border border-gray-200 rounded-md shadow-lg" ref={dropdownRef}>
+                            <div className="absolute right-0 z-50 w-50 mt-2 bg-white border border-gray-200 rounded-md shadow-lg" ref={dropdownRef}>
                               <button
                                 className="flex items-center w-full px-4 py-2 text-left text-gray-700 hover:bg-gray"
                                 onClick={() => {

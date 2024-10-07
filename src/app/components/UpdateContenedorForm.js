@@ -35,13 +35,13 @@ function UpdateContenedorForm({ isOpen, onClose, contenedor, onSave, register, s
             <button
               type="button"
               onClick={onClose}
-              className="mr-2 px-4 py-2 bg-slate-500 text-white rounded-md hover:bg-gray-600"
+              className="mr-2 px-4 py-2  text-gray-700 border rounded-lg"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+              className="px-4 py-2 bg-yellow-500 text-white border rounded-md hover:bg-yellow-600"
             >
               Guardar
             </button>

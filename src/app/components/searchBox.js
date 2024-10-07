@@ -52,9 +52,9 @@ function ReadySearchBox({ onSelectAddress }) {
   return (
     <Combobox onChange={handleSelect}>
       <Combobox.Input
-        className="mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
+        className="mt-2 text-gray-600 focus:outline-none focus:border focus:border-yellow-500 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
         onChange={handleChange}
-        placeholder="Agregue una dirección 📍"
+        placeholder="Ingrese una dirección 📍"
       />
       <Combobox.Options className="max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
         {status == "OK" &&
