@@ -231,22 +231,22 @@ function UpdatePedidoModal({ isOpen, onClose, pedido, fetchPedidos, dataPedidoSe
 
             </div>
 
-            <div className="flex justify-center mt-4">
-              <button
-                type="submit"
-                className="bg-yellow-500 hover:bg-yellow-600 text-white font-semi-bold py-2 px-4 rounded-md"
-              >
-                Actualizar Pedido
-              </button>
-            </div>
-            <div className="flex justify-center mt-4">
-              <button
-                type="submit"
-                onClick={() => onClose()}
-                className="bg-slate-600 hover:bg-slate-800  text-white font-semi-bold py-2 px-4 rounded-md"
-              >
-                Cerrar
-              </button>
+            <div className="flex justify-center w-full">
+              <div className="mt-4">
+                <button
+                  type="submit"
+                  onClick={() => onClose()}
+                  className="mr-2 px-4 py-2  text-gray-700 border rounded-lg"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="bg-yellow-400 hover:bg-yellow-500 text-white font-semi-bold py-2 px-4 rounded-md"
+                >
+                  Actualizar Pedido
+                </button>
+              </div>
             </div>
           </form>
         </div >

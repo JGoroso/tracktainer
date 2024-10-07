@@ -95,7 +95,7 @@ function UpdateClienteForm({
           </div>
           <div className="mb-4">
             <label
-              htmlFor="edit-telefono"
+              htmlFor="edit-cuit"
               className="block text-gray-700 font-bold mb-2"
             >
               CUIT
@@ -115,13 +115,13 @@ function UpdateClienteForm({
             <button
               type="button"
               onClick={onClose}
-              className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-gray-600"
+              className="mr-2 px-4 py-2  text-gray-700 border rounded-lg"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+              className="px-4 py-2 bg-yellow-400 text-white border rounded-md hover:bg-yellow-500"
             >
               Guardar
             </button>

@@ -15,8 +15,8 @@ export default async function handler(req, res) {
     // Crear una referencia a la colección 'clientes'
     const clientesCollection = collection(db, 'clientes');
 
-    // Obtenemos todos los contenedores
-    const clientesQuery = query(clientesCollection);
+    // Consulta para obtener solo los clientes con 'activo' en true
+    const clientesQuery = query(clientesCollection, where('estado', '==', "activo"));
 
     // Obtener los documentos que cumplen con la consulta
     const snapshot = await getDocs(clientesQuery);

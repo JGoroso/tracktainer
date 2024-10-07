@@ -65,16 +65,15 @@ function NuevoContenedor() {
   };
 
   return (
-
     <>
-      <div className="sm:flex sm:items-center sm:justify-between p-4">
+      <div className="sm:flex sm:justify-between p-4">
         <div>
-          <div className="flex items-center mt-4 gap-x-3">
+          <div className="flex items-center mt-4 ml-20">
             <h2 className="font-medium text-3xl text-gray-800">Agregar Contenedor</h2>
           </div>
-          
+
         </div>
-        <div className="flex items-center mt-4 gap-x-3">
+        <div className="flex items-center mt-4 mr-15">
           <Link href={"/"}>
             <button className="flex items-center justify-center w-full px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto hover:bg-gray-100">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
@@ -93,7 +92,7 @@ function NuevoContenedor() {
             <input
               type="submit"
               value="Crear Nuevo Contenedor"
-              className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300"
+              className="w-full bg-yellow-400 text-white font-bold py-2 px-4 rounded-md hover:bg-yellow-500 transition duration-300"
             />
           </form>
         </div>
